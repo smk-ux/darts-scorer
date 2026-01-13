@@ -39,6 +39,26 @@
         .ht-text { font-size: 4rem; font-weight: 900; color: var(--gold); animation: ht-pop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         @keyframes ht-pop { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
+        .mode-title {
+            font-size: 2.2rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            font-style: italic;
+            letter-spacing: -1px;
+            margin-bottom: 5px;
+            position: relative;
+            display: inline-block;
+        }
+        .mode-title::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 40px;
+            height: 4px;
+            background: var(--accent);
+        }
+
         .side-menu {
             position: fixed; top: 0; left: -280px; width: 280px; height: 100%;
             background: var(--surface); z-index: 1000; transition: 0.3s;
@@ -64,8 +84,7 @@
         .score-strip { display: flex; gap: 10px; margin: 10px 0; justify-content: center; }
         .dart-slot { flex: 1; background: var(--surface); border: 1px solid var(--border); height: 50px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.2rem; color: var(--accent); }
 
-        /* NEW 01 UI ELEMENTS */
-        .picker-btn-container { display: flex; gap: 10px; margin-top: 20px; }
+        .picker-btn-container { display: flex; gap: 10px; margin-top: 20px; width: 100%; }
         .picker-main-btn { flex: 1; padding: 25px 0; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-weight: 900; font-size: 1.1rem; text-transform: uppercase; }
         
         #value-picker-overlay {
@@ -77,7 +96,6 @@
         #value-picker-overlay.open { bottom: 0; }
         .picker-key { background: var(--bg); border: 1px solid var(--border); padding: 15px 0; border-radius: 8px; color: var(--text); font-weight: 700; text-align: center; }
 
-        /* KEYPAD FOR CRICKET ONLY */
         .pro-keypad { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-top: auto; }
         .key { background: var(--surface); border: 1px solid var(--border); padding: 12px 0; border-radius: 8px; color: var(--text); font-size: 1rem; font-weight: 700; }
         .m-bar { display: flex; gap: 5px; margin: 5px 0; }
@@ -94,15 +112,12 @@
         .name-entry-row { display: flex; gap: 10px; margin-bottom: 10px; background: var(--surface); border: 1px solid var(--border); padding: 5px 10px; border-radius: 12px; }
         .name-input { flex: 1; background: transparent; border: none; padding: 10px; color: var(--text); font-size: 1rem; }
         
-        .content-area { padding: 20px; line-height: 1.6; color: var(--text); overflow-y: auto; }
-        .content-area h3 { color: var(--accent); margin: 20px 0 10px 0; text-transform: uppercase; }
-        .content-area p { margin-bottom: 15px; font-size: 0.9rem; color: var(--dim); }
-        .content-area li { margin-bottom: 10px; font-size: 0.85rem; color: var(--dim); list-style: none; }
-        .content-area strong { color: var(--text); }
-        
         .score-header { text-align: center; margin-bottom: 15px; }
         #p-name { font-size: 1.8rem; font-weight: 900; color: var(--text); text-transform: uppercase; margin-bottom: -5px; letter-spacing: -1px; }
         #score-display { font-size: 4rem; font-weight: 900; color: var(--accent); line-height: 1; }
+
+        /* CENTERED SUMMARY SCREEN */
+        #screen-summary { justify-content: center; align-items: center; text-align: center; padding-bottom: 100px; }
     </style>
 </head>
 <body data-theme="dark">
@@ -133,7 +148,7 @@
     </div>
 
     <div id="screen-mode" class="screen">
-        <div class="brand-group"><p class="subtitle">Choose Mode</p></div>
+        <div class="brand-group"><h2 class="mode-title">SELECT<br>MODE</h2></div>
         <div class="center-action">
             <button class="cta" style="width: 80%;" onclick="setMode('01')">01 Game</button>
             <button class="cta" style="width: 80%;" onclick="setMode('cricket')">Cricket</button>
@@ -163,22 +178,18 @@
             <div id="p-name">PLAYER 1</div>
             <div id="01-ui-display"><div id="score-display">301</div></div>
         </div>
-        
         <div id="cricket-ui" style="display:none;">
             <div class="total-points-bar"><span>Current Points</span><span id="cricket-total-points">0</span></div>
             <div class="cricket-grid"><div class="c-head">Marks</div><div class="c-head">Target</div><div class="c-head">Pts</div><div id="cricket-board" style="display: contents;"></div></div>
         </div>
-
         <div class="score-strip">
             <div class="dart-slot" id="d1">-</div><div class="dart-slot" id="d2">-</div><div class="dart-slot" id="d3">-</div>
         </div>
-
         <div id="01-selectors" class="picker-btn-container">
             <button class="picker-main-btn" onclick="openPicker(1)">Single</button>
             <button class="picker-main-btn" onclick="openPicker(2)">Double</button>
             <button class="picker-main-btn" onclick="openPicker(3)">Triple</button>
         </div>
-
         <div id="cricket-controls" style="display:none;">
             <div class="m-bar">
                 <button class="m-btn active" id="m1" onclick="setMultiplier(1)">S</button>
@@ -187,31 +198,18 @@
             </div>
             <div class="pro-keypad" id="keypad"></div>
         </div>
-
         <div class="bottom-action" style="flex-direction:row;">
             <button class="cta cta-outline" style="flex:1;" onclick="undoDart()">Undo</button>
             <button class="cta" id="confirm-btn" style="flex:1; opacity:0.3; pointer-events:none;" onclick="confirmTurn()">Submit</button>
         </div>
     </div>
 
-    <div id="screen-help" class="screen">
-        <div class="brand-group"><p class="subtitle">Scoring Guide</p></div>
-        <div class="content-area">
-            <h3>1. Standard Numbers (1–20)</h3>
-            <p>Single (S), Double (D), or Triple (T) modifiers apply to numbers 1–20.</p>
-            <h3>2. The Bullseye</h3>
-            <p>Single Bull: 25 pts. Double Bull: 50 pts.</p>
-        </div>
-    </div>
-
-    <div id="screen-about" class="screen">
-        <div class="brand-group"><p class="subtitle">About App</p></div>
-        <div class="content-area" style="text-align: center;"><p><strong>The Darts Scorer</strong><br>Version 2.0</p></div>
-    </div>
-
     <div id="screen-summary" class="screen">
-        <div class="brand-group" style="margin-top:auto;">
-            <div style="font-size:4rem;">🏆</div><p style="color:var(--accent); font-weight:900;">WINNER</p><h2 id="winner-name" style="font-size:3rem;">PLAYER 1</h2>
+        <div class="brand-group">
+            <div style="font-size:5rem; margin-bottom: 20px;">🏆</div>
+            <p style="color:var(--accent); font-weight:900; letter-spacing: 3px; text-transform: uppercase;">WINNER</p>
+            <h2 id="winner-name" style="font-size:3.5rem; font-weight: 900; text-transform: uppercase; line-height: 1;">PLAYER 1</h2>
+            <p class="subtitle" style="margin-top: 20px;">Congratulations!</p>
         </div>
         <div class="bottom-action"><button class="cta" onclick="location.reload()">New Game</button></div>
     </div>
@@ -226,7 +224,6 @@
             const b = document.createElement('button'); b.className = 'key'; b.innerText = n; b.onclick = () => pressValue(n); grid.appendChild(b);
         });
         grid.innerHTML += `<button class="key" onclick="pressValue(25)">BULL</button><button class="key" onclick="pressValue(0)">0</button>`;
-        
         const picker = document.getElementById('value-picker-overlay');
         for(let i=20; i>=1; i--) picker.innerHTML += `<div class="picker-key" onclick="selectValue(${i})">${i}</div>`;
         picker.innerHTML += `<div class="picker-key" onclick="selectValue(25)">BULL</div><div class="picker-key" onclick="selectValue(0)">0</div>`;
@@ -243,9 +240,7 @@
         toggleMenu();
         const cur = history[history.length-1];
         if (opt === 'home') location.reload();
-        else if (opt === 'play') navigateTo(cur, 'screen-mode');
-        else if (opt === 'help') navigateTo(cur, 'screen-help');
-        else if (opt === 'about') navigateTo(cur, 'screen-about');
+        else navigateTo(cur, 'screen-' + opt);
     }
 
     function navigateTo(cur, next) {
@@ -278,7 +273,6 @@
     }
     
     function changeCount(v) { pCount=Math.max(1, Math.min(8, pCount+v)); document.getElementById('player-val').innerText=pCount; }
-    
     function submitPlayerCount() {
         const c = document.getElementById('name-container'); c.innerHTML = "";
         for(let i=1; i<=pCount; i++) c.innerHTML += `<div class="name-entry-row"><input type="text" class="name-input" id="in-p${i}" placeholder="Player ${i}"></div>`;
