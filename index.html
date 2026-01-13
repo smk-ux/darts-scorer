@@ -180,9 +180,8 @@
 </div>
 
 <script>
-    let gMode='01', pCount=1, currentScore=301, multiplier=1, dartsThrown=[], pName="PLAYER 1";
-    let cricketHits = { 20:0, 19:0, 18:0, 17:0, 16:0, 15:0, 25:0 };
-    let cricketPoints = { 20:0, 19:0, 18:0, 17:0, 16:0, 15:0, 25:0 };
+    let gMode='01', pCount=1, currentPlayerIdx=0, multiplier=1, dartsThrown=[];
+    let players = [];
     let history = ['screen-welcome'];
 
     window.onload = function() {
@@ -215,7 +214,7 @@
         document.getElementById(cur).style.display = 'none';
         document.getElementById(next).style.display = 'flex';
         history.push(next); updateNav();
-        if(next === 'screen-game' && gMode === 'cricket') updateCricketBoard();
+        if(next === 'screen-game') updateTurnUI();
     }
 
     function goBack() {
@@ -248,23 +247,43 @@
     }
     
     function beginMatch() { 
-        pName = (document.getElementById('in-p1').value || "PLAYER 1").toUpperCase(); 
-        document.getElementById('p-name').innerText = pName; 
+        players = [];
+        for(let i=1; i<=pCount; i++) {
+            let name = (document.getElementById('in-p${i}')?.value || "PLAYER " + i).toUpperCase();
+            players.push({
+                name: name,
+                score01: 301,
+                cricketHits: { 20:0, 19:0, 18:0, 17:0, 16:0, 15:0, 25:0 },
+                cricketPoints: { 20:0, 19:0, 18:0, 17:0, 16:0, 15:0, 25:0 }
+            });
+        }
+        currentPlayerIdx = 0;
         navigateTo('screen-names', 'screen-game'); 
     }
     
+    function updateTurnUI() {
+        let p = players[currentPlayerIdx];
+        document.getElementById('p-name').innerText = p.name;
+        if(gMode === '01') {
+            document.getElementById('score-display').innerText = p.score01;
+        } else {
+            updateCricketBoard();
+        }
+        updateDartSlots();
+    }
+
     function setMultiplier(m) { multiplier = m; document.querySelectorAll('.m-btn').forEach(b => b.classList.remove('active')); document.getElementById('m'+m).classList.add('active'); }
     
     function pressValue(v) { 
         if(dartsThrown.length < 3){ 
             if(v===25 && multiplier===3) multiplier=2; 
             dartsThrown.push({v, m:multiplier}); 
-            updateUI(); 
+            updateDartSlots(); 
             setMultiplier(1); 
         } 
     }
 
-    function updateUI() { 
+    function updateDartSlots() {
         const cBtn = document.getElementById('confirm-btn'); 
         cBtn.style.opacity = (dartsThrown.length === 3) ? "1" : "0.3"; 
         cBtn.style.pointerEvents = (dartsThrown.length === 3) ? "auto" : "none"; 
@@ -275,53 +294,48 @@
                 const d = dartsThrown[i-1];
                 let prefix = d.m === 2 ? 'D' : d.m === 3 ? 'T' : '';
                 slot.innerText = prefix + (d.v === 25 ? 'B' : d.v);
-            } else {
-                slot.innerText = '-';
-            }
+            } else { slot.innerText = '-'; }
         }
     }
     
     function confirmTurn() {
+        let p = players[currentPlayerIdx];
         dartsThrown.forEach(d => { 
             if(gMode === '01') {
-                currentScore -= (d.v * d.m);
-            } else if(cricketHits.hasOwnProperty(d.v)) {
-                let hitsNeeded = 3 - cricketHits[d.v];
+                p.score01 -= (d.v * d.m);
+            } else if(p.cricketHits.hasOwnProperty(d.v)) {
+                let hitsNeeded = 3 - p.cricketHits[d.v];
                 if (hitsNeeded > 0) {
                     let toMarks = Math.min(d.m, hitsNeeded);
-                    let toPoints = d.m - toMarks;
-                    cricketHits[d.v] += toMarks;
-                    cricketPoints[d.v] += (toPoints * d.v);
-                } else {
-                    cricketPoints[d.v] += (d.m * d.v);
-                }
+                    p.cricketHits[d.v] += toMarks;
+                    p.cricketPoints[d.v] += ((d.m - toMarks) * d.v);
+                } else { p.cricketPoints[d.v] += (d.m * d.v); }
             } 
         });
-        if(gMode === '01') { 
-            document.getElementById('score-display').innerText = currentScore; 
-            if(currentScore <= 0) showSummary(); 
-        } else { 
-            updateCricketBoard(); 
-            if(Object.values(cricketHits).every(h => h >= 3)) showSummary(); 
-        }
-        dartsThrown = []; 
-        updateUI();
+
+        if(gMode === '01' && p.score01 <= 0) { showSummary(p.name); return; }
+        if(gMode === 'cricket' && Object.values(p.cricketHits).every(h => h >= 3)) { showSummary(p.name); return; }
+
+        currentPlayerIdx = (currentPlayerIdx + 1) % players.length;
+        dartsThrown = [];
+        updateTurnUI();
     }
 
     function updateCricketBoard() {
+        let p = players[currentPlayerIdx];
         const board = document.getElementById('cricket-board'); board.innerHTML = "";
         let total = 0;
         [20,19,18,17,16,15,25].forEach(t => {
-            let h = cricketHits[t];
+            let h = p.cricketHits[t];
             let mark = h === 1 ? "/" : h === 2 ? "X" : h >= 3 ? "⊗" : "";
-            total += cricketPoints[t];
-            board.innerHTML += `<div class="c-val">${mark}</div><div class="c-num">${t==25?'BULL':t}</div><div class="c-val c-score-text">${cricketPoints[t]}</div>`;
+            total += p.cricketPoints[t];
+            board.innerHTML += `<div class="c-val">${mark}</div><div class="c-num">${t==25?'BULL':t}</div><div class="c-val c-score-text">${p.cricketPoints[t]}</div>`;
         });
         document.getElementById('cricket-total-points').innerText = total;
     }
 
-    function showSummary() { document.getElementById('winner-name').innerText = pName; navigateTo('screen-game', 'screen-summary'); }
-    function undoDart() { dartsThrown.pop(); updateUI(); }
+    function showSummary(winner) { document.getElementById('winner-name').innerText = winner; navigateTo('screen-game', 'screen-summary'); }
+    function undoDart() { dartsThrown.pop(); updateDartSlots(); }
     function toggleTheme() { document.body.setAttribute('data-theme', document.body.getAttribute('data-theme')==='dark'?'light':'dark'); }
 </script>
 </body>
