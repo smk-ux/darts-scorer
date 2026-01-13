@@ -46,7 +46,7 @@
         .cta-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
 
         .center-action {
-            flex-grow: 1; display: flex; align-items: center; justify-content: center; width: 100%;
+            flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; gap: 15px;
         }
 
         .pro-keypad { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-top: auto; }
@@ -55,7 +55,6 @@
         .m-btn { flex: 1; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-weight: 800; font-size: 0.7rem; }
         .m-btn.active { background: var(--text); color: var(--bg); }
         
-        /* UPDATED CRICKET BOARD DESIGN */
         .cricket-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; background: var(--surface); padding: 15px; border-radius: 16px; border: 1px solid var(--border); }
         .c-head { color: var(--dim); font-size: 0.6rem; text-transform: uppercase; font-weight: 800; margin-bottom: 5px; }
         .c-val { font-size: 1.2rem; font-weight: 900; color: var(--accent); }
@@ -83,11 +82,11 @@
         </div>
     </div>
 
-    <div id="screen-mode" class="screen">
+    <div id="screen-mode" class="screen" style="padding-bottom: 0;">
         <div class="brand-group"><p class="subtitle">Choose Mode</p></div>
-        <div class="bottom-action">
-            <button class="cta" onclick="setMode('01')">01 Game</button>
-            <button class="cta cta-outline" onclick="setMode('cricket')">Cricket</button>
+        <div class="center-action">
+            <button class="cta" style="width: 80%;" onclick="setMode('01')">01 Game</button>
+            <button class="cta" style="width: 80%;" onclick="setMode('cricket')">Cricket</button>
         </div>
     </div>
 
@@ -109,16 +108,13 @@
 
     <div id="screen-game" class="screen" style="padding-bottom:140px;">
         <div id="p-name" style="font-weight:700; color:var(--dim); font-size:0.8rem; text-transform:uppercase; margin-bottom:5px;">PLAYER 1</div>
-        
         <div id="01-ui"><div style="font-size:3.5rem; font-weight:900;" id="score-display">301</div></div>
-        
         <div id="cricket-ui" style="display:none;">
             <div class="cricket-grid">
                 <div class="c-head">Mark</div><div class="c-head">Target</div><div class="c-head">Score</div>
                 <div id="cricket-board" style="display: contents;"></div>
             </div>
         </div>
-
         <div class="m-bar">
             <button class="m-btn active" id="m1" onclick="setMultiplier(1)">S</button>
             <button class="m-btn" id="m2" onclick="setMultiplier(2)">D</button>
@@ -198,9 +194,7 @@
     }
     
     function setMultiplier(m) { multiplier = m; document.querySelectorAll('.m-btn').forEach(b => b.classList.remove('active')); document.getElementById('m'+m).classList.add('active'); }
-    
     function pressValue(v) { if(dartsThrown.length<3){ if(v===25 && multiplier===3) multiplier=2; dartsThrown.push({v, m:multiplier}); updateUI(); setMultiplier(1); }}
-    
     function updateUI() { const cBtn = document.getElementById('confirm-btn'); cBtn.style.opacity = (dartsThrown.length === 3) ? "1" : "0.3"; cBtn.style.pointerEvents = (dartsThrown.length === 3) ? "auto" : "none"; }
     
     function confirmTurn() {
@@ -217,8 +211,6 @@
         }
         dartsThrown = []; updateUI();
     }
-
-    
 
     function updateCricketBoard() {
         const board = document.getElementById('cricket-board'); board.innerHTML = "";
