@@ -23,76 +23,81 @@
         }
         .app-container { width: 100%; max-width: 400px; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; position: relative; }
         
-        /* NAVIGATION */
-        .top-nav { position: absolute; top: 30px; width: 100%; display: flex; justify-content: space-between; padding: 0 20px; align-items: center; z-index: 1000; }
-        .nav-group { display: flex; gap: 10px; }
-        .nav-icon-btn { width: 44px; height: 44px; background: var(--nav-bg); border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; border: 1px solid var(--border); }
-        .nav-icon-btn svg { width: 20px; height: 20px; fill: var(--text); }
-
+        /* SCREENS */
         .screen { position: absolute; width: calc(100% - 40px); opacity: 0; visibility: hidden; pointer-events: none; text-align: center; display: flex; flex-direction: column; align-items: center; transition: opacity var(--transition-speed) ease; }
         .screen.active { opacity: 1; visibility: visible; pointer-events: auto; }
 
-        /* GAME UI */
-        .p-score { font-size: 5rem; font-weight: 900; margin: 0; line-height: 1; letter-spacing: -3px; transition: color 0.2s; }
-        .bust-flash { color: var(--error) !important; animation: shake 0.4s ease-in-out; }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
-
-        .dart-strip { display: flex; gap: 10px; margin: 20px 0; }
-        .dart-box { width: 60px; height: 40px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; display: flex; justify-content: center; align-items: center; font-weight: 900; color: var(--accent); }
+        /* SCORE & DART STRIP */
+        .p-score { font-size: 4rem; font-weight: 900; margin: 0; letter-spacing: -2px; }
+        .dart-strip { display: flex; gap: 8px; margin: 15px 0; }
+        .dart-box { width: 50px; height: 35px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; display: flex; justify-content: center; align-items: center; font-weight: 900; font-size: 0.9rem; color: var(--accent); }
         
-        .multiplier-bar { display: flex; gap: 8px; margin-bottom: 15px; width: 100%; max-width: 320px; }
-        .m-btn { flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-weight: 700; font-size: 0.7rem; cursor: pointer; }
+        /* MULTIPLIER */
+        .multiplier-bar { display: flex; gap: 6px; margin-bottom: 12px; width: 100%; max-width: 340px; }
+        .m-btn { flex: 1; padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-weight: 800; font-size: 0.65rem; cursor: pointer; text-transform: uppercase; }
         .m-btn.active { background: var(--text); color: var(--bg); border-color: var(--text); }
 
-        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; max-width: 320px; }
-        .key { background: var(--surface); border: 1px solid var(--border); padding: 15px; border-radius: 12px; color: var(--text); font-size: 1.2rem; font-weight: 700; cursor: pointer; }
-        .key.action { background: var(--surface); color: var(--dim); border: 1px solid var(--border); font-size: 0.8rem; }
+        /* SCROLLABLE DARTS KEYPAD */
+        .dart-keypad-container {
+            width: 100%; max-width: 340px;
+            height: 220px; /* Fixed height for keypad area */
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            padding: 5px;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 15px;
+        }
 
-        .name-input { width: 100%; max-width: 320px; background: var(--surface); border: 1px solid var(--border); padding: 18px; border-radius: 15px; color: var(--text); margin-bottom: 12px; text-align: center; font-weight: 700; }
+        .key { background: var(--surface); border: 1px solid var(--border); padding: 15px 0; border-radius: 10px; color: var(--text); font-size: 1.1rem; font-weight: 700; cursor: pointer; }
+        .key:active { background: var(--accent); color: #000; }
+        .key.bull { background: #1a1a1a; border-color: var(--accent); color: var(--accent); }
+        
+        .action-row { display: flex; gap: 8px; width: 100%; max-width: 340px; }
+        .btn-half { flex: 1; padding: 15px; border-radius: 10px; font-weight: 800; text-transform: uppercase; cursor: pointer; border: none; font-size: 0.75rem; }
+        .btn-undo { background: var(--surface); color: var(--dim); border: 1px solid var(--border); }
+        .btn-confirm { background: var(--accent); color: #000; }
+
+        /* STEPPER & INPUTS */
         .cta { width: 100%; max-width: 320px; padding: 18px; background: var(--text); color: var(--bg); border-radius: 50px; font-weight: 900; margin-top: 15px; text-transform: uppercase; border: none; cursor: pointer; }
+        .name-input { width: 100%; max-width: 320px; background: var(--surface); border: 1px solid var(--border); padding: 18px; border-radius: 15px; color: var(--text); margin-bottom: 12px; text-align: center; font-weight: 700; }
     </style>
 </head>
 <body data-theme="dark">
 
 <div class="app-container">
-    <div class="top-nav">
-        <div class="nav-group">
-            <div id="home-btn" class="nav-icon-btn" style="opacity:0" onclick="confirmGoHome()"><svg viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg></div>
-            <div id="back-btn" class="nav-icon-btn" style="opacity:0" onclick="goBack()"><svg viewBox="0 0 24 24"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" /></svg></div>
-        </div>
-        <div class="nav-icon-btn" onclick="toggleTheme()"><svg viewBox="0 0 24 24"><path d="M12,18C15.31,18 18,15.31 18,12C18,8.69 15.31,6 12,6V18M20,12.51V16.19L17.62,18.57L13.94,20.95H10.06L6.38,18.57L4,16.19V12.51L1.62,10.13L4,7.75V4.06L6.38,1.68H10.06L13.94,4.06L17.62,6.44V10.13L20,12.51Z" /></svg></div>
-    </div>
-
     <div id="screen-welcome" class="screen active">
-        <h1 style="font-size:4rem; font-weight:900;">APEX<span style="color:var(--dim)">.</span></h1>
-        <p class="tagline">Engineered by Sree</p>
-        <div style="width:100px; height:100px; border:2px solid var(--text); border-radius:50%; display:flex; justify-content:center; align-items:center; font-weight:900; font-size:0.8rem; cursor:pointer;" onclick="navigateTo('screen-welcome', 'screen-mode')">START</div>
+        <h1>APEX<span style="color:var(--dim)">.</span></h1>
+        <p style="color:var(--dim); font-size:0.7rem; letter-spacing:2px; margin-bottom:20px;">ENGINEERED BY SREE</p>
+        <div style="width:100px; height:100px; border:2px solid var(--text); border-radius:50%; display:flex; justify-content:center; align-items:center; font-weight:900; cursor:pointer;" onclick="navigateTo('screen-welcome', 'screen-mode')">START</div>
     </div>
 
     <div id="screen-mode" class="screen">
-        <p class="tagline">Select Mode</p>
+        <p style="color:var(--dim); text-transform:uppercase; font-size:0.7rem; margin-bottom:20px;">Select Mode</p>
         <button class="cta" onclick="setMode('01')">01 Game</button>
         <button class="cta" style="background:transparent; color:var(--text); border:1px solid var(--border); margin-top:10px;" onclick="setMode('cricket')">Cricket</button>
     </div>
 
     <div id="screen-players" class="screen">
-        <p class="tagline">Players</p>
+        <p style="color:var(--dim); text-transform:uppercase; font-size:0.7rem;">Players</p>
         <div style="display:flex; align-items:center; gap:30px; margin:30px 0;">
-            <div class="nav-icon-btn" onclick="changeCount(-1)">–</div>
+            <div style="width:50px; height:50px; border:1px solid var(--border); border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:1.5rem; cursor:pointer;" onclick="changeCount(-1)">–</div>
             <div style="font-size:5rem; font-weight:900;" id="player-val">1</div>
-            <div class="nav-icon-btn" onclick="changeCount(1)">+</div>
+            <div style="width:50px; height:50px; border:1px solid var(--border); border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:1.5rem; cursor:pointer;" onclick="changeCount(1)">+</div>
         </div>
         <button class="cta" onclick="submitPlayerCount()">Next</button>
     </div>
 
     <div id="screen-names" class="screen">
-        <p class="tagline">Enter Names</p>
+        <p style="color:var(--dim); text-transform:uppercase; font-size:0.7rem;">Enter Names</p>
         <div id="name-container" style="width:100%;"></div>
         <button class="cta" onclick="beginMatch()">Start Match</button>
     </div>
 
     <div id="screen-game" class="screen">
-        <div id="player-name-display" style="font-weight:700; color:var(--dim); margin-bottom:5px;">PLAYER 1</div>
+        <div id="player-name-display" style="font-weight:700; color:var(--dim); margin-bottom:5px; font-size:0.8rem;">PLAYER 1</div>
         <div class="p-score" id="score-display">301</div>
         
         <div class="dart-strip">
@@ -102,54 +107,43 @@
         </div>
 
         <div class="multiplier-bar">
-            <button class="m-btn active" id="m1" onclick="setMultiplier(1)">SINGLE</button>
-            <button class="m-btn" id="m2" onclick="setMultiplier(2)">DOUBLE</button>
-            <button class="m-btn" id="m3" onclick="setMultiplier(3)">TRIPLE</button>
+            <button class="m-btn active" id="m1" onclick="setMultiplier(1)">Single</button>
+            <button class="m-btn" id="m2" onclick="setMultiplier(2)">Double</button>
+            <button class="m-btn" id="m3" onclick="setMultiplier(3)">Triple</button>
         </div>
 
-        <div class="keypad">
-            <button class="key" onclick="pressValue(1)">1</button><button class="key" onclick="pressValue(2)">2</button><button class="key" onclick="pressValue(3)">3</button>
-            <button class="key" onclick="pressValue(4)">4</button><button class="key" onclick="pressValue(5)">5</button><button class="key" onclick="pressValue(6)">6</button>
-            <button class="key" onclick="pressValue(7)">7</button><button class="key" onclick="pressValue(8)">8</button><button class="key" onclick="pressValue(9)">9</button>
-            <button class="key" onclick="pressValue(25)">25</button><button class="key" onclick="pressValue(0)">0</button><button class="key action" onclick="undoDart()">UNDO</button>
+        <div class="dart-keypad-container" id="keypad">
+            </div>
+
+        <div class="action-row">
+            <button class="btn-half btn-undo" onclick="undoDart()">Undo</button>
+            <button class="btn-half btn-confirm" id="confirm-turn-btn" style="opacity:0.3; pointer-events:none;" onclick="confirmTurn()">Confirm</button>
         </div>
-        <button class="cta" id="confirm-turn-btn" style="display:none; margin-top:10px;" onclick="confirmTurn()">Confirm Turn</button>
     </div>
 </div>
 
 <script>
     let navStack=['screen-welcome'], gMode='01', pCount=1, isRunning=false;
-    let currentScore=301, multiplier=1, dartsThrown=[], playerNames=[];
+    let currentScore=301, multiplier=1, dartsThrown=[];
+
+    // Populate Board Numbers
+    const keypad = document.getElementById('keypad');
+    const boardNumbers = [20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
+    boardNumbers.forEach(n => {
+        keypad.innerHTML += `<button class="key" onclick="pressValue(${n})">${n}</button>`;
+    });
+    keypad.innerHTML += `<button class="key bull" onclick="pressValue(25)">BULL</button>`;
+    keypad.innerHTML += `<button class="key" onclick="pressValue(0)">MISS</button>`;
 
     function navigateTo(cur, next) {
         document.getElementById(cur).classList.remove('active');
         document.getElementById(next).classList.add('active');
-        navStack.push(next); updateNav();
+        navStack.push(next);
     }
-    function goBack() {
-        if(navStack.length<=1) return;
-        let cur=navStack.pop(), prev=navStack[navStack.length-1];
-        document.getElementById(cur).classList.remove('active');
-        document.getElementById(prev).classList.add('active');
-        updateNav();
-    }
-    function confirmGoHome() { if(confirm("Stop the game? All scores will be lost.")) { isRunning=false; resetToHome(); } }
-    function resetToHome() {
-        document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-        document.getElementById('screen-welcome').classList.add('active');
-        navStack=['screen-welcome']; updateNav();
-    }
-    function updateNav() {
-        const isH = navStack[navStack.length-1]==='screen-welcome';
-        const btns = [document.getElementById('home-btn'), document.getElementById('back-btn')];
-        btns.forEach(b => {
-            b.style.opacity = isH ? "0" : "1";
-            b.style.pointerEvents = isH ? "none" : "auto";
-        });
-    }
-
-    function changeCount(v) { pCount=Math.max(1, Math.min(8, pCount+v)); document.getElementById('player-val').innerText=pCount; }
+    
     function setMode(m) { gMode=m; navigateTo('screen-mode', 'screen-players'); }
+    function changeCount(v) { pCount=Math.max(1, Math.min(8, pCount+v)); document.getElementById('player-val').innerText=pCount; }
+    
     function submitPlayerCount() {
         const c=document.getElementById('name-container'); c.innerHTML="";
         for(let i=1; i<=pCount; i++) c.innerHTML+=`<input type="text" class="name-input" id="in-p${i}" placeholder="Click to add name" autocomplete="off">`;
@@ -173,9 +167,10 @@
 
     function pressValue(v) {
         if(dartsThrown.length >= 3) return;
-        if(v === 25 && multiplier > 2) multiplier = 2;
-        let score = v * multiplier;
-        dartsThrown.push(score);
+        // Bullseye constraint (No triple bull)
+        if(v === 25 && multiplier === 3) multiplier = 2;
+        
+        dartsThrown.push(v * multiplier);
         updateDartUI();
         setMultiplier(1);
     }
@@ -187,48 +182,5 @@
             const val = dartsThrown[i-1];
             document.getElementById('dart-'+i).innerText = (val !== undefined) ? val : "-";
         }
-        document.getElementById('confirm-turn-btn').style.display = (dartsThrown.length === 3) ? "block" : "none";
-    }
-
-    function confirmTurn() {
-        let turnTotal = dartsThrown.reduce((a,b)=>a+b, 0);
-        let display = document.getElementById('score-display');
-
-        if(gMode === '01') {
-            if(currentScore - turnTotal === 0) {
-                currentScore = 0;
-                display.innerText = "0";
-                setTimeout(() => { alert("WINNER!"); resetToHome(); }, 100);
-            } else if (currentScore - turnTotal < 2) {
-                // BUST: Score must leave at least 0 (and usually double out, but we'll keep it simple for now)
-                // If score goes to 1 or negative, it's a bust in pro rules
-                triggerBust();
-            } else {
-                currentScore -= turnTotal;
-                display.innerText = currentScore;
-            }
-        } else {
-            currentScore += turnTotal;
-            display.innerText = currentScore;
-        }
-
-        dartsThrown = [];
-        updateDartUI();
-    }
-
-    function triggerBust() {
-        const display = document.getElementById('score-display');
-        const oldVal = display.innerText;
-        display.classList.add('bust-flash');
-        display.innerText = "BUST";
-        
-        setTimeout(() => {
-            display.classList.remove('bust-flash');
-            display.innerText = oldVal;
-        }, 1200);
-    }
-
-    function toggleTheme() { document.body.setAttribute('data-theme', document.body.getAttribute('data-theme')==='dark'?'light':'dark'); }
-</script>
-</body>
-</html>
+        const ready = dartsThrown.length === 3;
+        const cBtn = document.getElementById('confirm-turn-btn');
