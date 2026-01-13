@@ -7,80 +7,47 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #000000;
-            --surface: #111111;
-            --border: #222222;
-            --text: #ffffff;
-            --dim: #888888;
-            --nav-bg: rgba(255,255,255,0.1);
+            --bg: #000000; --surface: #111111; --border: #222222; --text: #ffffff;
+            --dim: #888888; --accent: #00ff88; --error: #ff3b30; --nav-bg: rgba(255,255,255,0.1);
             --transition-speed: 0.3s;
         }
-
         [data-theme="light"] {
-            --bg: #ffffff;
-            --surface: #f5f5f5;
-            --border: #e0e0e0;
-            --text: #000000;
-            --dim: #666666;
-            --nav-bg: rgba(0,0,0,0.05);
+            --bg: #ffffff; --surface: #f5f5f5; --border: #e0e0e0; --text: #000000;
+            --dim: #666666; --accent: #00aa66; --error: #d70000; --nav-bg: rgba(0,0,0,0.05);
         }
-
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-        
         body, html {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: 'Inter', sans-serif;
+            background-color: var(--bg); color: var(--text); font-family: 'Inter', sans-serif;
             margin: 0; height: 100vh; width: 100vw; overflow: hidden;
             display: flex; justify-content: center; transition: background-color var(--transition-speed);
         }
-
-        .app-container {
-            width: 100%; max-width: 400px; height: 100%;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            padding: 20px; position: relative;
-        }
-
-        .top-nav {
-            position: absolute; top: 30px; width: 100%;
-            display: flex; justify-content: space-between;
-            padding: 0 20px; align-items: center; z-index: 1000;
-        }
-
+        .app-container { width: 100%; max-width: 400px; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; position: relative; }
+        
+        /* NAVIGATION */
+        .top-nav { position: absolute; top: 30px; width: 100%; display: flex; justify-content: space-between; padding: 0 20px; align-items: center; z-index: 1000; }
         .nav-group { display: flex; gap: 10px; }
-        .nav-icon-btn {
-            width: 44px; height: 44px; background: var(--nav-bg);
-            border-radius: 50%; display: flex; justify-content: center;
-            align-items: center; cursor: pointer; border: 1px solid var(--border);
-        }
+        .nav-icon-btn { width: 44px; height: 44px; background: var(--nav-bg); border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; border: 1px solid var(--border); }
         .nav-icon-btn svg { width: 20px; height: 20px; fill: var(--text); }
 
-        .screen { 
-            position: absolute; width: calc(100% - 40px);
-            opacity: 0; visibility: hidden; pointer-events: none;
-            text-align: center; display: flex; flex-direction: column; align-items: center;
-            transition: opacity var(--transition-speed) ease;
-        }
-
+        .screen { position: absolute; width: calc(100% - 40px); opacity: 0; visibility: hidden; pointer-events: none; text-align: center; display: flex; flex-direction: column; align-items: center; transition: opacity var(--transition-speed) ease; }
         .screen.active { opacity: 1; visibility: visible; pointer-events: auto; }
 
-        h1 { font-size: 4rem; font-weight: 900; letter-spacing: -3px; margin: 0; }
-        .tagline { color: var(--dim); text-transform: uppercase; letter-spacing: 2px; font-size: 0.7rem; margin-bottom: 20px; }
+        /* GAME UI */
+        .p-score { font-size: 5rem; font-weight: 900; margin: 0; line-height: 1; letter-spacing: -3px; transition: color 0.2s; }
+        .bust-flash { color: var(--error) !important; animation: shake 0.4s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+
+        .dart-strip { display: flex; gap: 10px; margin: 20px 0; }
+        .dart-box { width: 60px; height: 40px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; display: flex; justify-content: center; align-items: center; font-weight: 900; color: var(--accent); }
         
-        /* SCORE DISPLAY */
-        .p-score { font-size: 6rem; font-weight: 900; margin: 0; line-height: 1; letter-spacing: -4px; }
-        .input-preview { font-size: 2rem; color: var(--dim); height: 40px; margin-bottom: 10px; font-weight: 700; }
+        .multiplier-bar { display: flex; gap: 8px; margin-bottom: 15px; width: 100%; max-width: 320px; }
+        .m-btn { flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-weight: 700; font-size: 0.7rem; cursor: pointer; }
+        .m-btn.active { background: var(--text); color: var(--bg); border-color: var(--text); }
 
-        /* KEYPAD */
-        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; max-width: 320px; margin-top: 10px; }
-        .key { background: var(--surface); border: 1px solid var(--border); padding: 20px; border-radius: 15px; color: var(--text); font-size: 1.5rem; font-weight: 700; cursor: pointer; }
-        .key:active { background: var(--text); color: var(--bg); }
-        .key.action { background: var(--text); color: var(--bg); font-size: 0.9rem; border: none; }
-        .key.backspace { background: transparent; color: var(--dim); font-size: 0.8rem; }
+        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; max-width: 320px; }
+        .key { background: var(--surface); border: 1px solid var(--border); padding: 15px; border-radius: 12px; color: var(--text); font-size: 1.2rem; font-weight: 700; cursor: pointer; }
+        .key.action { background: var(--surface); color: var(--dim); border: 1px solid var(--border); font-size: 0.8rem; }
 
-        /* STEPPER & INPUTS */
-        .stepper-container { display: flex; align-items: center; gap: 30px; margin: 30px 0; }
-        .step-btn { width: 60px; height: 60px; border-radius: 50%; background: var(--surface); border: 1px solid var(--border); color: var(--text); font-size: 1.5rem; display: flex; justify-content: center; align-items: center; cursor: pointer; }
         .name-input { width: 100%; max-width: 320px; background: var(--surface); border: 1px solid var(--border); padding: 18px; border-radius: 15px; color: var(--text); margin-bottom: 12px; text-align: center; font-weight: 700; }
         .cta { width: 100%; max-width: 320px; padding: 18px; background: var(--text); color: var(--bg); border-radius: 50px; font-weight: 900; margin-top: 15px; text-transform: uppercase; border: none; cursor: pointer; }
     </style>
@@ -90,20 +57,14 @@
 <div class="app-container">
     <div class="top-nav">
         <div class="nav-group">
-            <div id="home-btn" class="nav-icon-btn" style="opacity: 0; pointer-events: none;" onclick="confirmGoHome()">
-                <svg viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
-            </div>
-            <div id="back-btn" class="nav-icon-btn" style="opacity: 0; pointer-events: none;" onclick="goBack()">
-                <svg viewBox="0 0 24 24"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" /></svg>
-            </div>
+            <div id="home-btn" class="nav-icon-btn" style="opacity:0" onclick="confirmGoHome()"><svg viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg></div>
+            <div id="back-btn" class="nav-icon-btn" style="opacity:0" onclick="goBack()"><svg viewBox="0 0 24 24"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" /></svg></div>
         </div>
-        <div class="nav-icon-btn" onclick="toggleTheme()">
-            <svg viewBox="0 0 24 24"><path d="M12,18C15.31,18 18,15.31 18,12C18,8.69 15.31,6 12,6V18M20,12.51V16.19L17.62,18.57L13.94,20.95H10.06L6.38,18.57L4,16.19V12.51L1.62,10.13L4,7.75V4.06L6.38,1.68H10.06L13.94,4.06L17.62,6.44V10.13L20,12.51Z" /></svg>
-        </div>
+        <div class="nav-icon-btn" onclick="toggleTheme()"><svg viewBox="0 0 24 24"><path d="M12,18C15.31,18 18,15.31 18,12C18,8.69 15.31,6 12,6V18M20,12.51V16.19L17.62,18.57L13.94,20.95H10.06L6.38,18.57L4,16.19V12.51L1.62,10.13L4,7.75V4.06L6.38,1.68H10.06L13.94,4.06L17.62,6.44V10.13L20,12.51Z" /></svg></div>
     </div>
 
     <div id="screen-welcome" class="screen active">
-        <h1>APEX<span style="color:var(--dim)">.</span></h1>
+        <h1 style="font-size:4rem; font-weight:900;">APEX<span style="color:var(--dim)">.</span></h1>
         <p class="tagline">Engineered by Sree</p>
         <div style="width:100px; height:100px; border:2px solid var(--text); border-radius:50%; display:flex; justify-content:center; align-items:center; font-weight:900; font-size:0.8rem; cursor:pointer;" onclick="navigateTo('screen-welcome', 'screen-mode')">START</div>
     </div>
@@ -116,10 +77,10 @@
 
     <div id="screen-players" class="screen">
         <p class="tagline">Players</p>
-        <div class="stepper-container">
-            <div class="step-btn" onclick="changeCount(-1)">–</div>
-            <div style="font-size: 5rem; font-weight: 900; min-width: 60px;" id="player-val">1</div>
-            <div class="step-btn" onclick="changeCount(1)">+</div>
+        <div style="display:flex; align-items:center; gap:30px; margin:30px 0;">
+            <div class="nav-icon-btn" onclick="changeCount(-1)">–</div>
+            <div style="font-size:5rem; font-weight:900;" id="player-val">1</div>
+            <div class="nav-icon-btn" onclick="changeCount(1)">+</div>
         </div>
         <button class="cta" onclick="submitPlayerCount()">Next</button>
     </div>
@@ -131,140 +92,143 @@
     </div>
 
     <div id="screen-game" class="screen">
-        <p class="tagline" id="game-mode-display">01 GAME</p>
-        <div id="player-name-display" style="font-weight: 700; color: var(--dim);">PLAYER 1</div>
+        <div id="player-name-display" style="font-weight:700; color:var(--dim); margin-bottom:5px;">PLAYER 1</div>
         <div class="p-score" id="score-display">301</div>
         
-        <div class="input-preview" id="key-preview">_</div>
+        <div class="dart-strip">
+            <div class="dart-box" id="dart-1">-</div>
+            <div class="dart-box" id="dart-2">-</div>
+            <div class="dart-box" id="dart-3">-</div>
+        </div>
+
+        <div class="multiplier-bar">
+            <button class="m-btn active" id="m1" onclick="setMultiplier(1)">SINGLE</button>
+            <button class="m-btn" id="m2" onclick="setMultiplier(2)">DOUBLE</button>
+            <button class="m-btn" id="m3" onclick="setMultiplier(3)">TRIPLE</button>
+        </div>
 
         <div class="keypad">
-            <button class="key" onclick="typeNum(1)">1</button>
-            <button class="key" onclick="typeNum(2)">2</button>
-            <button class="key" onclick="typeNum(3)">3</button>
-            <button class="key" onclick="typeNum(4)">4</button>
-            <button class="key" onclick="typeNum(5)">5</button>
-            <button class="key" onclick="typeNum(6)">6</button>
-            <button class="key" onclick="typeNum(7)">7</button>
-            <button class="key" onclick="typeNum(8)">8</button>
-            <button class="key" onclick="typeNum(9)">9</button>
-            <button class="key backspace" onclick="delNum()">DEL</button>
-            <button class="key" onclick="typeNum(0)">0</button>
-            <button class="key action" onclick="submitScore()">ENTER</button>
+            <button class="key" onclick="pressValue(1)">1</button><button class="key" onclick="pressValue(2)">2</button><button class="key" onclick="pressValue(3)">3</button>
+            <button class="key" onclick="pressValue(4)">4</button><button class="key" onclick="pressValue(5)">5</button><button class="key" onclick="pressValue(6)">6</button>
+            <button class="key" onclick="pressValue(7)">7</button><button class="key" onclick="pressValue(8)">8</button><button class="key" onclick="pressValue(9)">9</button>
+            <button class="key" onclick="pressValue(25)">25</button><button class="key" onclick="pressValue(0)">0</button><button class="key action" onclick="undoDart()">UNDO</button>
         </div>
+        <button class="cta" id="confirm-turn-btn" style="display:none; margin-top:10px;" onclick="confirmTurn()">Confirm Turn</button>
     </div>
 </div>
 
 <script>
-    let navStack = ['screen-welcome'];
-    let gMode = '01';
-    let pCount = 1;
-    let isRunning = false;
-    let currentInput = "";
-    let currentScore = 301;
+    let navStack=['screen-welcome'], gMode='01', pCount=1, isRunning=false;
+    let currentScore=301, multiplier=1, dartsThrown=[], playerNames=[];
 
     function navigateTo(cur, next) {
         document.getElementById(cur).classList.remove('active');
         document.getElementById(next).classList.add('active');
-        navStack.push(next);
-        updateNav();
+        navStack.push(next); updateNav();
     }
-
     function goBack() {
-        if (navStack.length <= 1) return;
-        let cur = navStack.pop();
-        let prev = navStack[navStack.length - 1];
+        if(navStack.length<=1) return;
+        let cur=navStack.pop(), prev=navStack[navStack.length-1];
         document.getElementById(cur).classList.remove('active');
         document.getElementById(prev).classList.add('active');
-        if (prev === 'screen-welcome') isRunning = false;
         updateNav();
     }
-
-    function confirmGoHome() {
-        if (isRunning && !confirm("Exit game? Score will be lost.")) return;
-        isRunning = false;
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    function confirmGoHome() { if(confirm("Stop the game? All scores will be lost.")) { isRunning=false; resetToHome(); } }
+    function resetToHome() {
+        document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
         document.getElementById('screen-welcome').classList.add('active');
-        navStack = ['screen-welcome'];
-        updateNav();
+        navStack=['screen-welcome']; updateNav();
     }
-
     function updateNav() {
-        const isH = navStack[navStack.length-1] === 'screen-welcome';
-        document.getElementById('home-btn').style.opacity = isH ? "0" : "1";
-        document.getElementById('home-btn').style.pointerEvents = isH ? "none" : "auto";
-        document.getElementById('back-btn').style.opacity = isH ? "0" : "1";
-        document.getElementById('back-btn').style.pointerEvents = isH ? "none" : "auto";
+        const isH = navStack[navStack.length-1]==='screen-welcome';
+        const btns = [document.getElementById('home-btn'), document.getElementById('back-btn')];
+        btns.forEach(b => {
+            b.style.opacity = isH ? "0" : "1";
+            b.style.pointerEvents = isH ? "none" : "auto";
+        });
     }
 
-    function setMode(m) {
-        gMode = m;
-        document.getElementById('game-mode-display').innerText = m === '01' ? '01 GAME' : 'CRICKET';
-        navigateTo('screen-mode', 'screen-players');
-    }
-
-    function changeCount(v) {
-        pCount = Math.max(1, Math.min(8, pCount + v));
-        document.getElementById('player-val').innerText = pCount;
-    }
-
+    function changeCount(v) { pCount=Math.max(1, Math.min(8, pCount+v)); document.getElementById('player-val').innerText=pCount; }
+    function setMode(m) { gMode=m; navigateTo('screen-mode', 'screen-players'); }
     function submitPlayerCount() {
-        const container = document.getElementById('name-container');
-        container.innerHTML = "";
-        for(let i=1; i<=pCount; i++) {
-            container.innerHTML += `<input type="text" class="name-input" id="input-p${i}" placeholder="Click to add name" autocomplete="off">`;
-        }
+        const c=document.getElementById('name-container'); c.innerHTML="";
+        for(let i=1; i<=pCount; i++) c.innerHTML+=`<input type="text" class="name-input" id="in-p${i}" placeholder="Click to add name" autocomplete="off">`;
         navigateTo('screen-players', 'screen-names');
     }
 
     function beginMatch() {
-        isRunning = true;
-        currentScore = (gMode === '01') ? 301 : 0;
-        document.getElementById('score-display').innerText = currentScore;
-        const name = document.getElementById('input-p1').value || "PLAYER 1";
-        document.getElementById('player-name-display').innerText = name.toUpperCase();
+        isRunning=true; dartsThrown=[];
+        currentScore=(gMode==='01')?301:0;
+        document.getElementById('score-display').innerText=currentScore;
+        const name=document.getElementById('in-p1').value || "PLAYER 1";
+        document.getElementById('player-name-display').innerText=name.toUpperCase();
         navigateTo('screen-names', 'screen-game');
     }
 
-    // KEYPAD LOGIC
-    function typeNum(n) {
-        if (currentInput.length < 3) {
-            currentInput += n;
-            document.getElementById('key-preview').innerText = currentInput;
+    function setMultiplier(m) {
+        multiplier = m;
+        document.querySelectorAll('.m-btn').forEach(b=>b.classList.remove('active'));
+        document.getElementById('m'+m).classList.add('active');
+    }
+
+    function pressValue(v) {
+        if(dartsThrown.length >= 3) return;
+        if(v === 25 && multiplier > 2) multiplier = 2;
+        let score = v * multiplier;
+        dartsThrown.push(score);
+        updateDartUI();
+        setMultiplier(1);
+    }
+
+    function undoDart() { dartsThrown.pop(); updateDartUI(); }
+
+    function updateDartUI() {
+        for(let i=1; i<=3; i++) {
+            const val = dartsThrown[i-1];
+            document.getElementById('dart-'+i).innerText = (val !== undefined) ? val : "-";
         }
+        document.getElementById('confirm-turn-btn').style.display = (dartsThrown.length === 3) ? "block" : "none";
     }
 
-    function delNum() {
-        currentInput = currentInput.slice(0, -1);
-        document.getElementById('key-preview').innerText = currentInput || "_";
-    }
+    function confirmTurn() {
+        let turnTotal = dartsThrown.reduce((a,b)=>a+b, 0);
+        let display = document.getElementById('score-display');
 
-    function submitScore() {
-        if (currentInput === "") return;
-        let points = parseInt(currentInput);
-        
-        if (gMode === '01') {
-            if (points <= 180 && (currentScore - points) >= 0) {
-                currentScore -= points;
+        if(gMode === '01') {
+            if(currentScore - turnTotal === 0) {
+                currentScore = 0;
+                display.innerText = "0";
+                setTimeout(() => { alert("WINNER!"); resetToHome(); }, 100);
+            } else if (currentScore - turnTotal < 2) {
+                // BUST: Score must leave at least 0 (and usually double out, but we'll keep it simple for now)
+                // If score goes to 1 or negative, it's a bust in pro rules
+                triggerBust();
             } else {
-                alert("Invalid Score!");
+                currentScore -= turnTotal;
+                display.innerText = currentScore;
             }
         } else {
-            currentScore += points;
+            currentScore += turnTotal;
+            display.innerText = currentScore;
         }
 
-        document.getElementById('score-display').innerText = currentScore;
-        currentInput = "";
-        document.getElementById('key-preview').innerText = "_";
+        dartsThrown = [];
+        updateDartUI();
+    }
+
+    function triggerBust() {
+        const display = document.getElementById('score-display');
+        const oldVal = display.innerText;
+        display.classList.add('bust-flash');
+        display.innerText = "BUST";
         
-        if (currentScore === 0 && gMode === '01') {
-            alert("Game Over! Winner!");
-            confirmGoHome();
-        }
+        setTimeout(() => {
+            display.classList.remove('bust-flash');
+            display.innerText = oldVal;
+        }, 1200);
     }
 
-    function toggleTheme() {
-        document.body.setAttribute('data-theme', document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
-    }
+    function toggleTheme() { document.body.setAttribute('data-theme', document.body.getAttribute('data-theme')==='dark'?'light':'dark'); }
 </script>
 </body>
 </html>
