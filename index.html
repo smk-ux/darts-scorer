@@ -22,7 +22,6 @@
         }
         .app-container { width: 100%; max-width: 400px; height: 100%; display: flex; flex-direction: column; padding: 20px; position: relative; }
         
-        /* SCREENS */
         .screen { position: absolute; top: 70px; left: 20px; right: 20px; bottom: 20px; opacity: 0; visibility: hidden; pointer-events: none; text-align: center; display: flex; flex-direction: column; transition: opacity 0.3s ease; }
         .screen.active { opacity: 1; visibility: visible; pointer-events: auto; }
 
@@ -30,32 +29,22 @@
         h1 { font-size: 4.5rem; font-weight: 900; margin: 0; line-height: 0.9; letter-spacing: -3px; }
         .subtitle { color: var(--dim); font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; margin-top: -5px; font-weight: 700; }
 
-        /* SCORING KEYPAD - GRID DESIGN */
-        .pro-keypad {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 6px;
-            margin-top: 10px;
-        }
-        .key { background: var(--surface); border: 1px solid var(--border); padding: 12px 0; border-radius: 8px; color: var(--text); font-size: 1rem; font-weight: 700; cursor: pointer; }
-        .key:active { background: var(--accent); color: #000; }
-        .key.special { grid-column: span 1; background: #1a1a1a; border-color: var(--accent); color: var(--accent); }
-        .key.miss { grid-column: span 1; color: var(--dim); }
+        /* CRICKET TABLE */
+        .cricket-grid { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 10px; margin-top: 10px; background: var(--surface); padding: 15px; border-radius: 12px; border: 1px solid var(--border); }
+        .cricket-row { display: contents; font-weight: 900; font-size: 1.2rem; }
+        .cricket-mark { color: var(--accent); font-size: 1.4rem; }
 
-        /* MULTIPLIER BUTTONS */
+        /* PRO KEYPAD */
+        .pro-keypad { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 10px; }
+        .key { background: var(--surface); border: 1px solid var(--border); padding: 12px 0; border-radius: 8px; color: var(--text); font-size: 1rem; font-weight: 700; cursor: pointer; }
+        .key.active-num { border-color: var(--accent); color: var(--accent); }
+
+        /* BUTTONS */
+        .cta { width: 100%; padding: 18px; background: var(--text); color: var(--bg); border-radius: 50px; font-weight: 900; text-transform: uppercase; border: none; cursor: pointer; }
         .m-bar { display: flex; gap: 6px; margin-bottom: 10px; }
         .m-btn { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-weight: 800; font-size: 0.7rem; text-transform: uppercase; cursor: pointer; }
         .m-btn.active { background: var(--text); color: var(--bg); }
-
-        /* DART TRACKER */
-        .dart-strip { display: flex; justify-content: center; gap: 8px; margin: 10px 0; }
-        .dart-box { width: 45px; height: 32px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; display: flex; justify-content: center; align-items: center; font-weight: 900; font-size: 0.8rem; color: var(--accent); }
-
-        /* BUTTONS & INPUTS */
-        .cta { width: 100%; padding: 18px; background: var(--text); color: var(--bg); border-radius: 50px; font-weight: 900; text-transform: uppercase; border: none; cursor: pointer; }
-        .name-input { width: 100%; background: var(--surface); border: 1px solid var(--border); padding: 16px; border-radius: 12px; color: var(--text); margin-bottom: 10px; text-align: center; font-size: 1rem; }
-        .scroll-v { width: 100%; overflow-y: auto; margin-bottom: 15px; padding-right: 5px; }
-
+        
         .top-nav { display: flex; justify-content: space-between; align-items: center; padding-top: 10px; z-index: 1000; }
         .nav-btn { width: 44px; height: 44px; background: var(--nav-bg); border-radius: 50%; display: flex; justify-content: center; align-items: center; border: 1px solid var(--border); cursor: pointer; }
     </style>
@@ -80,7 +69,6 @@
     </div>
 
     <div id="screen-players" class="screen" style="justify-content:center;">
-        <p style="font-size:0.7rem; color:var(--dim); text-transform:uppercase;">How many players?</p>
         <div style="display:flex; align-items:center; justify-content:center; gap:30px; margin:20px 0;">
             <div class="nav-btn" onclick="changeCount(-1)">–</div>
             <div style="font-size:5rem; font-weight:900;" id="player-val">1</div>
@@ -90,29 +78,29 @@
     </div>
 
     <div id="screen-names" class="screen">
-        <p style="font-size:0.7rem; color:var(--dim); text-transform:uppercase; margin-bottom:15px;">Add Names</p>
-        <div class="scroll-v" id="name-container"></div>
+        <div id="name-container" style="overflow-y:auto; margin-bottom:10px;"></div>
         <button class="cta" onclick="beginMatch()">Start Match</button>
     </div>
 
     <div id="screen-game" class="screen">
-        <div id="p-name" style="font-weight:700; color:var(--dim); font-size:0.8rem;">PLAYER 1</div>
-        <div style="font-size:4rem; font-weight:900;" id="score-display">301</div>
+        <div id="p-name" style="font-weight:700; color:var(--dim); font-size:0.8rem; text-transform:uppercase;">PLAYER 1</div>
         
-        <div class="dart-strip">
-            <div class="dart-box" id="dart-1">-</div>
-            <div class="dart-box" id="dart-2">-</div>
-            <div class="dart-box" id="dart-3">-</div>
+        <div id="01-ui">
+            <div style="font-size:4rem; font-weight:900;" id="score-display">301</div>
         </div>
 
-        <div class="m-bar">
-            <button class="m-btn active" id="m1" onclick="setMultiplier(1)">Single</button>
-            <button class="m-btn" id="m2" onclick="setMultiplier(2)">Double</button>
-            <button class="m-btn" id="m3" onclick="setMultiplier(3)">Triple</button>
+        <div id="cricket-ui" style="display:none;">
+            <div class="cricket-grid" id="cricket-board">
+                </div>
+        </div>
+        
+        <div class="m-bar" style="margin-top:10px;">
+            <button class="m-btn active" id="m1" onclick="setMultiplier(1)">S</button>
+            <button class="m-btn" id="m2" onclick="setMultiplier(2)">D</button>
+            <button class="m-btn" id="m3" onclick="setMultiplier(3)">T</button>
         </div>
 
-        <div class="pro-keypad" id="keypad">
-            </div>
+        <div class="pro-keypad" id="keypad"></div>
 
         <div style="display:flex; gap:10px; margin-top:15px;">
             <button class="cta" style="background:var(--surface); color:var(--dim); border:1px solid var(--border); flex:1;" onclick="undoDart()">Undo</button>
@@ -123,24 +111,22 @@
 
 <script>
     let gMode='01', pCount=1, currentScore=301, multiplier=1, dartsThrown=[];
+    let cricketHits = { 20:0, 19:0, 18:0, 17:0, 16:0, 15:0, 25:0 };
 
     window.onload = function() {
         const grid = document.getElementById('keypad');
-        // Arrange numbers for easy access (Darts layout)
         const nums = [20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1];
         nums.forEach(n => {
             const b = document.createElement('button');
-            b.className = 'key'; b.innerText = n;
+            b.className = 'key'; b.innerText = n; b.id = 'key-'+n;
             b.onclick = () => pressValue(n);
             grid.appendChild(b);
         });
-        // Bullseye
         const bull = document.createElement('button');
-        bull.className = 'key special'; bull.innerText = 'BULL'; bull.onclick = () => pressValue(25);
+        bull.className = 'key'; bull.innerText = 'BULL'; bull.onclick = () => pressValue(25);
         grid.appendChild(bull);
-        // Miss (0)
         const miss = document.createElement('button');
-        miss.className = 'key miss'; miss.innerText = '0'; miss.onclick = () => pressValue(0);
+        miss.className = 'key'; miss.innerText = '0'; miss.onclick = () => pressValue(0);
         grid.appendChild(miss);
     };
 
@@ -150,24 +136,29 @@
         document.getElementById('home-btn').style.opacity = (next === 'screen-welcome') ? "0" : "1";
     }
 
-    function setMode(m) { gMode=m; navigateTo('screen-mode', 'screen-players'); }
+    function setMode(m) { 
+        gMode=m; 
+        document.getElementById('01-ui').style.display = (m==='01') ? 'block' : 'none';
+        document.getElementById('cricket-ui').style.display = (m==='cricket') ? 'block' : 'none';
+        
+        // Highlight active Cricket numbers on keypad
+        const cricketNums = [20,19,18,17,16,15,25];
+        document.querySelectorAll('.key').forEach(k => k.classList.remove('active-num'));
+        if(m === 'cricket') {
+            cricketNums.forEach(n => { if(document.getElementById('key-'+n)) document.getElementById('key-'+n).classList.add('active-num'); });
+            updateCricketBoard();
+        }
+        navigateTo('screen-mode', 'screen-players'); 
+    }
+
     function changeCount(v) { pCount=Math.max(1, Math.min(8, pCount+v)); document.getElementById('player-val').innerText=pCount; }
-    
     function submitPlayerCount() {
         const c=document.getElementById('name-container'); c.innerHTML="";
-        for(let i=1; i<=pCount; i++) {
-            c.innerHTML += `<input type="text" class="name-input" id="in-p${i}" placeholder="Name ${i}" autocomplete="off">`;
-        }
+        for(let i=1; i<=pCount; i++) c.innerHTML += `<input type="text" class="name-input" id="in-p${i}" placeholder="Name ${i}" style="width:100%; background:var(--surface); border:1px solid var(--border); padding:16px; border-radius:12px; color:var(--text); margin-bottom:10px; text-align:center;">`;
         navigateTo('screen-players', 'screen-names');
     }
 
-    function beginMatch() {
-        currentScore = (gMode === '01') ? 301 : 0;
-        document.getElementById('score-display').innerText = currentScore;
-        const name = document.getElementById('in-p1').value || "PLAYER 1";
-        document.getElementById('p-name').innerText = name.toUpperCase();
-        navigateTo('screen-names', 'screen-game');
-    }
+    function beginMatch() { navigateTo('screen-names', 'screen-game'); }
 
     function setMultiplier(m) {
         multiplier = m;
@@ -177,16 +168,13 @@
 
     function pressValue(v) {
         if(dartsThrown.length >= 3) return;
-        if(v === 25 && multiplier === 3) multiplier = 2; // Rules: Triple Bull is rare/non-existent
-        dartsThrown.push(v * multiplier);
+        if(v === 25 && multiplier === 3) multiplier = 2;
+        dartsThrown.push({val: v, mult: multiplier});
         updateUI();
         setMultiplier(1);
     }
 
-    function undoDart() { dartsThrown.pop(); updateUI(); }
-
     function updateUI() {
-        for(let i=1; i<=3; i++) document.getElementById('dart-'+i).innerText = (dartsThrown[i-1] !== undefined) ? dartsThrown[i-1] : "-";
         const ready = (dartsThrown.length === 3);
         const cBtn = document.getElementById('confirm-btn');
         cBtn.style.opacity = ready ? "1" : "0.3";
@@ -194,18 +182,44 @@
     }
 
     function confirmTurn() {
-        let total = dartsThrown.reduce((a,b)=>a+b, 0);
-        if(gMode === '01') {
-            if(currentScore - total < 0 || currentScore - total === 1) { 
-                alert("BUST!"); 
-            } else { currentScore -= total; }
-        } else { currentScore += total; }
-        document.getElementById('score-display').innerText = currentScore;
+        dartsThrown.forEach(d => {
+            let total = d.val * d.mult;
+            if(gMode === '01') {
+                currentScore -= total;
+            } else {
+                if(cricketHits.hasOwnProperty(d.val)) {
+                    cricketHits[d.val] += d.mult;
+                }
+            }
+        });
+
+        if(gMode === '01') document.getElementById('score-display').innerText = currentScore;
+        else updateCricketBoard();
+
         dartsThrown = [];
         updateUI();
-        if(currentScore === 0) { alert("WINNER!"); location.reload(); }
     }
 
+    function updateCricketBoard() {
+        const board = document.getElementById('cricket-board');
+        board.innerHTML = "";
+        const targets = [20, 19, 18, 17, 16, 15, 25];
+        targets.forEach(t => {
+            let hits = cricketHits[t];
+            let mark = "";
+            if(hits === 1) mark = "/";
+            if(hits === 2) mark = "X";
+            if(hits >= 3) mark = "⊗";
+            
+            board.innerHTML += `
+                <div class="cricket-mark">${mark}</div>
+                <div style="color:var(--dim)">${t === 25 ? 'BULL' : t}</div>
+                <div style="color:var(--accent)">${hits > 3 ? (hits-3)*t : 0}</div>
+            `;
+        });
+    }
+
+    function undoDart() { dartsThrown.pop(); updateUI(); }
     function toggleTheme() { document.body.setAttribute('data-theme', document.body.getAttribute('data-theme')==='dark'?'light':'dark'); }
 </script>
 </body>
