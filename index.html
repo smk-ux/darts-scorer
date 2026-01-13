@@ -2,10 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Darts. | Pro Scorer</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    
     <style>
         :root {
             --main-bg: #0a0c10;
@@ -14,6 +13,8 @@
             --accent: #3b82f6; 
             --text-main: #ffffff;
             --text-dim: #6b7280;
+            --danger: #ef4444;
+            --success: #22c55e;
         }
 
         body {
@@ -23,187 +24,195 @@
             margin: 0;
             display: flex;
             justify-content: center;
-            align-items: center;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        .app-viewport {
-            width: 100%;
-            max-width: 380px;
-            padding: 20px;
-        }
+        .app-container { width: 100%; max-width: 400px; padding: 20px; }
 
+        /* SHARED GLASS STYLE */
         .glass-card {
             background: var(--glass);
             backdrop-filter: blur(10px);
             border: 1px solid var(--glass-border);
-            border-radius: 40px;
-            padding: 40px 30px;
-            text-align: center;
+            border-radius: 35px;
+            padding: 30px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         }
 
-        header { margin-bottom: 40px; }
-        .subtitle { color: var(--accent); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; }
-        h1 { font-size: 2.5rem; margin: 0; font-weight: 800; }
+        /* --- SETUP SCREEN --- */
+        header { text-align: center; margin-bottom: 30px; }
+        .subtitle { color: var(--accent); font-weight: 600; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; }
+        h1 { font-size: 2.2rem; margin: 0; font-weight: 800; }
         .dot { color: var(--accent); }
 
-        .selection-group { margin-bottom: 35px; text-align: left; }
-        label { color: var(--text-dim); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; margin-left: 15px; margin-bottom: 12px; display: block; }
+        .selection-group { margin-bottom: 25px; }
+        label { color: var(--text-dim); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; margin-bottom: 10px; display: block; padding-left: 10px; }
 
-        .pill-toggle {
-            background: rgba(255,255,255,0.05);
-            padding: 5px;
-            border-radius: 100px;
-            display: flex;
-        }
-        .pill-btn {
-            flex: 1;
-            background: transparent;
-            border: none;
-            color: var(--text-dim);
-            padding: 12px;
-            border-radius: 100px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .pill-btn.active {
-            background: var(--text-main);
-            color: var(--main-bg);
-        }
+        .pill-toggle { background: rgba(255,255,255,0.05); padding: 5px; border-radius: 100px; display: flex; }
+        .pill-btn { flex: 1; background: transparent; border: none; color: var(--text-dim); padding: 10px; border-radius: 100px; font-weight: 600; cursor: pointer; }
+        .pill-btn.active { background: var(--text-main); color: var(--main-bg); }
 
-        .circle-grid { display: flex; justify-content: space-between; gap: 10px; }
-        .circle-btn {
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            color: var(--text-main);
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .circle-btn.active {
-            border-color: var(--accent);
-            background: rgba(59, 130, 246, 0.1);
-            color: var(--accent);
-        }
+        .circle-grid { display: flex; justify-content: space-around; }
+        .circle-btn { width: 50px; height: 50px; border-radius: 50%; background: var(--glass); border: 1px solid var(--glass-border); color: white; font-weight: bold; cursor: pointer; }
+        .circle-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(59, 130, 246, 0.1); }
 
-        .option-row { display: flex; gap: 10px; }
-        .option-item {
-            flex: 1;
-            padding: 15px;
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            text-align: center;
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .option-item.active {
-            border-color: var(--accent);
-            background: rgba(59, 130, 246, 0.1);
-        }
+        .cta-button { width: 100%; padding: 18px; border-radius: 20px; border: none; background: var(--accent); color: white; font-weight: 700; font-size: 1.1rem; cursor: pointer; margin-top: 10px; }
 
-        .cta-button {
-            width: 100%;
-            padding: 18px;
-            border-radius: 20px;
-            border: none;
-            background: var(--accent);
-            color: white;
-            font-weight: 700;
-            font-size: 1.1rem;
-            margin-top: 10px;
-            cursor: pointer;
-            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
-            transition: transform 0.2s;
-        }
-        .cta-button:active { transform: scale(0.98); }
+        /* --- SCOREBOARD SCREEN --- */
+        #scoreboard-screen { display: none; text-align: center; }
+        .score-display { font-size: 5rem; font-weight: 800; margin: 20px 0; color: var(--text-main); transition: 0.3s; }
+        .player-name { font-size: 1.2rem; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; }
+        
+        .input-preview { height: 40px; font-size: 1.5rem; color: var(--text-dim); margin-bottom: 20px; font-weight: 600; }
+        
+        /* KEYPAD */
+        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .key { background: var(--glass); border: 1px solid var(--glass-border); padding: 20px; border-radius: 15px; color: white; font-size: 1.5rem; font-weight: 600; cursor: pointer; }
+        .key:active { background: rgba(255,255,255,0.1); }
+        .key.enter { background: var(--accent); grid-column: span 2; }
+        .key.clear { color: var(--danger); }
 
-        footer { margin-top: 30px; font-size: 0.7rem; color: var(--text-dim); }
-        footer a { color: var(--accent); text-decoration: none; }
+        .history { margin-top: 20px; font-size: 0.8rem; color: var(--text-dim); }
     </style>
 </head>
 <body>
 
-    <div class="app-viewport">
-        <div class="glass-card">
-            <header>
-                <p class="subtitle">Game Setup</p>
-                <h1>Darts<span class="dot">.</span></h1>
-            </header>
+<div class="app-container">
+    <div id="setup-screen" class="glass-card">
+        <header>
+            <p class="subtitle">Championship Scorer</p>
+            <h1>Darts<span class="dot">.</span></h1>
+        </header>
 
-            <div class="selection-group">
-                <label>Game Mode</label>
-                <div class="pill-toggle">
-                    <button class="pill-btn active" onclick="toggleMain(this, '01')">301 / 501</button>
-                    <button class="pill-btn" onclick="toggleMain(this, 'cricket')">Cricket</button>
-                </div>
+        <div class="selection-group">
+            <label>Points</label>
+            <div class="pill-toggle">
+                <button class="pill-btn active" onclick="setInitial(301, this)">301</button>
+                <button class="pill-btn" onclick="setInitial(501, this)">501</button>
             </div>
-
-            <div class="selection-group">
-                <label>Players</label>
-                <div class="circle-grid">
-                    <button class="circle-btn active" onclick="toggleActive(this)">1</button>
-                    <button class="circle-btn" onclick="toggleActive(this)">2</button>
-                    <button class="circle-btn" onclick="toggleActive(this)">3</button>
-                    <button class="circle-btn" onclick="toggleActive(this)">4</button>
-                </div>
-            </div>
-
-            <div class="selection-group">
-                <label id="rule-label">Rules</label>
-                <div class="option-row" id="rule-options">
-                    <div class="option-item active" onclick="toggleActive(this)">
-                        <span>Straight Out</span>
-                    </div>
-                    <div class="option-item" onclick="toggleActive(this)">
-                        <span>Double Out</span>
-                    </div>
-                </div>
-            </div>
-
-            <button class="cta-button" onclick="startMatch()">Start Match</button>
-            
-            <footer>
-                Created by Sree | <a href="mailto:sreekuttanmk95@gmail.com">Feedback</a>
-            </footer>
         </div>
+
+        <div class="selection-group">
+            <label>Players</label>
+            <div class="circle-grid">
+                <button class="circle-btn active" onclick="setPlayers(1, this)">1</button>
+                <button class="circle-btn" onclick="setPlayers(2, this)">2</button>
+            </div>
+        </div>
+
+        <button class="cta-button" onclick="launchGame()">Start Match</button>
     </div>
 
-    <script>
-        // Toggle Active for buttons in a group
-        function toggleActive(element) {
-            const parent = element.parentElement;
-            parent.querySelectorAll('.active').forEach(el => el.classList.remove('active'));
-            element.classList.add('active');
+    <div id="scoreboard-screen">
+        <div class="glass-card">
+            <div class="player-name" id="display-player">Player 1</div>
+            <div class="score-display" id="main-score">501</div>
+            <div class="input-preview" id="current-input">_</div>
+            
+            <div class="keypad">
+                <button class="key" onclick="press(1)">1</button>
+                <button class="key" onclick="press(2)">2</button>
+                <button class="key" onclick="press(3)">3</button>
+                <button class="key" onclick="press(4)">4</button>
+                <button class="key" onclick="press(5)">5</button>
+                <button class="key" onclick="press(6)">6</button>
+                <button class="key" onclick="press(7)">7</button>
+                <button class="key" onclick="press(8)">8</button>
+                <button class="key" onclick="press(9)">9</button>
+                <button class="key clear" onclick="clearInput()">C</button>
+                <button class="key" onclick="press(0)">0</button>
+                <button class="key enter" onclick="submitScore()">ENTER</button>
+            </div>
+            
+            <div class="history" id="history-log">Waiting for first throw...</div>
+            <button style="background:transparent; border:none; color:var(--text-dim); margin-top:20px; cursor:pointer;" onclick="location.reload()">Quit Game</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // GAME STATE
+    let startingScore = 301;
+    let playerCount = 1;
+    let scores = [301];
+    let currentPlayer = 0;
+    let tempInput = "";
+
+    // SETUP FUNCTIONS
+    function setInitial(val, btn) {
+        startingScore = val;
+        toggleUI(btn);
+    }
+
+    function setPlayers(val, btn) {
+        playerCount = val;
+        toggleUI(btn);
+    }
+
+    function toggleUI(btn) {
+        btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    function launchGame() {
+        // Initialize scores for all players
+        scores = Array(playerCount).fill(startingScore);
+        document.getElementById('setup-screen').style.display = 'none';
+        document.getElementById('scoreboard-screen').style.display = 'block';
+        updateDisplay();
+    }
+
+    // SCORING FUNCTIONS
+    function press(num) {
+        if (tempInput.length < 3) {
+            tempInput += num;
+            document.getElementById('current-input').innerText = tempInput;
+        }
+    }
+
+    function clearInput() {
+        tempInput = "";
+        document.getElementById('current-input').innerText = "_";
+    }
+
+    function submitScore() {
+        let points = parseInt(tempInput);
+        
+        if (isNaN(points)) return;
+        if (points > 180) {
+            alert("Maximum score is 180!");
+            clearInput();
+            return;
         }
 
-        // Specific toggle for Game Type (changes rules text)
-        function toggleMain(element, type) {
-            toggleActive(element);
-            const ruleLabel = document.getElementById('rule-label');
-            const ruleOptions = document.getElementById('rule-options');
+        let currentTotal = scores[currentPlayer];
+        let newTotal = currentTotal - points;
 
-            if (type === 'cricket') {
-                ruleLabel.innerText = "Cricket Style";
-                ruleOptions.innerHTML = `
-                    <div class="option-item active" onclick="toggleActive(this)"><span>Standard</span></div>
-                    <div class="option-item" onclick="toggleActive(this)"><span>Cut-Throat</span></div>
-                `;
-            } else {
-                ruleLabel.innerText = "Rules";
-                ruleOptions.innerHTML = `
-                    <div class="option-item active" onclick="toggleActive(this)"><span>Straight Out</span></div>
-                    <div class="option-item" onclick="toggleActive(this)"><span>Double Out</span></div>
-                `;
+        // BUST LOGIC
+        if (newTotal < 0 || newTotal === 1) {
+            alert("BUST!");
+        } else {
+            scores[currentPlayer] = newTotal;
+            if (newTotal === 0) {
+                alert("PLAYER " + (currentPlayer + 1) + " WINS!");
+                location.reload();
             }
         }
 
-        function startMatch() {
-            alert("Ready to play
+        // Switch Player
+        currentPlayer = (currentPlayer + 1) % playerCount;
+        tempInput = "";
+        updateDisplay();
+    }
+
+    function updateDisplay() {
+        document.getElementById('main-score').innerText = scores[currentPlayer];
+        document.getElementById('display-player').innerText = "Player " + (currentPlayer + 1);
+        document.getElementById('current-input').innerText = "_";
+        document.getElementById('history-log').innerText = "Next throw: Player " + (currentPlayer + 1);
+    }
+</script>
+
+</body>
+</html>
