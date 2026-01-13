@@ -25,20 +25,17 @@
         }
         .screen { 
             display: none; flex-direction: column; height: 100%; width: 100%; 
-            padding-bottom: 80px; /* Space for the bottom button */
+            padding-bottom: 80px;
         }
         .screen.active { display: flex; }
 
-        /* HEADER */
         .top-nav { display: flex; justify-content: space-between; align-items: center; height: 50px; flex-shrink: 0; }
         .nav-btn { width: 40px; height: 40px; background: var(--nav-bg); border-radius: 50%; display: flex; justify-content: center; align-items: center; border: 1px solid var(--border); }
 
-        /* BRANDING */
         .brand-group { margin: 40px 0; text-align: center; }
         h1 { font-size: 3rem; font-weight: 900; line-height: 0.9; letter-spacing: -2px; text-transform: uppercase; }
         .subtitle { color: var(--dim); font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; margin-top: 5px; font-weight: 700; }
 
-        /* BUTTONS - FIXED POSITIONING */
         .bottom-action {
             position: absolute; bottom: 20px; left: 10px; right: 10px; display: flex; flex-direction: column; gap: 10px;
         }
@@ -48,13 +45,22 @@
         }
         .cta-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
 
-        /* SCORER SPECIFIC */
+        .center-action {
+            flex-grow: 1; display: flex; align-items: center; justify-content: center; width: 100%;
+        }
+
         .pro-keypad { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-top: auto; }
         .key { background: var(--surface); border: 1px solid var(--border); padding: 12px 0; border-radius: 8px; color: var(--text); font-size: 1rem; font-weight: 700; }
         .m-bar { display: flex; gap: 5px; margin: 10px 0; }
         .m-btn { flex: 1; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-weight: 800; font-size: 0.7rem; }
         .m-btn.active { background: var(--text); color: var(--bg); }
-        .cricket-grid { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 5px; background: var(--surface); padding: 10px; border-radius: 12px; }
+        
+        /* UPDATED CRICKET BOARD DESIGN */
+        .cricket-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; background: var(--surface); padding: 15px; border-radius: 16px; border: 1px solid var(--border); }
+        .c-head { color: var(--dim); font-size: 0.6rem; text-transform: uppercase; font-weight: 800; margin-bottom: 5px; }
+        .c-val { font-size: 1.2rem; font-weight: 900; color: var(--accent); }
+        .c-num { font-weight: 800; border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
+
         .name-entry-row { display: flex; gap: 10px; margin-bottom: 10px; background: var(--surface); border: 1px solid var(--border); padding: 5px 10px; border-radius: 12px; }
         .name-input { flex: 1; background: transparent; border: none; padding: 10px; color: var(--text); font-size: 1rem; }
     </style>
@@ -67,12 +73,14 @@
         <div class="nav-btn" onclick="toggleTheme()"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12,18C15.31,18 18,15.31 18,12C18,8.69 15.31,6 12,6V18M20,12.51V16.19L17.62,18.57L13.94,20.95H10.06L6.38,18.57L4,16.19V12.51L1.62,10.13L4,7.75V4.06L6.38,1.68H10.06L13.94,4.06L17.62,6.44V10.13L20,12.51Z"/></svg></div>
     </div>
 
-    <div id="screen-welcome" class="screen active">
+    <div id="screen-welcome" class="screen active" style="padding-bottom: 0;">
         <div class="brand-group">
             <h1>THE DARTS<br><span style="color:var(--accent)">SCORER</span></h1>
             <p class="subtitle">ENGINEERED BY SREE</p>
         </div>
-        <div class="bottom-action"><button class="cta" onclick="navigateTo('screen-welcome', 'screen-mode')">Start Game</button></div>
+        <div class="center-action">
+            <button class="cta" style="width: 80%;" onclick="navigateTo('screen-welcome', 'screen-mode')">Start Game</button>
+        </div>
     </div>
 
     <div id="screen-mode" class="screen">
@@ -101,8 +109,16 @@
 
     <div id="screen-game" class="screen" style="padding-bottom:140px;">
         <div id="p-name" style="font-weight:700; color:var(--dim); font-size:0.8rem; text-transform:uppercase; margin-bottom:5px;">PLAYER 1</div>
+        
         <div id="01-ui"><div style="font-size:3.5rem; font-weight:900;" id="score-display">301</div></div>
-        <div id="cricket-ui" style="display:none;"><div class="cricket-grid" id="cricket-board"></div></div>
+        
+        <div id="cricket-ui" style="display:none;">
+            <div class="cricket-grid">
+                <div class="c-head">Mark</div><div class="c-head">Target</div><div class="c-head">Score</div>
+                <div id="cricket-board" style="display: contents;"></div>
+            </div>
+        </div>
+
         <div class="m-bar">
             <button class="m-btn active" id="m1" onclick="setMultiplier(1)">S</button>
             <button class="m-btn" id="m2" onclick="setMultiplier(2)">D</button>
@@ -143,6 +159,7 @@
         document.getElementById(cur).style.display = 'none';
         document.getElementById(next).style.display = 'flex';
         history.push(next); updateBack();
+        if(next === 'screen-game' && gMode === 'cricket') updateCricketBoard();
     }
 
     function goBack() {
@@ -159,30 +176,60 @@
         document.getElementById('back-btn').style.visibility = (cur==='screen-welcome'||cur==='screen-summary') ? "hidden" : "visible";
     }
 
-    function setMode(m) { gMode=m; navigateTo('screen-mode', 'screen-players'); }
+    function setMode(m) { 
+        gMode=m; 
+        document.getElementById('01-ui').style.display = (m==='01')?'block':'none';
+        document.getElementById('cricket-ui').style.display = (m==='cricket')?'block':'none';
+        navigateTo('screen-mode', 'screen-players'); 
+    }
+    
     function changeCount(v) { pCount=Math.max(1, Math.min(8, pCount+v)); document.getElementById('player-val').innerText=pCount; }
+    
     function submitPlayerCount() {
         const c = document.getElementById('name-container'); c.innerHTML = "";
         for(let i=1; i<=pCount; i++) c.innerHTML += `<div class="name-entry-row"><input type="text" class="name-input" id="in-p${i}" placeholder="Player ${i}"></div>`;
         navigateTo('screen-players', 'screen-names');
     }
-    function beginMatch() { pName = (document.getElementById('in-p1').value || "PLAYER 1").toUpperCase(); document.getElementById('p-name').innerText = pName; navigateTo('screen-names', 'screen-game'); }
+    
+    function beginMatch() { 
+        pName = (document.getElementById('in-p1').value || "PLAYER 1").toUpperCase(); 
+        document.getElementById('p-name').innerText = pName; 
+        navigateTo('screen-names', 'screen-game'); 
+    }
+    
     function setMultiplier(m) { multiplier = m; document.querySelectorAll('.m-btn').forEach(b => b.classList.remove('active')); document.getElementById('m'+m).classList.add('active'); }
+    
     function pressValue(v) { if(dartsThrown.length<3){ if(v===25 && multiplier===3) multiplier=2; dartsThrown.push({v, m:multiplier}); updateUI(); setMultiplier(1); }}
+    
     function updateUI() { const cBtn = document.getElementById('confirm-btn'); cBtn.style.opacity = (dartsThrown.length === 3) ? "1" : "0.3"; cBtn.style.pointerEvents = (dartsThrown.length === 3) ? "auto" : "none"; }
+    
     function confirmTurn() {
-        dartsThrown.forEach(d => { if(gMode === '01') currentScore -= (d.v * d.m); else if(cricketHits.hasOwnProperty(d.v)) cricketHits[d.v] += d.m; });
-        if(gMode === '01') { document.getElementById('score-display').innerText = currentScore; if(currentScore <= 0) showSummary(); }
-        else { updateCricketBoard(); if(Object.values(cricketHits).every(h => h >= 3)) showSummary(); }
+        dartsThrown.forEach(d => { 
+            if(gMode === '01') currentScore -= (d.v * d.m); 
+            else if(cricketHits.hasOwnProperty(d.v)) cricketHits[d.v] += d.m; 
+        });
+        if(gMode === '01') { 
+            document.getElementById('score-display').innerText = currentScore; 
+            if(currentScore <= 0) showSummary(); 
+        } else { 
+            updateCricketBoard(); 
+            if(Object.values(cricketHits).every(h => h >= 3)) showSummary(); 
+        }
         dartsThrown = []; updateUI();
     }
+
+    
+
     function updateCricketBoard() {
         const board = document.getElementById('cricket-board'); board.innerHTML = "";
         [20,19,18,17,16,15,25].forEach(t => {
-            let h = cricketHits[t], m = h === 1 ? "/" : h === 2 ? "X" : h >= 3 ? "⊗" : "";
-            board.innerHTML += `<div>${m}</div><div>${t==25?'BULL':t}</div><div>${h>3?(h-3)*t:0}</div>`;
+            let h = cricketHits[t];
+            let mark = h === 1 ? "/" : h === 2 ? "X" : h >= 3 ? "⊗" : "";
+            let score = h > 3 ? (h - 3) * t : 0;
+            board.innerHTML += `<div class="c-val">${mark}</div><div class="c-num">${t==25?'BULL':t}</div><div class="c-val" style="color:var(--text); opacity:0.6">${score}</div>`;
         });
     }
+
     function showSummary() { document.getElementById('winner-name').innerText = pName; navigateTo('screen-game', 'screen-summary'); }
     function undoDart() { dartsThrown.pop(); updateUI(); }
     function toggleTheme() { document.body.setAttribute('data-theme', document.body.getAttribute('data-theme')==='dark'?'light':'dark'); }
