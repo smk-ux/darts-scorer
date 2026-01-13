@@ -14,7 +14,6 @@
             --text-main: #ffffff;
             --text-dim: #6b7280;
             --danger: #ef4444;
-            --success: #22c55e;
         }
 
         body {
@@ -30,7 +29,6 @@
 
         .app-container { width: 100%; max-width: 400px; padding: 20px; }
 
-        /* SHARED GLASS STYLE */
         .glass-card {
             background: var(--glass);
             backdrop-filter: blur(10px);
@@ -38,181 +36,37 @@
             border-radius: 35px;
             padding: 30px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            text-align: center;
         }
 
         /* --- SETUP SCREEN --- */
-        header { text-align: center; margin-bottom: 30px; }
+        header { margin-bottom: 30px; }
         .subtitle { color: var(--accent); font-weight: 600; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; }
         h1 { font-size: 2.2rem; margin: 0; font-weight: 800; }
         .dot { color: var(--accent); }
 
-        .selection-group { margin-bottom: 25px; }
+        .selection-group { margin-bottom: 25px; text-align: left; }
         label { color: var(--text-dim); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; margin-bottom: 10px; display: block; padding-left: 10px; }
 
         .pill-toggle { background: rgba(255,255,255,0.05); padding: 5px; border-radius: 100px; display: flex; }
-        .pill-btn { flex: 1; background: transparent; border: none; color: var(--text-dim); padding: 10px; border-radius: 100px; font-weight: 600; cursor: pointer; }
+        .pill-btn { flex: 1; background: transparent; border: none; color: var(--text-dim); padding: 12px; border-radius: 100px; font-weight: 600; cursor: pointer; }
         .pill-btn.active { background: var(--text-main); color: var(--main-bg); }
 
         .circle-grid { display: flex; justify-content: space-around; }
-        .circle-btn { width: 50px; height: 50px; border-radius: 50%; background: var(--glass); border: 1px solid var(--glass-border); color: white; font-weight: bold; cursor: pointer; }
+        .circle-btn { width: 55px; height: 55px; border-radius: 50%; background: var(--glass); border: 1px solid var(--glass-border); color: white; font-weight: bold; cursor: pointer; }
         .circle-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(59, 130, 246, 0.1); }
 
-        .cta-button { width: 100%; padding: 18px; border-radius: 20px; border: none; background: var(--accent); color: white; font-weight: 700; font-size: 1.1rem; cursor: pointer; margin-top: 10px; }
+        .cta-button { width: 100%; padding: 18px; border-radius: 20px; border: none; background: var(--accent); color: white; font-weight: 700; font-size: 1.1rem; cursor: pointer; margin-top: 10px; box-shadow: 0 10px 20px rgba(59, 130, 246, 0.2); }
 
         /* --- SCOREBOARD SCREEN --- */
-        #scoreboard-screen { display: none; text-align: center; }
-        .score-display { font-size: 5rem; font-weight: 800; margin: 20px 0; color: var(--text-main); transition: 0.3s; }
-        .player-name { font-size: 1.2rem; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; }
+        #scoreboard-screen { display: none; }
+        .score-display { font-size: 5.5rem; font-weight: 800; margin: 10px 0; color: var(--text-main); }
+        .player-name { font-size: 1rem; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; font-weight: 600; }
+        .input-preview { height: 40px; font-size: 1.8rem; color: var(--text-dim); margin-bottom: 20px; font-weight: 700; border-bottom: 2px solid var(--glass-border); display: inline-block; min-width: 60px; }
         
-        .input-preview { height: 40px; font-size: 1.5rem; color: var(--text-dim); margin-bottom: 20px; font-weight: 600; }
-        
-        /* KEYPAD */
+        /* KEYPAD - ENTER IN MIDDLE */
         .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-        .key { background: var(--glass); border: 1px solid var(--glass-border); padding: 20px; border-radius: 15px; color: white; font-size: 1.5rem; font-weight: 600; cursor: pointer; }
-        .key:active { background: rgba(255,255,255,0.1); }
-        .key.enter { background: var(--accent); grid-column: span 2; }
-        .key.clear { color: var(--danger); }
-
-        .history { margin-top: 20px; font-size: 0.8rem; color: var(--text-dim); }
-    </style>
-</head>
-<body>
-
-<div class="app-container">
-    <div id="setup-screen" class="glass-card">
-        <header>
-            <p class="subtitle">Championship Scorer</p>
-            <h1>Darts<span class="dot">.</span></h1>
-        </header>
-
-        <div class="selection-group">
-            <label>Points</label>
-            <div class="pill-toggle">
-                <button class="pill-btn active" onclick="setInitial(301, this)">301</button>
-                <button class="pill-btn" onclick="setInitial(501, this)">501</button>
-            </div>
-        </div>
-
-        <div class="selection-group">
-            <label>Players</label>
-            <div class="circle-grid">
-                <button class="circle-btn active" onclick="setPlayers(1, this)">1</button>
-                <button class="circle-btn" onclick="setPlayers(2, this)">2</button>
-            </div>
-        </div>
-
-        <button class="cta-button" onclick="launchGame()">Start Match</button>
-    </div>
-
-    <div id="scoreboard-screen">
-        <div class="glass-card">
-            <div class="player-name" id="display-player">Player 1</div>
-            <div class="score-display" id="main-score">501</div>
-            <div class="input-preview" id="current-input">_</div>
-            
-            <div class="keypad">
-                <button class="key" onclick="press(1)">1</button>
-                <button class="key" onclick="press(2)">2</button>
-                <button class="key" onclick="press(3)">3</button>
-                <button class="key" onclick="press(4)">4</button>
-                <button class="key" onclick="press(5)">5</button>
-                <button class="key" onclick="press(6)">6</button>
-                <button class="key" onclick="press(7)">7</button>
-                <button class="key" onclick="press(8)">8</button>
-                <button class="key" onclick="press(9)">9</button>
-                <button class="key clear" onclick="clearInput()">C</button>
-                <button class="key" onclick="press(0)">0</button>
-                <button class="key enter" onclick="submitScore()">ENTER</button>
-            </div>
-            
-            <div class="history" id="history-log">Waiting for first throw...</div>
-            <button style="background:transparent; border:none; color:var(--text-dim); margin-top:20px; cursor:pointer;" onclick="location.reload()">Quit Game</button>
-        </div>
-    </div>
-</div>
-
-<script>
-    // GAME STATE
-    let startingScore = 301;
-    let playerCount = 1;
-    let scores = [301];
-    let currentPlayer = 0;
-    let tempInput = "";
-
-    // SETUP FUNCTIONS
-    function setInitial(val, btn) {
-        startingScore = val;
-        toggleUI(btn);
-    }
-
-    function setPlayers(val, btn) {
-        playerCount = val;
-        toggleUI(btn);
-    }
-
-    function toggleUI(btn) {
-        btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    }
-
-    function launchGame() {
-        // Initialize scores for all players
-        scores = Array(playerCount).fill(startingScore);
-        document.getElementById('setup-screen').style.display = 'none';
-        document.getElementById('scoreboard-screen').style.display = 'block';
-        updateDisplay();
-    }
-
-    // SCORING FUNCTIONS
-    function press(num) {
-        if (tempInput.length < 3) {
-            tempInput += num;
-            document.getElementById('current-input').innerText = tempInput;
-        }
-    }
-
-    function clearInput() {
-        tempInput = "";
-        document.getElementById('current-input').innerText = "_";
-    }
-
-    function submitScore() {
-        let points = parseInt(tempInput);
+        .key { background: var(--glass); border: 1px solid var(--glass-border); padding: 22px; border-radius: 18px; color: white; font-size: 1.6rem; font-weight: 600; cursor: pointer; transition: transform 0.1s; }
+        .key:active { transform: scale(0.95); background: rgba(255,255,255,0.1); }
         
-        if (isNaN(points)) return;
-        if (points > 180) {
-            alert("Maximum score is 180!");
-            clearInput();
-            return;
-        }
-
-        let currentTotal = scores[currentPlayer];
-        let newTotal = currentTotal - points;
-
-        // BUST LOGIC
-        if (newTotal < 0 || newTotal === 1) {
-            alert("BUST!");
-        } else {
-            scores[currentPlayer] = newTotal;
-            if (newTotal === 0) {
-                alert("PLAYER " + (currentPlayer + 1) + " WINS!");
-                location.reload();
-            }
-        }
-
-        // Switch Player
-        currentPlayer = (currentPlayer + 1) % playerCount;
-        tempInput = "";
-        updateDisplay();
-    }
-
-    function updateDisplay() {
-        document.getElementById('main-score').innerText = scores[currentPlayer];
-        document.getElementById('display-player').innerText = "Player " + (currentPlayer + 1);
-        document.getElementById('current-input').innerText = "_";
-        document.getElementById('history-log').innerText = "Next throw: Player " + (currentPlayer + 1);
-    }
-</script>
-
-</body>
-</html>
+        .key.
