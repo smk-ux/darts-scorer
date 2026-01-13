@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Darts. | Pro Scorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --main-bg: #0a0c10;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --accent: #3b82f6; 
+            --text-main: #ffffff;
+            --text-dim: #6b7280;
+        }
+
+        body {
+            background-color: var(--main-bg);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .app-viewport {
+            width: 100%;
+            max-width: 380px;
+            padding: 20px;
+        }
+
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 40px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        header { margin-bottom: 40px; }
+        .subtitle { color: var(--accent); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; }
+        h1 { font-size: 2.5rem; margin: 0; font-weight: 800; }
+        .dot { color: var(--accent); }
+
+        .selection-group { margin-bottom: 35px; text-align: left; }
+        label { color: var(--text-dim); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; margin-left: 15px; margin-bottom: 12px; display: block; }
+
+        .pill-toggle {
+            background: rgba(255,255,255,0.05);
+            padding: 5px;
+            border-radius: 100px;
+            display: flex;
+        }
+        .pill-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            padding: 12px;
+            border-radius: 100px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .pill-btn.active {
+            background: var(--text-main);
+            color: var(--main-bg);
+        }
+
+        .circle-grid { display: flex; justify-content: space-between; gap: 10px; }
+        .circle-btn {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .circle-btn.active {
+            border-color: var(--accent);
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent);
+        }
+
+        .option-row { display: flex; gap: 10px; }
+        .option-item {
+            flex: 1;
+            padding: 15px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .option-item.active {
+            border-color: var(--accent);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .cta-button {
+            width: 100%;
+            padding: 18px;
+            border-radius: 20px;
+            border: none;
+            background: var(--accent);
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-top: 10px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+            transition: transform 0.2s;
+        }
+        .cta-button:active { transform: scale(0.98); }
+
+        footer { margin-top: 30px; font-size: 0.7rem; color: var(--text-dim); }
+        footer a { color: var(--accent); text-decoration: none; }
+    </style>
+</head>
+<body>
+
+    <div class="app-viewport">
+        <div class="glass-card">
+            <header>
+                <p class="subtitle">Game Setup</p>
+                <h1>Darts<span class="dot">.</span></h1>
+            </header>
+
+            <div class="selection-group">
+                <label>Game Mode</label>
+                <div class="pill-toggle">
+                    <button class="pill-btn active" onclick="toggleMain(this, '01')">301 / 501</button>
+                    <button class="pill-btn" onclick="toggleMain(this, 'cricket')">Cricket</button>
+                </div>
+            </div>
+
+            <div class="selection-group">
+                <label>Players</label>
+                <div class="circle-grid">
+                    <button class="circle-btn active" onclick="toggleActive(this)">1</button>
+                    <button class="circle-btn" onclick="toggleActive(this)">2</button>
+                    <button class="circle-btn" onclick="toggleActive(this)">3</button>
+                    <button class="circle-btn" onclick="toggleActive(this)">4</button>
+                </div>
+            </div>
+
+            <div class="selection-group">
+                <label id="rule-label">Rules</label>
+                <div class="option-row" id="rule-options">
+                    <div class="option-item active" onclick="toggleActive(this)">
+                        <span>Straight Out</span>
+                    </div>
+                    <div class="option-item" onclick="toggleActive(this)">
+                        <span>Double Out</span>
+                    </div>
+                </div>
+            </div>
+
+            <button class="cta-button" onclick="startMatch()">Start Match</button>
+            
+            <footer>
+                Created by Sree | <a href="mailto:sreekuttanmk95@gmail.com">Feedback</a>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // Toggle Active for buttons in a group
+        function toggleActive(element) {
+            const parent = element.parentElement;
+            parent.querySelectorAll('.active').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        // Specific toggle for Game Type (changes rules text)
+        function toggleMain(element, type) {
+            toggleActive(element);
+            const ruleLabel = document.getElementById('rule-label');
+            const ruleOptions = document.getElementById('rule-options');
+
+            if (type === 'cricket') {
+                ruleLabel.innerText = "Cricket Style";
+                ruleOptions.innerHTML = `
+                    <div class="option-item active" onclick="toggleActive(this)"><span>Standard</span></div>
+                    <div class="option-item" onclick="toggleActive(this)"><span>Cut-Throat</span></div>
+                `;
+            } else {
+                ruleLabel.innerText = "Rules";
+                ruleOptions.innerHTML = `
+                    <div class="option-item active" onclick="toggleActive(this)"><span>Straight Out</span></div>
+                    <div class="option-item" onclick="toggleActive(this)"><span>Double Out</span></div>
+                `;
+            }
+        }
+
+        function startMatch() {
+            alert("Ready to play
