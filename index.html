@@ -67,4 +67,179 @@
         }
         .name-field:focus { border-color: var(--accent); }
 
-        .cta-button { width: 100%; padding:
+        .cta-button { width: 100%; padding: 18px; border-radius: 20px; border: none; background: var(--accent); color: white; font-weight: 700; font-size: 1.1rem; cursor: pointer; margin-top: 20px; }
+
+        /* --- SCOREBOARD --- */
+        #scoreboard-screen { display: none; }
+        .score-display { font-size: 5.5rem; font-weight: 800; margin: 10px 0; }
+        .player-name-display { font-size: 1.2rem; color: var(--accent); text-transform: uppercase; font-weight: 700; }
+        .input-preview { height: 40px; font-size: 1.8rem; color: var(--text-dim); margin-bottom: 20px; font-weight: 700; border-bottom: 2px solid var(--glass-border); display: inline-block; min-width: 60px; }
+        
+        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .key { background: var(--glass); border: 1px solid var(--glass-border); padding: 22px; border-radius: 18px; color: white; font-size: 1.6rem; font-weight: 600; cursor: pointer; }
+        .key:active { transform: scale(0.95); background: rgba(255,255,255,0.1); }
+        .key.enter { background: var(--accent); font-size: 1rem; border: none; }
+        .key.clear { color: var(--danger); }
+
+        footer { margin-top: 25px; font-size: 0.7rem; color: var(--text-dim); }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div id="setup-screen" class="glass-card">
+        <header>
+            <p class="subtitle">Match Settings</p>
+            <h1>Darts<span class="dot">.</span></h1>
+        </header>
+
+        <div class="selection-group">
+            <label>Score Type</label>
+            <div class="pill-toggle">
+                <button class="pill-btn active" onclick="setInitial(301, this)">301</button>
+                <button class="pill-btn" onclick="setInitial(501, this)">501</button>
+            </div>
+        </div>
+
+        <div class="selection-group">
+            <label>Players</label>
+            <div class="circle-grid">
+                <button class="circle-btn active" onclick="updatePlayerNames(1, this)">1</button>
+                <button class="circle-btn" onclick="updatePlayerNames(2, this)">2</button>
+                <button class="circle-btn" onclick="updatePlayerNames(3, this)">3</button>
+                <button class="circle-btn" onclick="updatePlayerNames(4, this)">4</button>
+            </div>
+            
+            <label>Player Names</label>
+            <div id="player-names-container" class="name-input-group">
+                <input type="text" class="name-field" placeholder="Player 1 Name" value="Player 1">
+            </div>
+        </div>
+
+        <button class="cta-button" onclick="launchGame()">Start Match</button>
+        <footer>Created by Sree | <a href="mailto:sreekuttanmk95@gmail.com" style="color:var(--accent); text-decoration:none;">Feedback</a></footer>
+    </div>
+
+    <div id="scoreboard-screen" class="glass-card">
+        <div class="player-name-display" id="display-player-name">PLAYER 1</div>
+        <div class="score-display" id="main-score">301</div>
+        <div class="input-preview" id="current-input">_</div>
+        
+        <div class="keypad">
+            <button class="key" onclick="press(1)">1</button>
+            <button class="key" onclick="press(2)">2</button>
+            <button class="key" onclick="press(3)">3</button>
+            <button class="key" onclick="press(4)">4</button>
+            <button class="key" onclick="press(5)">5</button>
+            <button class="key" onclick="press(6)">6</button>
+            <button class="key" onclick="press(7)">7</button>
+            <button class="key" onclick="press(8)">8</button>
+            <button class="key" onclick="press(9)">9</button>
+            <button class="key clear" onclick="clearInput()">C</button>
+            <button class="key enter" onclick="submitScore()">ENTER</button>
+            <button class="key" onclick="press(0)">0</button>
+        </div>
+        
+        <button style="background:transparent; border:none; color:var(--text-dim); margin-top:30px; cursor:pointer; font-size: 0.7rem; letter-spacing: 1px;" onclick="location.reload()">RESTART GAME</button>
+    </div>
+</div>
+
+<script>
+    let startingScore = 301;
+    let playerCount = 1;
+    let players = []; // Array of objects: { name, score }
+    let currentPlayerIndex = 0;
+    let tempInput = "";
+
+    function setInitial(val, btn) {
+        startingScore = val;
+        setActive(btn);
+    }
+
+    function updatePlayerNames(count, btn) {
+        playerCount = count;
+        setActive(btn);
+        
+        const container = document.getElementById('player-names-container');
+        container.innerHTML = "";
+        
+        for(let i = 1; i <= count; i++) {
+            const input = document.createElement('input');
+            input.type = "text";
+            input.className = "name-field";
+            input.placeholder = `Player ${i} Name`;
+            input.value = `Player ${i}`;
+            container.appendChild(input);
+        }
+    }
+
+    function setActive(btn) {
+        btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    function launchGame() {
+        const nameFields = document.querySelectorAll('.name-field');
+        players = [];
+        nameFields.forEach(field => {
+            players.push({
+                name: field.value || "Player",
+                score: startingScore
+            });
+        });
+
+        currentPlayerIndex = 0;
+        document.getElementById('setup-screen').style.display = 'none';
+        document.getElementById('scoreboard-screen').style.display = 'block';
+        updateDisplay();
+    }
+
+    function press(num) {
+        if (tempInput.length < 3) {
+            tempInput += num;
+            document.getElementById('current-input').innerText = tempInput;
+        }
+    }
+
+    function clearInput() {
+        tempInput = "";
+        document.getElementById('current-input').innerText = "_";
+    }
+
+    function submitScore() {
+        let points = parseInt(tempInput);
+        if (isNaN(points)) return;
+        if (points > 180) {
+            alert("Max score is 180!");
+            clearInput();
+            return;
+        }
+
+        let player = players[currentPlayerIndex];
+        let newTotal = player.score - points;
+
+        if (newTotal < 0 || newTotal === 1) {
+            alert("BUST! Try again next turn.");
+        } else {
+            player.score = newTotal;
+            if (newTotal === 0) {
+                alert("🏆 " + player.name + " WINS!");
+                location.reload();
+                return;
+            }
+        }
+
+        currentPlayerIndex = (currentPlayerIndex + 1) % playerCount;
+        tempInput = "";
+        updateDisplay();
+    }
+
+    function updateDisplay() {
+        const player = players[currentPlayerIndex];
+        document.getElementById('main-score').innerText = player.score;
+        document.getElementById('display-player-name').innerText = player.name;
+        document.getElementById('current-input').innerText = "_";
+    }
+</script>
+</body>
+</html>
