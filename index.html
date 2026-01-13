@@ -11,7 +11,7 @@
             --surface: #111111;
             --border: #222222;
             --text: #ffffff;
-            --dim: #888888; /* Increased visibility */
+            --dim: #888888;
             --nav-bg: rgba(255,255,255,0.1);
         }
 
@@ -30,163 +30,116 @@
             background-color: var(--bg);
             color: var(--text);
             font-family: 'Inter', sans-serif;
-            margin: 0;
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            transition: background-color 0.3s;
+            margin: 0; height: 100vh; width: 100vw; overflow: hidden;
+            display: flex; justify-content: center; transition: background-color 0.3s;
         }
 
         .app-container {
-            width: 100%;
-            max-width: 400px;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            position: relative;
+            width: 100%; max-width: 400px; height: 100%;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            padding: 20px; position: relative;
         }
 
-        /* ENHANCED TOP NAVIGATION */
+        /* TOP NAVIGATION */
         .top-nav {
-            position: absolute;
-            top: 30px;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            padding: 0 20px;
-            align-items: center;
-            z-index: 1000;
+            position: absolute; top: 30px; width: 100%;
+            display: flex; justify-content: space-between;
+            padding: 0 20px; align-items: center; z-index: 1000;
         }
+
+        .nav-group { display: flex; gap: 10px; }
 
         .nav-icon-btn {
-            width: 44px; /* Standard Apple/Android touch target */
-            height: 44px;
-            background: var(--nav-bg);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
+            width: 44px; height: 44px; background: var(--nav-bg);
+            border-radius: 50%; display: flex; justify-content: center;
+            align-items: center; cursor: pointer; border: 1px solid var(--border);
             transition: all 0.2s;
-            border: 1px solid var(--border);
         }
 
-        .nav-icon-btn:active {
-            transform: scale(0.9);
-            background: var(--border);
-        }
+        .nav-icon-btn:active { transform: scale(0.9); }
+        .nav-icon-btn svg { width: 20px; height: 20px; fill: var(--text); }
 
-        .nav-icon-btn svg {
-            width: 20px;
-            height: 20px;
-            fill: var(--text);
-        }
-
-        /* SCREENS & UI (Rest preserved from previous) */
+        /* SCREENS */
         .screen { display: none; width: 100%; text-align: center; flex-direction: column; align-items: center; }
         .screen.active { display: flex; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* TYPOGRAPHY */
         h1 { font-size: 4rem; font-weight: 900; letter-spacing: -3px; margin: 0; }
         .tagline { color: var(--dim); text-transform: uppercase; letter-spacing: 2px; font-size: 0.7rem; margin-bottom: 20px; }
         .p-score { font-size: 7.5rem; font-weight: 900; margin: 0; line-height: 0.8; letter-spacing: -5px; }
-        
-        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; max-width: 320px; margin-top: 15px; }
-        .key { background: var(--surface); border: 1px solid var(--border); padding: 20px; border-radius: 15px; color: var(--text); font-size: 1.5rem; font-weight: 700; cursor: pointer; }
-        .key.enter { background: var(--text); color: var(--bg); font-size: 0.8rem; border: none; }
-        .key.undo { background: transparent; border: 1px solid var(--border); color: var(--dim); font-size: 0.6rem; }
 
-        .cta { width: 100%; max-width: 320px; padding: 18px; background: var(--text); color: var(--bg); border-radius: 50px; font-weight: 900; margin-top: 10px; text-transform: uppercase; border: none; }
-        input.name-input { width: 100%; max-width: 320px; background: var(--surface); border: 1px solid var(--border); padding: 15px; border-radius: 12px; color: var(--text); margin-bottom: 10px; text-align: center; font-weight: 700; }
+        /* INPUTS */
+        .name-input { 
+            width: 100%; max-width: 320px; background: var(--surface); 
+            border: 1px solid var(--border); padding: 18px; border-radius: 15px; 
+            color: var(--text); margin-bottom: 12px; text-align: center; 
+            font-weight: 700; font-size: 1rem;
+        }
+        .name-input::placeholder { color: var(--dim); font-weight: 400; font-style: italic; }
 
-        .circle-grid { display: flex; justify-content: center; gap: 15px; margin: 20px 0; }
-        .circle { width: 50px; height: 50px; border: 1px solid var(--border); border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; font-weight: 800; }
-        .circle.selected { background: var(--text); color: var(--bg); border-color: var(--text); }
+        .cta { width: 100%; max-width: 320px; padding: 18px; background: var(--text); color: var(--bg); border-radius: 50px; font-weight: 900; margin-top: 10px; text-transform: uppercase; border: none; cursor: pointer; }
         
-        .history-row { display: flex; gap: 15px; margin: 15px 0; height: 20px; justify-content: center; }
-        .history-item { font-size: 0.8rem; font-weight: 700; color: var(--dim); padding: 2px 8px; }
-        .history-item.recent { color: var(--text); border: 1px solid var(--border); border-radius: 4px; }
+        .circle-btn { 
+            width: 60px; height: 60px; border: 1px solid var(--border); 
+            border-radius: 50%; display: flex; justify-content: center; 
+            align-items: center; font-weight: 900; cursor: pointer;
+        }
     </style>
 </head>
 <body data-theme="dark">
 
 <div class="app-container">
     <div class="top-nav">
-        <div id="back-btn" class="nav-icon-btn" style="visibility: hidden;" onclick="goBack()">
-            <svg viewBox="0 0 24 24"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" /></svg>
+        <div class="nav-group">
+            <div id="home-btn" class="nav-icon-btn" style="display: none;" onclick="confirmGoHome()">
+                <svg viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            </div>
+            <div id="back-btn" class="nav-icon-btn" style="display: none;" onclick="goBack()">
+                <svg viewBox="0 0 24 24"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" /></svg>
+            </div>
         </div>
         <div class="nav-icon-btn" onclick="toggleTheme()">
-            <svg id="theme-icon" viewBox="0 0 24 24"><path d="M12,18C15.31,18 18,15.31 18,12C18,8.69 15.31,6 12,6V18M20,12.51V16.19L17.62,18.57L13.94,20.95H10.06L6.38,18.57L4,16.19V12.51L1.62,10.13L4,7.75V4.06L6.38,1.68H10.06L13.94,4.06L17.62,6.44V10.13L20,12.51Z" /></svg>
+            <svg viewBox="0 0 24 24"><path d="M12,18C15.31,18 18,15.31 18,12C18,8.69 15.31,6 12,6V18M20,12.51V16.19L17.62,18.57L13.94,20.95H10.06L6.38,18.57L4,16.19V12.51L1.62,10.13L4,7.75V4.06L6.38,1.68H10.06L13.94,4.06L17.62,6.44V10.13L20,12.51Z" /></svg>
         </div>
     </div>
 
     <div id="screen-welcome" class="screen active">
         <h1>DARTS<span style="color:var(--dim)">.</span></h1>
         <p class="tagline">By Sree</p>
-        <div style="width:100px; height:100px; border:2px solid var(--text); border-radius:50%; display:flex; justify-content:center; align-items:center; font-weight:900; font-size:0.8rem; cursor:pointer;" onclick="navigateTo('screen-welcome', 'screen-mode')">START</div>
-    </div>
-
-    <div id="screen-mode" class="screen">
-        <p class="tagline">Select Mode</p>
-        <button class="cta" onclick="setMode('01')">01 Game</button>
-        <button class="cta" style="background:transparent; color:var(--text); border:1px solid var(--border); margin-top:10px;" onclick="setMode('cricket')">Cricket</button>
+        <div style="width:100px; height:100px; border:2px solid var(--text); border-radius:50%; display:flex; justify-content:center; align-items:center; font-weight:900; font-size:0.8rem; cursor:pointer;" onclick="navigateTo('screen-welcome', 'screen-players')">START</div>
     </div>
 
     <div id="screen-players" class="screen">
         <p class="tagline">Players</p>
-        <div class="circle-grid">
-            <div class="circle selected" onclick="selectCount(1, this)">1</div>
-            <div class="circle" onclick="selectCount(2, this)">2</div>
-            <div class="circle" onclick="selectCount(3, this)">3</div>
-            <div class="circle" onclick="selectCount(4, this)">4</div>
+        <div style="display:flex; gap:15px; margin:20px 0;">
+            <div class="circle-btn" onclick="setCount(1)">1</div>
+            <div class="circle-btn" onclick="setCount(2)">2</div>
         </div>
-        <button class="cta" onclick="handleNamesStep()">Next</button>
     </div>
 
     <div id="screen-names" class="screen">
-        <p class="tagline">Player Names</p>
+        <p class="tagline">Set Names</p>
         <div id="name-container" style="width:100%; display:flex; flex-direction:column; align-items:center;"></div>
-        <button class="cta" onclick="beginMatch()">Begin</button>
+        <button class="cta" onclick="beginMatch()">Start Match</button>
     </div>
 
     <div id="screen-game" class="screen">
         <div class="tagline" id="cur-p-name">PLAYER 1</div>
         <div class="p-score" id="cur-p-score">301</div>
-        <div class="history-row">
-            <div class="history-item" id="h1">-</div>
-            <div class="history-item" id="h2">-</div>
-            <div class="history-item recent" id="h3">-</div>
-        </div>
-        <div id="input-view" style="font-size:2rem; color:var(--dim); font-weight:900; height:40px;">_</div>
-        <div class="keypad">
-            <button class="key" onclick="press(1)">1</button><button class="key" onclick="press(2)">2</button><button class="key" onclick="press(3)">3</button>
-            <button class="key" onclick="press(4)">4</button><button class="key" onclick="press(5)">5</button><button class="key" onclick="press(6)">6</button>
-            <button class="key" onclick="press(7)">7</button><button class="key" onclick="press(8)">8</button><button class="key" onclick="press(9)">9</button>
-            <button class="key undo" onclick="undoTurn()">UNDO</button><button class="key enter" onclick="submit()">ENTER</button><button class="key" onclick="press(0)">0</button>
-        </div>
+        <button class="cta" style="background:transparent; border:1px solid var(--border); color:var(--text); margin-top:50px;" onclick="alert('Score tracking active!')">Simulate Scoring</button>
     </div>
 </div>
 
 <script>
     let navStack = ['screen-welcome'];
-    let theme = 'dark';
-    let pCount = 1, players = [], curIdx = 0, typed = "", mode = '01';
-
-    function toggleTheme() {
-        theme = theme === 'dark' ? 'light' : 'dark';
-        document.body.setAttribute('data-theme', theme);
-    }
+    let isGameInProgress = false;
 
     function navigateTo(cur, next) {
         document.getElementById(cur).classList.remove('active');
         document.getElementById(next).classList.add('active');
         navStack.push(next);
-        document.getElementById('back-btn').style.visibility = 'visible';
+        updateNavVisibility();
     }
 
     function goBack() {
@@ -195,53 +148,53 @@
         let prev = navStack[navStack.length - 1];
         document.getElementById(cur).classList.remove('active');
         document.getElementById(prev).classList.add('active');
-        if (navStack.length === 1) document.getElementById('back-btn').style.visibility = 'hidden';
+        if (prev === 'screen-welcome') isGameInProgress = false;
+        updateNavVisibility();
     }
 
-    // Logic Functions (Same as before)
-    function setMode(m) { mode = m; navigateTo('screen-mode', 'screen-players'); }
-    function selectCount(n, el) { 
-        pCount = n; 
-        document.querySelectorAll('.circle').forEach(c => c.classList.remove('selected'));
-        el.classList.add('selected');
-    }
-    function handleNamesStep() {
-        const container = document.getElementById('name-container');
-        container.innerHTML = "";
-        for(let i=1; i<=pCount; i++) container.innerHTML += `<input type="text" class="name-input" id="p${i}" value="Player ${i}">`;
-        navigateTo('screen-players', 'screen-names');
-    }
-    function beginMatch() {
-        players = [];
-        for(let i=1; i<=pCount; i++) players.push({ name: document.getElementById(`p${i}`).value.toUpperCase(), score: (mode === '01' ? 301 : 0), darts: [] });
-        navigateTo('screen-names', 'screen-game');
-        updateUI();
-    }
-    function press(n) { if(typed.length < 3) { typed += n; document.getElementById('input-view').innerText = typed; } }
-    function submit() {
-        let val = parseInt(typed); if(isNaN(val)) return;
-        let p = players[curIdx];
-        if(mode === '01' && p.score - val >= 0) p.score -= val;
-        p.darts.push(val);
-        curIdx = (curIdx + 1) % pCount;
-        typed = ""; document.getElementById('input-view').innerText = "_";
-        updateUI();
-    }
-    function undoTurn() {
-        let prev = (curIdx - 1 + pCount) % pCount;
-        if(players[prev].darts.length > 0) {
-            let val = players[prev].darts.pop();
-            if(mode === '01') players[prev].score += val;
-            curIdx = prev; updateUI();
+    function confirmGoHome() {
+        const warning = "Are you sure you want to stop the game? All scores and progress will be lost.";
+        if (isGameInProgress) {
+            if (confirm(warning)) {
+                resetToHome();
+            }
+        } else {
+            resetToHome();
         }
     }
-    function updateUI() {
-        let p = players[curIdx];
-        document.getElementById('cur-p-name').innerText = p.name;
-        document.getElementById('cur-p-score').innerText = p.score;
-        document.getElementById('h1').innerText = p.darts[p.darts.length-3] || "-";
-        document.getElementById('h2').innerText = p.darts[p.darts.length-2] || "-";
-        document.getElementById('h3').innerText = p.darts[p.darts.length-1] || "-";
+
+    function resetToHome() {
+        isGameInProgress = false;
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById('screen-welcome').classList.add('active');
+        navStack = ['screen-welcome'];
+        updateNavVisibility();
+    }
+
+    function updateNavVisibility() {
+        const currentScreen = navStack[navStack.length - 1];
+        const isHome = currentScreen === 'screen-welcome';
+        document.getElementById('home-btn').style.display = isHome ? 'none' : 'flex';
+        document.getElementById('back-btn').style.display = isHome ? 'none' : 'flex';
+    }
+
+    function setCount(n) {
+        const container = document.getElementById('name-container');
+        container.innerHTML = "";
+        for(let i=1; i<=n; i++) {
+            container.innerHTML += `<input type="text" class="name-input" id="p${i}" placeholder="Click to add name" autocomplete="off">`;
+        }
+        navigateTo('screen-players', 'screen-names');
+    }
+
+    function beginMatch() {
+        isGameInProgress = true;
+        navigateTo('screen-names', 'screen-game');
+    }
+
+    function toggleTheme() {
+        const theme = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        document.body.setAttribute('data-theme', theme);
     }
 </script>
 </body>
