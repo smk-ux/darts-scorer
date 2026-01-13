@@ -14,23 +14,36 @@
             --text-secondary: #888888;
         }
 
-        body {
+        /* Prevent scrolling and fix the viewport */
+        html, body {
             background-color: var(--bg);
             color: var(--text-primary);
             font-family: 'Inter', sans-serif;
             margin: 0;
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-            overflow: hidden;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden; 
         }
 
-        .app-container { width: 100%; max-width: 400px; position: relative; padding: 20px; }
+        .app-container { 
+            width: 100%; 
+            height: 100%;
+            max-width: 400px; 
+            margin: 0 auto;
+            position: relative; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-        /* --- SCREEN: WELCOME --- */
+        /* --- SCREEN: WELCOME (VISIBLE BY DEFAULT) --- */
         #welcome-screen {
-            position: fixed;
-            inset: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: var(--bg);
             display: flex;
             flex-direction: column;
@@ -38,12 +51,11 @@
             align-items: center;
             z-index: 100;
             text-align: center;
-            padding: 40px;
             transition: transform 0.6s cubic-bezier(0.8, 0, 0.2, 1);
         }
 
-        .welcome-content h1 { font-size: 3.5rem; font-weight: 900; letter-spacing: -2px; margin: 0; }
-        .welcome-content p { color: var(--text-secondary); font-size: 1.1rem; margin: 20px 0 40px 0; line-height: 1.5; }
+        .welcome-content h1 { font-size: 4rem; font-weight: 900; letter-spacing: -3px; margin: 0; }
+        .welcome-content p { color: var(--text-secondary); font-size: 1rem; margin: 15px 0 40px 0; line-height: 1.5; text-transform: uppercase; letter-spacing: 1px; }
         
         .start-circle {
             width: 80px;
@@ -56,48 +68,62 @@
             cursor: pointer;
             background: transparent;
             color: white;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             transition: 0.3s;
+            outline: none;
         }
-        .start-circle:hover { background: white; color: black; }
+        .start-circle:active { background: white; color: black; }
 
-        /* --- SHARED UI --- */
+        /* --- SHARED UI CARDS --- */
         .glass-card {
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 40px;
-            padding: 35px;
+            padding: 30px;
             text-align: center;
-            margin-top: 20px;
+            width: 85%;
+            display: none; /* Hidden until triggered */
+            animation: fadeIn 0.4s ease-out;
         }
 
-        label { color: var(--text-secondary); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 15px; display: block; text-align: left; padding-left: 10px; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
 
-        .choice-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
+        label { color: var(--text-secondary); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 15px; display: block; text-align: left; }
+
+        .choice-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
         .choice-card {
             background: #1a1a1a;
             border: 1px solid var(--border);
-            padding: 25px 10px;
-            border-radius: 25px;
+            padding: 20px 10px;
+            border-radius: 20px;
             cursor: pointer;
-            transition: 0.3s;
         }
         .choice-card.active { background: white; color: black; border-color: white; }
-        .choice-card h2 { margin: 0; font-size: 1.2rem; font-weight: 800; }
-        .choice-card span { font-size: 0.7rem; opacity: 0.6; text-transform: uppercase; font-weight: 600; }
+        .choice-card h2 { margin: 0; font-size: 1rem; font-weight: 800; }
 
-        .circle-grid { display: flex; justify-content: space-between; margin-bottom: 25px; }
-        .circle-btn { width: 55px; height: 55px; border-radius: 50%; background: #1a1a1a; border: 1px solid var(--border); color: white; font-weight: 800; cursor: pointer; }
-        .circle-btn.active { background: white; color: black; border-color: white; }
+        .circle-grid { display: flex; justify-content: space-between; margin-bottom: 20px; }
+        .circle-btn { width: 50px; height: 50px; border-radius: 50%; background: #1a1a1a; border: 1px solid var(--border); color: white; font-weight: 800; }
+        .circle-btn.active { background: white; color: black; }
 
-        .name-field { background: #1a1a1a; border: 1px solid var(--border); padding: 14px; border-radius: 15px; color: white; margin-bottom: 10px; width: calc(100% - 30px); outline: none; }
+        .name-field { background: #1a1a1a; border: 1px solid var(--border); padding: 12px; border-radius: 12px; color: white; margin-bottom: 8px; width: 90%; outline: none; }
 
-        .cta-button { width: 100%; padding: 20px; border-radius: 100px; border: none; background: white; color: black; font-weight: 900; font-size: 1rem; text-transform: uppercase; cursor: pointer; }
-
-        /* --- HIDE SCREENS BY DEFAULT --- */
-        #game-selection-screen, #setup-screen, #scoreboard-screen { display: none; }
+        .cta-button { width: 100%; padding: 18px; border-radius: 100px; border: none; background: white; color: black; font-weight: 900; font-size: 0.9rem; text-transform: uppercase; cursor: pointer; margin-top: 15px; }
 
         /* --- SCOREBOARD --- */
-        .score-display { font-size: 6.5rem; font-weight: 900; letter-spacing: -4px; margin: 10px 0; }
-        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
-        .key { background:
+        .score-display { font-size: 6rem; font-weight: 900; letter-spacing: -4px; margin: 5px 0; }
+        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 15px; }
+        .key { background: #111111; border: 1px solid var(--border); padding: 18px; border-radius: 15px; color: white; font-size: 1.4rem; font-weight: 700; }
+        .key.enter { background: white; color: black; font-size: 0.8rem; border: none; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div id="welcome-screen">
+        <div class="welcome-content">
+            <h1>DARTS<span style="color:#333">.</span></h1>
+            <p>Master the board.</p>
+            <button class="start-circle" onclick="goToGame
