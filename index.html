@@ -57,7 +57,6 @@
 
         .center-action { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; gap: 15px; }
 
-        /* SCORE STRIP */
         .score-strip { display: flex; gap: 10px; margin: 10px 0; justify-content: center; }
         .dart-slot { flex: 1; background: var(--surface); border: 1px solid var(--border); height: 50px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.2rem; color: var(--accent); }
 
@@ -76,6 +75,9 @@
 
         .name-entry-row { display: flex; gap: 10px; margin-bottom: 10px; background: var(--surface); border: 1px solid var(--border); padding: 5px 10px; border-radius: 12px; }
         .name-input { flex: 1; background: transparent; border: none; padding: 10px; color: var(--text); font-size: 1rem; }
+        
+        /* DARTBOARD IMAGE STYLE */
+        .board-img { width: 180px; height: 180px; border-radius: 50%; object-fit: cover; border: 4px solid var(--border); margin: 10px 0; }
     </style>
 </head>
 <body data-theme="dark">
@@ -119,6 +121,7 @@
     <div id="screen-players" class="screen" style="padding-bottom: 0;">
         <div class="brand-group"><p class="subtitle">number of players</p></div>
         <div class="center-action">
+            <img src="https://images.unsplash.com/photo-1594132176008-8926955a8288?auto=format&fit=crop&q=80&w=300&h=300" alt="Dartboard" class="board-img">
             <div style="display:flex; align-items:center; justify-content:center; gap:30px; margin-bottom: 20px;">
                 <div class="nav-btn" onclick="changeCount(-1)">–</div>
                 <div style="font-size:5rem; font-weight:900;" id="player-val">1</div>
@@ -249,7 +252,7 @@
     function beginMatch() { 
         players = [];
         for(let i=1; i<=pCount; i++) {
-            let name = (document.getElementById('in-p${i}')?.value || "PLAYER " + i).toUpperCase();
+            let name = (document.getElementById(`in-p${i}`)?.value || "PLAYER " + i).toUpperCase();
             players.push({
                 name: name,
                 score01: 301,
