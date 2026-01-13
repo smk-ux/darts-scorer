@@ -76,13 +76,16 @@
         .name-entry-row { display: flex; gap: 10px; margin-bottom: 10px; background: var(--surface); border: 1px solid var(--border); padding: 5px 10px; border-radius: 12px; }
         .name-input { flex: 1; background: transparent; border: none; padding: 10px; color: var(--text); font-size: 1rem; }
         
-        .board-img { width: 180px; height: 180px; border-radius: 50%; object-fit: cover; border: 4px solid var(--accent); margin: 10px 0; background: var(--surface); }
-
         .content-area { padding: 20px; line-height: 1.6; color: var(--text); overflow-y: auto; }
         .content-area h3 { color: var(--accent); margin: 20px 0 10px 0; text-transform: uppercase; }
         .content-area p { margin-bottom: 15px; font-size: 0.9rem; color: var(--dim); }
         .content-area li { margin-bottom: 10px; font-size: 0.85rem; color: var(--dim); list-style: none; }
         .content-area strong { color: var(--text); }
+        
+        /* IMPROVED SCORING UI DESIGN */
+        .score-header { text-align: center; margin-bottom: 15px; }
+        #p-name { font-size: 1.8rem; font-weight: 900; color: var(--text); text-transform: uppercase; margin-bottom: -5px; letter-spacing: -1px; }
+        #score-display { font-size: 4rem; font-weight: 900; color: var(--accent); line-height: 1; }
     </style>
 </head>
 <body data-theme="dark">
@@ -126,7 +129,6 @@
     <div id="screen-players" class="screen">
         <div class="brand-group"><p class="subtitle">number of players</p></div>
         <div class="center-action">
-            <img src="https://cdn.pixabay.com/photo/2013/07/13/10/31/dartboard-157416_1280.png" alt="Dartboard" class="board-img">
             <div style="display:flex; align-items:center; justify-content:center; gap:30px; margin-bottom: 20px;">
                 <div class="nav-btn" onclick="changeCount(-1)">–</div>
                 <div style="font-size:5rem; font-weight:900;" id="player-val">1</div>
@@ -145,8 +147,10 @@
     </div>
 
     <div id="screen-game" class="screen" style="padding-bottom:140px;">
-        <div id="p-name" style="font-weight:700; color:var(--dim); font-size:0.8rem; text-transform:uppercase; margin-bottom:5px;">PLAYER 1</div>
-        <div id="01-ui"><div style="font-size:3.5rem; font-weight:900;" id="score-display">301</div></div>
+        <div class="score-header">
+            <div id="p-name">PLAYER 1</div>
+            <div id="01-ui"><div id="score-display">301</div></div>
+        </div>
         <div id="cricket-ui" style="display:none;">
             <div class="total-points-bar"><span>Current Points</span><span id="cricket-total-points">0</span></div>
             <div class="cricket-grid"><div class="c-head">Marks</div><div class="c-head">Target</div><div class="c-head">Pts</div><div id="cricket-board" style="display: contents;"></div></div>
