@@ -57,13 +57,16 @@
 
         .center-action { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; gap: 15px; }
 
+        /* SCORE STRIP */
+        .score-strip { display: flex; gap: 10px; margin: 10px 0; justify-content: center; }
+        .dart-slot { flex: 1; background: var(--surface); border: 1px solid var(--border); height: 50px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.2rem; color: var(--accent); }
+
         .pro-keypad { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-top: auto; }
         .key { background: var(--surface); border: 1px solid var(--border); padding: 12px 0; border-radius: 8px; color: var(--text); font-size: 1rem; font-weight: 700; }
-        .m-bar { display: flex; gap: 5px; margin: 10px 0; }
+        .m-bar { display: flex; gap: 5px; margin: 5px 0; }
         .m-btn { flex: 1; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-weight: 800; font-size: 0.7rem; }
         .m-btn.active { background: var(--text); color: var(--bg); }
         
-        /* IMPROVED CRICKET UI */
         .cricket-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; background: var(--surface); padding: 15px; border-radius: 16px; border: 1px solid var(--border); margin-bottom: 10px; }
         .c-head { color: var(--dim); font-size: 0.65rem; text-transform: uppercase; font-weight: 800; margin-bottom: 8px; text-align: center; }
         .c-val { font-size: 1.4rem; font-weight: 900; color: var(--accent); text-align: center; height: 30px; display: flex; align-items: center; justify-content: center; }
@@ -73,8 +76,6 @@
 
         .name-entry-row { display: flex; gap: 10px; margin-bottom: 10px; background: var(--surface); border: 1px solid var(--border); padding: 5px 10px; border-radius: 12px; }
         .name-input { flex: 1; background: transparent; border: none; padding: 10px; color: var(--text); font-size: 1rem; }
-        .help-content { line-height: 1.6; font-size: 0.9rem; overflow-y: auto; padding: 0 10px; }
-        .help-content h3 { color: var(--accent); margin: 15px 0 5px 0; text-transform: uppercase; }
     </style>
 </head>
 <body data-theme="dark">
@@ -150,6 +151,12 @@
             </div>
         </div>
 
+        <div class="score-strip">
+            <div class="dart-slot" id="d1">-</div>
+            <div class="dart-slot" id="d2">-</div>
+            <div class="dart-slot" id="d3">-</div>
+        </div>
+
         <div class="m-bar">
             <button class="m-btn active" id="m1" onclick="setMultiplier(1)">S</button>
             <button class="m-btn" id="m2" onclick="setMultiplier(2)">D</button>
@@ -158,25 +165,7 @@
         <div class="pro-keypad" id="keypad"></div>
         <div class="bottom-action" style="flex-direction:row;">
             <button class="cta cta-outline" style="flex:1;" onclick="undoDart()">Undo</button>
-            <button class="cta" id="confirm-btn" style="flex:1; opacity:0.3; pointer-events:none;" onclick="confirmTurn()">Done</button>
-        </div>
-    </div>
-
-    <div id="screen-help" class="screen">
-        <div class="brand-group"><p class="subtitle">Game Rules</p></div>
-        <div class="help-content">
-            <h3>01 Game</h3>
-            <p>Start with 301 or 501 points. Each throw subtracts from your total. First to reach exactly 0 wins.</p>
-            <h3>Cricket</h3>
-            <p>Hit numbers 15 through 20 and the Bull 3 times each to "close" them. Once closed, additional hits score points. Most points wins.</p>
-        </div>
-    </div>
-
-    <div id="screen-about" class="screen">
-        <div class="brand-group"><p class="subtitle">About</p></div>
-        <div class="help-content" style="text-align: center;">
-            <p><strong>The Darts Scorer</strong><br>Version 1.1</p>
-            <p style="margin-top:20px; color:var(--dim);">A precision-engineered scoring companion for casual and competitive dart players. Designed for speed, clarity, and ease of use.</p>
+            <button class="cta" id="confirm-btn" style="flex:1; opacity:0.3; pointer-events:none;" onclick="confirmTurn()">Submit</button>
         </div>
     </div>
 
@@ -215,13 +204,11 @@
     function handleMenu(opt) {
         toggleMenu();
         const cur = history[history.length-1];
-        const isMidGame = (cur === 'screen-game');
         if (opt === 'home') {
-            if (!isMidGame || confirm("Exit game and return home?")) location.reload();
+            if (cur !== 'screen-game' || confirm("Exit game?")) location.reload();
         } else if (opt === 'play') {
-            if (!isMidGame || confirm("End current match to start a new one?")) navigateTo(cur, 'screen-mode');
-        } else if (opt === 'help') { navigateTo(cur, 'screen-help');
-        } else if (opt === 'about') { navigateTo(cur, 'screen-about'); }
+            if (cur !== 'screen-game' || confirm("End current match?")) navigateTo(cur, 'screen-mode');
+        }
     }
 
     function navigateTo(cur, next) {
@@ -267,8 +254,32 @@
     }
     
     function setMultiplier(m) { multiplier = m; document.querySelectorAll('.m-btn').forEach(b => b.classList.remove('active')); document.getElementById('m'+m).classList.add('active'); }
-    function pressValue(v) { if(dartsThrown.length<3){ if(v===25 && multiplier===3) multiplier=2; dartsThrown.push({v, m:multiplier}); updateUI(); setMultiplier(1); }}
-    function updateUI() { const cBtn = document.getElementById('confirm-btn'); cBtn.style.opacity = (dartsThrown.length === 3) ? "1" : "0.3"; cBtn.style.pointerEvents = (dartsThrown.length === 3) ? "auto" : "none"; }
+    
+    function pressValue(v) { 
+        if(dartsThrown.length < 3){ 
+            if(v===25 && multiplier===3) multiplier=2; 
+            dartsThrown.push({v, m:multiplier}); 
+            updateUI(); 
+            setMultiplier(1); 
+        } 
+    }
+
+    function updateUI() { 
+        const cBtn = document.getElementById('confirm-btn'); 
+        cBtn.style.opacity = (dartsThrown.length === 3) ? "1" : "0.3"; 
+        cBtn.style.pointerEvents = (dartsThrown.length === 3) ? "auto" : "none"; 
+
+        for(let i=1; i<=3; i++) {
+            const slot = document.getElementById('d'+i);
+            if(dartsThrown[i-1]) {
+                const d = dartsThrown[i-1];
+                let prefix = d.m === 2 ? 'D' : d.m === 3 ? 'T' : '';
+                slot.innerText = prefix + (d.v === 25 ? 'B' : d.v);
+            } else {
+                slot.innerText = '-';
+            }
+        }
+    }
     
     function confirmTurn() {
         dartsThrown.forEach(d => { 
@@ -293,10 +304,9 @@
             updateCricketBoard(); 
             if(Object.values(cricketHits).every(h => h >= 3)) showSummary(); 
         }
-        dartsThrown = []; updateUI();
+        dartsThrown = []; 
+        updateUI();
     }
-
-    
 
     function updateCricketBoard() {
         const board = document.getElementById('cricket-board'); board.innerHTML = "";
@@ -304,9 +314,8 @@
         [20,19,18,17,16,15,25].forEach(t => {
             let h = cricketHits[t];
             let mark = h === 1 ? "/" : h === 2 ? "X" : h >= 3 ? "⊗" : "";
-            let score = cricketPoints[t];
-            total += score;
-            board.innerHTML += `<div class="c-val">${mark}</div><div class="c-num">${t==25?'BULL':t}</div><div class="c-val c-score-text">${score}</div>`;
+            total += cricketPoints[t];
+            board.innerHTML += `<div class="c-val">${mark}</div><div class="c-num">${t==25?'BULL':t}</div><div class="c-val c-score-text">${cricketPoints[t]}</div>`;
         });
         document.getElementById('cricket-total-points').innerText = total;
     }
