@@ -30,18 +30,13 @@
         }
         .screen.active { display: flex; }
 
-        /* HAT TRICK OVERLAY */
         #hat-trick-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.8); z-index: 2000; display: none;
             flex-direction: column; align-items: center; justify-content: center;
             pointer-events: none;
         }
-        .ht-text { 
-            font-size: 4rem; font-weight: 900; color: var(--gold); 
-            text-shadow: 0 0 20px rgba(255,215,0,0.5); 
-            animation: ht-pop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
+        .ht-text { font-size: 4rem; font-weight: 900; color: var(--gold); animation: ht-pop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         @keyframes ht-pop { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
         .side-menu {
@@ -50,14 +45,8 @@
             border-right: 1px solid var(--border); padding: 40px 20px;
         }
         .side-menu.open { left: 0; }
-        .menu-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); z-index: 999; display: none;
-        }
-        .menu-item {
-            padding: 15px 0; font-weight: 700; border-bottom: 1px solid var(--border);
-            text-transform: uppercase; letter-spacing: 1px; cursor: pointer;
-        }
+        .menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; display: none; }
+        .menu-item { padding: 15px 0; font-weight: 700; border-bottom: 1px solid var(--border); text-transform: uppercase; cursor: pointer; }
 
         .top-nav { display: flex; justify-content: space-between; align-items: center; height: 50px; flex-shrink: 0; gap: 10px; }
         .nav-btn { width: 40px; height: 40px; background: var(--nav-bg); border-radius: 50%; display: flex; justify-content: center; align-items: center; border: 1px solid var(--border); }
@@ -75,6 +64,20 @@
         .score-strip { display: flex; gap: 10px; margin: 10px 0; justify-content: center; }
         .dart-slot { flex: 1; background: var(--surface); border: 1px solid var(--border); height: 50px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.2rem; color: var(--accent); }
 
+        /* NEW 01 UI ELEMENTS */
+        .picker-btn-container { display: flex; gap: 10px; margin-top: 20px; }
+        .picker-main-btn { flex: 1; padding: 25px 0; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-weight: 900; font-size: 1.1rem; text-transform: uppercase; }
+        
+        #value-picker-overlay {
+            position: fixed; bottom: -100%; left: 0; width: 100%; height: 70%;
+            background: var(--surface); z-index: 3000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-top: 1px solid var(--accent); padding: 20px;
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; overflow-y: auto;
+        }
+        #value-picker-overlay.open { bottom: 0; }
+        .picker-key { background: var(--bg); border: 1px solid var(--border); padding: 15px 0; border-radius: 8px; color: var(--text); font-weight: 700; text-align: center; }
+
+        /* KEYPAD FOR CRICKET ONLY */
         .pro-keypad { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-top: auto; }
         .key { background: var(--surface); border: 1px solid var(--border); padding: 12px 0; border-radius: 8px; color: var(--text); font-size: 1rem; font-weight: 700; }
         .m-bar { display: flex; gap: 5px; margin: 5px 0; }
@@ -82,7 +85,7 @@
         .m-btn.active { background: var(--text); color: var(--bg); }
         
         .cricket-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; background: var(--surface); padding: 15px; border-radius: 16px; border: 1px solid var(--border); margin-bottom: 10px; }
-        .c-head { color: var(--dim); font-size: 0.65rem; text-transform: uppercase; font-weight: 800; margin-bottom: 8px; text-align: center; }
+        .c-head { color: var(--dim); font-size: 0.65rem; text-transform: uppercase; font-weight: 800; text-align: center; }
         .c-val { font-size: 1.4rem; font-weight: 900; color: var(--accent); text-align: center; height: 30px; display: flex; align-items: center; justify-content: center; }
         .c-num { font-weight: 900; border-left: 1px solid var(--border); border-right: 1px solid var(--border); text-align: center; font-size: 1.1rem; padding: 5px 0; background: rgba(255,255,255,0.03); }
         .c-score-text { color: var(--text); font-size: 1rem; font-weight: 800; opacity: 0.8; }
@@ -105,6 +108,7 @@
 <body data-theme="dark">
 
 <div id="hat-trick-overlay"><div class="ht-text">HAT TRICK!</div><div style="color:var(--gold); font-weight:800;">3x BULLSEYE</div></div>
+<div id="value-picker-overlay"></div>
 <div id="menu-overlay" class="menu-overlay" onclick="toggleMenu()"></div>
 <div id="side-menu" class="side-menu">
     <h2 style="margin-bottom: 30px; font-weight: 900;">MENU</h2>
@@ -124,13 +128,8 @@
     </div>
 
     <div id="screen-welcome" class="screen active">
-        <div class="brand-group">
-            <h1>THE DARTS<br><span style="color:var(--accent)">SCORER</span></h1>
-            <p class="subtitle">ENGINEERED BY SREE</p>
-        </div>
-        <div class="center-action">
-            <button class="cta" style="width: 80%;" onclick="navigateTo('screen-welcome', 'screen-mode')">Start Game</button>
-        </div>
+        <div class="brand-group"><h1>THE DARTS<br><span style="color:var(--accent)">SCORER</span></h1><p class="subtitle">ENGINEERED BY SREE</p></div>
+        <div class="center-action"><button class="cta" style="width: 80%;" onclick="navigateTo('screen-welcome', 'screen-mode')">Start Game</button></div>
     </div>
 
     <div id="screen-mode" class="screen">
@@ -156,29 +155,39 @@
     <div id="screen-names" class="screen">
         <div class="brand-group"><p class="subtitle">Enter Names</p></div>
         <div id="name-container" style="margin-bottom: 20px;"></div>
-        <div style="padding: 0 10px 40px 10px;">
-            <button class="cta" onclick="beginMatch()">Confirm & Play</button>
-        </div>
+        <div style="padding: 0 10px 40px 10px;"><button class="cta" onclick="beginMatch()">Confirm & Play</button></div>
     </div>
 
     <div id="screen-game" class="screen" style="padding-bottom:140px;">
         <div class="score-header">
             <div id="p-name">PLAYER 1</div>
-            <div id="01-ui"><div id="score-display">301</div></div>
+            <div id="01-ui-display"><div id="score-display">301</div></div>
         </div>
+        
         <div id="cricket-ui" style="display:none;">
             <div class="total-points-bar"><span>Current Points</span><span id="cricket-total-points">0</span></div>
             <div class="cricket-grid"><div class="c-head">Marks</div><div class="c-head">Target</div><div class="c-head">Pts</div><div id="cricket-board" style="display: contents;"></div></div>
         </div>
+
         <div class="score-strip">
             <div class="dart-slot" id="d1">-</div><div class="dart-slot" id="d2">-</div><div class="dart-slot" id="d3">-</div>
         </div>
-        <div class="m-bar">
-            <button class="m-btn active" id="m1" onclick="setMultiplier(1)">S</button>
-            <button class="m-btn" id="m2" onclick="setMultiplier(2)">D</button>
-            <button class="m-btn" id="m3" onclick="setMultiplier(3)">T</button>
+
+        <div id="01-selectors" class="picker-btn-container">
+            <button class="picker-main-btn" onclick="openPicker(1)">Single</button>
+            <button class="picker-main-btn" onclick="openPicker(2)">Double</button>
+            <button class="picker-main-btn" onclick="openPicker(3)">Triple</button>
         </div>
-        <div class="pro-keypad" id="keypad"></div>
+
+        <div id="cricket-controls" style="display:none;">
+            <div class="m-bar">
+                <button class="m-btn active" id="m1" onclick="setMultiplier(1)">S</button>
+                <button class="m-btn" id="m2" onclick="setMultiplier(2)">D</button>
+                <button class="m-btn" id="m3" onclick="setMultiplier(3)">T</button>
+            </div>
+            <div class="pro-keypad" id="keypad"></div>
+        </div>
+
         <div class="bottom-action" style="flex-direction:row;">
             <button class="cta cta-outline" style="flex:1;" onclick="undoDart()">Undo</button>
             <button class="cta" id="confirm-btn" style="flex:1; opacity:0.3; pointer-events:none;" onclick="confirmTurn()">Submit</button>
@@ -189,53 +198,20 @@
         <div class="brand-group"><p class="subtitle">Scoring Guide</p></div>
         <div class="content-area">
             <h3>1. Standard Numbers (1–20)</h3>
-            <p>These are the most frequent inputs. On the keypad, you select the number first, but you can modify it using the Multiplier Bar (S, D, T):</p>
-            <ul>
-                <li><strong>Single (S):</strong> The base value (e.g., hitting the large 20 segment = 20 points).</li>
-                <li><strong>Double (D):</strong> Twice the value (e.g., hitting the outer ring of 20 = 40 points).</li>
-                <li><strong>Triple (T):</strong> Three times the value (e.g., hitting the inner ring of 20 = 60 points).</li>
-            </ul>
+            <p>Single (S), Double (D), or Triple (T) modifiers apply to numbers 1–20.</p>
             <h3>2. The Bullseye</h3>
-            <p>Located at the center of the board, it has two values:</p>
-            <ul>
-                <li><strong>Single Bull (Outer Green):</strong> Usually worth 25 points.</li>
-                <li><strong>Double Bull (Inner Red):</strong> Also known as a "Bullseye," worth 50 points.</li>
-            </ul>
-            <p><em>In your app: Press "BULL" with 'S' for 25, or press "BULL" with 'D' for 50.</em></p>
-            <h3>3. Misses and Bounces</h3>
-            <p><strong>0 (Zero):</strong> Used if the dart lands outside the scoring area, falls off the board, or hits the wire and bounces out.</p>
-            <h3>Common Strategy Inputs (High Scores)</h3>
-            <p>When trying to reduce the score quickly, players aim for these high-value segments:</p>
-            <ul>
-                <li><strong>T20 (Triple 20):</strong> 60 points (The highest possible single dart score).</li>
-                <li><strong>T19:</strong> 57 points.</li>
-                <li><strong>T18:</strong> 54 points.</li>
-                <li><strong>T17:</strong> 51 points.</li>
-            </ul>
-            <h3>Finishing (The "Checkout")</h3>
-            <p>Most professional rules require you to finish on a Double. Common "Checkout" inputs include:</p>
-            <ul>
-                <li><strong>D20 (Top):</strong> 40 points.</li>
-                <li><strong>D16:</strong> 32 points.</li>
-                <li><strong>D8:</strong> 16 points.</li>
-            </ul>
+            <p>Single Bull: 25 pts. Double Bull: 50 pts.</p>
         </div>
     </div>
 
     <div id="screen-about" class="screen">
         <div class="brand-group"><p class="subtitle">About App</p></div>
-        <div class="content-area" style="text-align: center;">
-            <p><strong>The Darts Scorer</strong><br>Version 2.0</p>
-            <p>A premium digital companion for your dart matches.</p>
-            <p style="margin-top: 50px; font-size: 0.7rem;">DESIGNED BY SREE</p>
-        </div>
+        <div class="content-area" style="text-align: center;"><p><strong>The Darts Scorer</strong><br>Version 2.0</p></div>
     </div>
 
     <div id="screen-summary" class="screen">
         <div class="brand-group" style="margin-top:auto;">
-            <div style="font-size:4rem;">🏆</div>
-            <p style="color:var(--accent); font-weight:900;">WINNER</p>
-            <h2 id="winner-name" style="font-size:3rem; text-transform:uppercase;">PLAYER 1</h2>
+            <div style="font-size:4rem;">🏆</div><p style="color:var(--accent); font-weight:900;">WINNER</p><h2 id="winner-name" style="font-size:3rem;">PLAYER 1</h2>
         </div>
         <div class="bottom-action"><button class="cta" onclick="location.reload()">New Game</button></div>
     </div>
@@ -249,8 +225,11 @@
         [20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1].forEach(n => {
             const b = document.createElement('button'); b.className = 'key'; b.innerText = n; b.onclick = () => pressValue(n); grid.appendChild(b);
         });
-        const bull = document.createElement('button'); bull.className = 'key'; bull.innerText = 'BULL'; bull.onclick = () => pressValue(25); grid.appendChild(bull);
-        const miss = document.createElement('button'); miss.className = 'key'; miss.innerText = '0'; miss.onclick = () => pressValue(0); grid.appendChild(miss);
+        grid.innerHTML += `<button class="key" onclick="pressValue(25)">BULL</button><button class="key" onclick="pressValue(0)">0</button>`;
+        
+        const picker = document.getElementById('value-picker-overlay');
+        for(let i=20; i>=1; i--) picker.innerHTML += `<div class="picker-key" onclick="selectValue(${i})">${i}</div>`;
+        picker.innerHTML += `<div class="picker-key" onclick="selectValue(25)">BULL</div><div class="picker-key" onclick="selectValue(0)">0</div>`;
     };
 
     function toggleMenu() {
@@ -263,10 +242,10 @@
     function handleMenu(opt) {
         toggleMenu();
         const cur = history[history.length-1];
-        if (opt === 'home') { if (cur !== 'screen-game' || confirm("Exit game?")) location.reload(); }
-        else if (opt === 'play') { if (cur !== 'screen-game' || confirm("End current match?")) navigateTo(cur, 'screen-mode'); }
-        else if (opt === 'help') { navigateTo(cur, 'screen-help'); }
-        else if (opt === 'about') { navigateTo(cur, 'screen-about'); }
+        if (opt === 'home') location.reload();
+        else if (opt === 'play') navigateTo(cur, 'screen-mode');
+        else if (opt === 'help') navigateTo(cur, 'screen-help');
+        else if (opt === 'about') navigateTo(cur, 'screen-about');
     }
 
     function navigateTo(cur, next) {
@@ -292,7 +271,8 @@
 
     function setMode(m) { 
         gMode=m; 
-        document.getElementById('01-ui').style.display = (m==='01')?'block':'none';
+        document.getElementById('01-selectors').style.display = (m==='01')?'flex':'none';
+        document.getElementById('cricket-controls').style.display = (m==='cricket')?'block':'none';
         document.getElementById('cricket-ui').style.display = (m==='cricket')?'block':'none';
         navigateTo('screen-mode', 'screen-players'); 
     }
@@ -309,15 +289,24 @@
         players = [];
         for(let i=1; i<=pCount; i++) {
             let name = (document.getElementById(`in-p${i}`)?.value || "PLAYER " + i).toUpperCase();
-            players.push({
-                name: name, score01: 301,
-                cricketHits: { 20:0, 19:0, 18:0, 17:0, 16:0, 15:0, 25:0 },
-                cricketPoints: { 20:0, 19:0, 18:0, 17:0, 16:0, 15:0, 25:0 }
-            });
+            players.push({ name: name, score01: 301, cricketHits: { 20:0, 19:0, 18:0, 17:0, 16:0, 15:0, 25:0 }, cricketPoints: { 20:0, 19:0, 18:0, 17:0, 16:0, 15:0, 25:0 } });
         }
         currentPlayerIdx = 0; navigateTo('screen-names', 'screen-game'); 
     }
-    
+
+    function openPicker(m) {
+        if(dartsThrown.length >= 3) return;
+        multiplier = m;
+        document.getElementById('value-picker-overlay').classList.add('open');
+    }
+
+    function selectValue(v) {
+        document.getElementById('value-picker-overlay').classList.remove('open');
+        if(v === 25 && multiplier === 3) multiplier = 2;
+        dartsThrown.push({v, m: multiplier});
+        updateDartSlots();
+    }
+
     function updateTurnUI() {
         let p = players[currentPlayerIdx];
         document.getElementById('p-name').innerText = p.name;
@@ -327,13 +316,7 @@
     }
 
     function setMultiplier(m) { multiplier = m; document.querySelectorAll('.m-btn').forEach(b => b.classList.remove('active')); document.getElementById('m'+m).classList.add('active'); }
-    
-    function pressValue(v) { 
-        if(dartsThrown.length < 3){ 
-            if(v===25 && multiplier===3) multiplier=2; 
-            dartsThrown.push({v, m:multiplier}); updateDartSlots(); setMultiplier(1); 
-        } 
-    }
+    function pressValue(v) { if(dartsThrown.length < 3){ dartsThrown.push({v, m:multiplier}); updateDartSlots(); setMultiplier(1); } }
 
     function updateDartSlots() {
         const cBtn = document.getElementById('confirm-btn'); 
@@ -351,24 +334,17 @@
     
     async function confirmTurn() {
         let p = players[currentPlayerIdx];
-        const isHatTrick = dartsThrown.every(d => d.v === 25);
-        
-        if (isHatTrick) {
-            const overlay = document.getElementById('hat-trick-overlay');
-            overlay.style.display = 'flex';
+        if (dartsThrown.every(d => d.v === 25)) {
+            document.getElementById('hat-trick-overlay').style.display = 'flex';
             await new Promise(r => setTimeout(r, 1500));
-            overlay.style.display = 'none';
+            document.getElementById('hat-trick-overlay').style.display = 'none';
         }
-
         dartsThrown.forEach(d => { 
-            if(gMode === '01') { p.score01 -= (d.v * d.m); } 
+            if(gMode === '01') p.score01 -= (d.v * d.m);
             else if(p.cricketHits.hasOwnProperty(d.v)) {
                 let hitsNeeded = 3 - p.cricketHits[d.v];
-                if (hitsNeeded > 0) {
-                    let toMarks = Math.min(d.m, hitsNeeded);
-                    p.cricketHits[d.v] += toMarks;
-                    p.cricketPoints[d.v] += ((d.m - toMarks) * d.v);
-                } else { p.cricketPoints[d.v] += (d.m * d.v); }
+                if (hitsNeeded > 0) { let toMarks = Math.min(d.m, hitsNeeded); p.cricketHits[d.v] += toMarks; p.cricketPoints[d.v] += ((d.m - toMarks) * d.v); }
+                else { p.cricketPoints[d.v] += (d.m * d.v); }
             } 
         });
         if(gMode === '01' && p.score01 <= 0) { showSummary(p.name); return; }
