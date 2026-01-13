@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Apex Darts</title>
+    <title>The Darts Scorer</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -21,27 +21,30 @@
             display: flex; justify-content: center;
         }
         .app-container { width: 100%; max-width: 400px; height: 100%; display: flex; flex-direction: column; padding: 15px; position: relative; }
-        .screen { display: none; flex-direction: column; flex-grow: 1; width: 100%; text-align: center; overflow-y: auto; }
+        .screen { display: none; flex-direction: column; flex-grow: 1; width: 100%; text-align: center; }
         .screen.active { display: flex; }
 
-        /* BRANDING */
+        /* UPDATED BRANDING */
         .brand-group { margin: 30px 0; }
-        h1 { font-size: 4.5rem; font-weight: 900; margin: 0; line-height: 0.9; letter-spacing: -3px; }
-        .subtitle { color: var(--dim); font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; margin-top: -5px; font-weight: 700; }
+        h1 { font-size: 3.2rem; font-weight: 900; margin: 0; line-height: 0.9; letter-spacing: -2px; text-transform: uppercase; }
+        .subtitle { color: var(--dim); font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; font-weight: 700; }
 
         /* UI ELEMENTS */
+        .name-entry-row {
+            display: flex; gap: 10px; margin-bottom: 12px; align-items: center;
+            background: var(--surface); border: 1px solid var(--border);
+            padding: 8px; border-radius: 16px; transition: border-color 0.3s;
+        }
+        .name-entry-row:focus-within { border-color: var(--accent); }
+        .name-input { flex: 1; background: transparent; border: none; padding: 10px; color: var(--text); font-size: 1rem; font-weight: 600; }
+        .btn-mini-submit { background: var(--accent); color: #000; border: none; padding: 8px 12px; border-radius: 10px; font-weight: 800; font-size: 0.6rem; text-transform: uppercase; cursor: pointer; }
+
         .cta { width: 100%; padding: 18px; background: var(--text); color: var(--bg); border-radius: 50px; font-weight: 900; text-transform: uppercase; border: none; cursor: pointer; flex-shrink: 0; }
-        .pro-keypad { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: auto; padding-bottom: 5px; }
-        .key { background: var(--surface); border: 1px solid var(--border); padding: 12px 0; border-radius: 8px; color: var(--text); font-size: 1rem; font-weight: 700; cursor: pointer; }
-        .key.active-num { border-color: var(--accent); color: var(--accent); }
-        
         .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; height: 60px; }
         .nav-btn { width: 44px; height: 44px; background: var(--nav-bg); border-radius: 50%; display: flex; justify-content: center; align-items: center; border: 1px solid var(--border); cursor: pointer; }
         
-        /* CONGRATS PAGE STYLING */
-        .congrats-card { padding: 40px 20px; background: linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%); border-radius: 24px; border: 1px solid var(--border); margin: auto 0; }
-        .trophy-icon { font-size: 4rem; margin-bottom: 10px; }
-
+        .pro-keypad { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: auto; padding-bottom: 5px; }
+        .key { background: var(--surface); border: 1px solid var(--border); padding: 12px 0; border-radius: 8px; color: var(--text); font-size: 1rem; font-weight: 700; cursor: pointer; }
         .m-bar { display: flex; gap: 6px; margin: 10px 0; }
         .m-btn { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-weight: 800; font-size: 0.7rem; text-transform: uppercase; }
         .m-btn.active { background: var(--text); color: var(--bg); }
@@ -52,16 +55,16 @@
 
 <div class="app-container">
     <div class="top-nav">
-        <div id="home-btn" class="nav-btn" style="visibility:hidden" onclick="confirmExit()"><svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z"/></svg></div>
+        <div id="home-btn" class="nav-btn" style="visibility:hidden" onclick="location.reload()"><svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z"/></svg></div>
         <div class="nav-btn" onclick="toggleTheme()"><svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M12,18C15.31,18 18,15.31 18,12C18,8.69 15.31,6 12,6V18M20,12.51V16.19L17.62,18.57L13.94,20.95H10.06L6.38,18.57L4,16.19V12.51L1.62,10.13L4,7.75V4.06L6.38,1.68H10.06L13.94,4.06L17.62,6.44V10.13L20,12.51Z"/></svg></div>
     </div>
 
     <div id="screen-welcome" class="screen active" style="justify-content:center;">
         <div class="brand-group">
-            <h1>APEX<span style="color:var(--dim)">.</span></h1>
+            <h1>THE DARTS<br><span style="color:var(--accent)">SCORER</span></h1>
             <p class="subtitle">ENGINEERED BY SREE</p>
         </div>
-        <div style="width:80px; height:80px; border:2px solid var(--text); border-radius:50%; display:flex; justify-content:center; align-items:center; font-weight:900; align-self:center; cursor:pointer;" onclick="navigateTo('screen-welcome', 'screen-mode')">GO</div>
+        <div style="width:80px; height:80px; border:2px solid var(--text); border-radius:50%; display:flex; justify-content:center; align-items:center; font-weight:900; align-self:center; cursor:pointer;" onclick="navigateTo('screen-welcome', 'screen-mode')">START</div>
     </div>
 
     <div id="screen-mode" class="screen" style="justify-content:center;">
@@ -79,8 +82,8 @@
     </div>
 
     <div id="screen-names" class="screen">
-        <p style="font-size:0.7rem; color:var(--dim); text-transform:uppercase; margin-bottom:10px;">Add Names</p>
-        <div style="flex-grow:1; overflow-y:auto; padding-bottom:10px;" id="name-container"></div>
+        <p style="font-size:0.7rem; color:var(--dim); text-transform:uppercase; margin-bottom:20px; letter-spacing:1px;">Enter Player Roster</p>
+        <div style="flex-grow:1; overflow-y:auto; padding:5px;" id="name-container"></div>
         <button class="cta" onclick="beginMatch()">Start Match</button>
     </div>
 
@@ -94,12 +97,11 @@
     </div>
 
     <div id="screen-summary" class="screen" style="justify-content:center;">
-        <div class="congrats-card">
-            <div class="trophy-icon">🏆</div>
-            <p style="color:var(--accent); text-transform:uppercase; letter-spacing:4px; font-weight:900; font-size:0.8rem;">Congratulations</p>
+        <div style="padding:40px 20px; background: var(--surface); border-radius:24px; border:1px solid var(--border);">
+            <div style="font-size:4rem; margin-bottom:10px;">🏆</div>
+            <p style="color:var(--accent); text-transform:uppercase; letter-spacing:4px; font-weight:900; font-size:0.8rem;">Victory</p>
             <h2 id="winner-name" style="font-size:3.5rem; margin:10px 0; text-transform:uppercase; font-weight:900; line-height:1;">PLAYER 1</h2>
-            <p style="color:var(--dim); margin-bottom:30px;">You are the Apex Champion!</p>
-            <button class="cta" onclick="location.reload()">Start New Game</button>
+            <button class="cta" onclick="location.reload()" style="margin-top:20px;">New Game</button>
         </div>
     </div>
 </div>
@@ -113,7 +115,7 @@
         [20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1].forEach(n => {
             const b = document.createElement('button'); b.className = 'key'; b.innerText = n; b.id = 'key-'+n; b.onclick = () => pressValue(n); grid.appendChild(b);
         });
-        const bull = document.createElement('button'); bull.className = 'key'; bull.innerText = 'BULL'; b.id='key-25'; bull.onclick = () => pressValue(25); grid.appendChild(bull);
+        const bull = document.createElement('button'); bull.className = 'key'; bull.innerText = 'BULL'; bull.onclick = () => pressValue(25); grid.appendChild(bull);
         const miss = document.createElement('button'); miss.className = 'key'; miss.innerText = '0'; miss.onclick = () => pressValue(0); grid.appendChild(miss);
     };
 
@@ -123,56 +125,25 @@
         document.getElementById('home-btn').style.visibility = (next === 'screen-welcome' || next === 'screen-summary') ? "hidden" : "visible";
     }
 
-    function setMode(m) { 
-        gMode=m; 
-        document.getElementById('01-ui').style.display = (m==='01')?'block':'none';
-        document.getElementById('cricket-ui').style.display = (m==='cricket')?'block':'none';
-        if(m==='cricket') { [20,19,18,17,16,15,25].forEach(n => { let k=document.getElementById('key-'+n); if(k) k.classList.add('active-num'); }); updateCricketBoard(); }
-        navigateTo('screen-mode', 'screen-players'); 
-    }
-
+    function setMode(m) { gMode=m; document.getElementById('01-ui').style.display = (m==='01')?'block':'none'; document.getElementById('cricket-ui').style.display = (m==='cricket')?'block':'none'; navigateTo('screen-mode', 'screen-players'); }
     function changeCount(v) { pCount=Math.max(1, Math.min(8, pCount+v)); document.getElementById('player-val').innerText=pCount; }
     function submitPlayerCount() {
-        const c=document.getElementById('name-container'); c.innerHTML="";
-        for(let i=1; i<=pCount; i++) c.innerHTML += `<input type="text" class="name-input" id="in-p${i}" placeholder="Name ${i}" autocomplete="off">`;
+        const c = document.getElementById('name-container'); c.innerHTML = "";
+        for(let i=1; i<=pCount; i++) {
+            c.innerHTML += `<div class="name-entry-row"><input type="text" class="name-input" id="in-p${i}" placeholder="Player ${i} Name" autocomplete="off"><button class="btn-mini-submit" onclick="this.parentElement.style.borderColor='var(--accent)'">Done</button></div>`;
+        }
         navigateTo('screen-players', 'screen-names');
     }
-
-    function beginMatch() { 
-        pName = (document.getElementById('in-p1').value || "PLAYER 1").toUpperCase();
-        document.getElementById('p-name').innerText = pName;
-        navigateTo('screen-names', 'screen-game'); 
-    }
-
-    function setMultiplier(m) {
-        multiplier = m;
-        document.querySelectorAll('.m-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById('m'+m).classList.add('active');
-    }
-
+    function beginMatch() { pName = (document.getElementById('in-p1').value || "PLAYER 1").toUpperCase(); document.getElementById('p-name').innerText = pName; navigateTo('screen-names', 'screen-game'); }
+    function setMultiplier(m) { multiplier = m; document.querySelectorAll('.m-btn').forEach(b => b.classList.remove('active')); document.getElementById('m'+m).classList.add('active'); }
     function pressValue(v) { if(dartsThrown.length<3){ if(v===25 && multiplier===3) multiplier=2; dartsThrown.push({v, m:multiplier}); updateUI(); setMultiplier(1); }}
-
-    function updateUI() {
-        const cBtn = document.getElementById('confirm-btn');
-        cBtn.style.opacity = (dartsThrown.length === 3) ? "1" : "0.3";
-        cBtn.style.pointerEvents = (dartsThrown.length === 3) ? "auto" : "none";
-    }
-
+    function updateUI() { const cBtn = document.getElementById('confirm-btn'); cBtn.style.opacity = (dartsThrown.length === 3) ? "1" : "0.3"; cBtn.style.pointerEvents = (dartsThrown.length === 3) ? "auto" : "none"; }
     function confirmTurn() {
-        dartsThrown.forEach(d => {
-            if(gMode === '01') currentScore -= (d.v * d.m);
-            else if(cricketHits.hasOwnProperty(d.v)) cricketHits[d.v] += d.m;
-        });
-        if(gMode === '01') {
-            document.getElementById('score-display').innerText = currentScore;
-            if(currentScore <= 0) showSummary();
-        } else {
-            updateCricketBoard();
-            if(Object.values(cricketHits).every(h => h >= 3)) showSummary();
-        }
+        dartsThrown.forEach(d => { if(gMode === '01') currentScore -= (d.v * d.m); else if(cricketHits.hasOwnProperty(d.v)) cricketHits[d.v] += d.m; });
+        if(gMode === '01') { document.getElementById('score-display').innerText = currentScore; if(currentScore <= 0) showSummary(); }
+        else { updateCricketBoard(); if(Object.values(cricketHits).every(h => h >= 3)) showSummary(); }
         dartsThrown = []; updateUI();
     }
-
     function updateCricketBoard() {
         const board = document.getElementById('cricket-board'); board.innerHTML = "";
         [20, 19, 18, 17, 16, 15, 25].forEach(t => {
@@ -180,15 +151,9 @@
             board.innerHTML += `<div style="color:var(--accent)">${m}</div><div style="color:var(--dim)">${t==25?'BULL':t}</div><div style="font-weight:900">${h>3?(h-3)*t:0}</div>`;
         });
     }
-
-    function showSummary() {
-        document.getElementById('winner-name').innerText = pName;
-        navigateTo('screen-game', 'screen-summary');
-    }
-
+    function showSummary() { document.getElementById('winner-name').innerText = pName; navigateTo('screen-game', 'screen-summary'); }
     function undoDart() { dartsThrown.pop(); updateUI(); }
     function toggleTheme() { document.body.setAttribute('data-theme', document.body.getAttribute('data-theme')==='dark'?'light':'dark'); }
-    function confirmExit() { if(confirm("End current match and return home?")) location.reload(); }
 </script>
 </body>
 </html>
