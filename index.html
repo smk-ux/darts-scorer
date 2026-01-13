@@ -76,16 +76,13 @@
         .name-entry-row { display: flex; gap: 10px; margin-bottom: 10px; background: var(--surface); border: 1px solid var(--border); padding: 5px 10px; border-radius: 12px; }
         .name-input { flex: 1; background: transparent; border: none; padding: 10px; color: var(--text); font-size: 1rem; }
         
-        /* DARTBOARD IMAGE STYLE */
-        .board-img { 
-            width: 180px; height: 180px; border-radius: 50%; object-fit: cover; 
-            border: 4px solid var(--accent); margin: 10px 0; 
-            background: var(--surface); /* Fallback background */
-        }
+        .board-img { width: 180px; height: 180px; border-radius: 50%; object-fit: cover; border: 4px solid var(--accent); margin: 10px 0; background: var(--surface); }
 
         .content-area { padding: 20px; line-height: 1.6; color: var(--text); overflow-y: auto; }
         .content-area h3 { color: var(--accent); margin: 20px 0 10px 0; text-transform: uppercase; }
         .content-area p { margin-bottom: 15px; font-size: 0.9rem; color: var(--dim); }
+        .content-area li { margin-bottom: 10px; font-size: 0.85rem; color: var(--dim); list-style: none; }
+        .content-area strong { color: var(--text); }
     </style>
 </head>
 <body data-theme="dark">
@@ -170,12 +167,39 @@
     </div>
 
     <div id="screen-help" class="screen">
-        <div class="brand-group"><p class="subtitle">How to Play</p></div>
+        <div class="brand-group"><p class="subtitle">Scoring Guide</p></div>
         <div class="content-area">
-            <h3>01 Games</h3>
-            <p>Start from 301. Each throw reduces your score. The goal is to reach exactly zero.</p>
-            <h3>Cricket</h3>
-            <p>Close numbers 15-20 and the Bull by hitting them 3 times. Once closed, additional hits score points if your opponent hasn't closed it yet.</p>
+            <h3>1. Standard Numbers (1–20)</h3>
+            <p>These are the most frequent inputs. On the keypad, you select the number first, but you can modify it using the Multiplier Bar (S, D, T):</p>
+            <ul>
+                <li><strong>Single (S):</strong> The base value (e.g., hitting the large 20 segment = 20 points).</li>
+                <li><strong>Double (D):</strong> Twice the value (e.g., hitting the outer ring of 20 = 40 points).</li>
+                <li><strong>Triple (T):</strong> Three times the value (e.g., hitting the inner ring of 20 = 60 points).</li>
+            </ul>
+            <h3>2. The Bullseye</h3>
+            <p>Located at the center of the board, it has two values:</p>
+            <ul>
+                <li><strong>Single Bull (Outer Green):</strong> Usually worth 25 points.</li>
+                <li><strong>Double Bull (Inner Red):</strong> Also known as a "Bullseye," worth 50 points.</li>
+            </ul>
+            <p><em>In your app: Press "BULL" with 'S' for 25, or press "BULL" with 'D' for 50.</em></p>
+            <h3>3. Misses and Bounces</h3>
+            <p><strong>0 (Zero):</strong> Used if the dart lands outside the scoring area, falls off the board, or hits the wire and bounces out.</p>
+            <h3>Common Strategy Inputs (High Scores)</h3>
+            <p>When trying to reduce the score quickly, players aim for these high-value segments:</p>
+            <ul>
+                <li><strong>T20 (Triple 20):</strong> 60 points (The highest possible single dart score).</li>
+                <li><strong>T19:</strong> 57 points.</li>
+                <li><strong>T18:</strong> 54 points.</li>
+                <li><strong>T17:</strong> 51 points.</li>
+            </ul>
+            <h3>Finishing (The "Checkout")</h3>
+            <p>Most professional rules require you to finish on a Double. Common "Checkout" inputs include:</p>
+            <ul>
+                <li><strong>D20 (Top):</strong> 40 points.</li>
+                <li><strong>D16:</strong> 32 points.</li>
+                <li><strong>D8:</strong> 16 points.</li>
+            </ul>
         </div>
     </div>
 
