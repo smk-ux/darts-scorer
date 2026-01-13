@@ -10,157 +10,239 @@
             --bg: #000000;
             --surface: #111111;
             --border: #222222;
-            --text-primary: #ffffff;
-            --text-secondary: #888888;
+            --text: #ffffff;
+            --dim: #444444;
+            --accent: #ffffff;
         }
 
-        html, body {
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        
+        body, html {
             background-color: var(--bg);
-            color: var(--text-primary);
+            color: var(--text);
             font-family: 'Inter', sans-serif;
             margin: 0;
-            padding: 0;
             height: 100vh;
             width: 100vw;
             overflow: hidden;
         }
 
-        .app-container { 
-            width: 100%; 
+        .app-container {
+            width: 100%;
             height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            position: relative;
+            padding: 20px;
         }
 
-        /* --- SCREEN: WELCOME (FIXED BUTTON VISIBILITY) --- */
-        #welcome-screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--bg);
-            display: flex;
-            flex-direction: column;
-            justify-content: center; /* Centers content vertically */
-            align-items: center;
-            z-index: 100;
-            text-align: center;
-            transition: transform 0.6s cubic-bezier(0.8, 0, 0.2, 1);
-        }
+        .screen { display: none; width: 100%; max-width: 350px; text-align: center; flex-direction: column; align-items: center; }
+        .screen.active { display: flex; }
 
-        .welcome-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-        }
+        /* ANIMATIONS */
+        .fade-in { animation: fadeIn 0.4s ease forwards; }
+        .fade-out { animation: fadeOut 0.4s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-10px); } }
 
-        .welcome-content h1 { 
-            font-size: 4.5rem; 
-            font-weight: 900; 
-            letter-spacing: -3px; 
-            margin: 0; 
-            line-height: 1;
-        }
-
-        .welcome-content p { 
-            color: var(--text-secondary); 
-            font-size: 0.9rem; 
-            margin: 20px 0 50px 0; 
-            text-transform: uppercase; 
-            letter-spacing: 2px; 
-        }
+        /* SCOREBOARD */
+        .tagline { color: var(--dim); text-transform: uppercase; letter-spacing: 2px; font-size: 0.7rem; margin-bottom: 10px; }
+        .p-score { font-size: 7.5rem; font-weight: 900; margin: 0; line-height: 0.8; letter-spacing: -5px; }
         
-        .start-circle {
-            width: 75px;
-            height: 75px;
-            border: 2px solid white;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            background: transparent;
-            color: white;
-            font-size: 2rem;
-            transition: all 0.2s ease;
-            -webkit-tap-highlight-color: transparent;
-        }
+        /* HISTORY */
+        .history-row { display: flex; gap: 15px; margin: 20px 0; height: 20px; justify-content: center; }
+        .history-item { font-size: 0.8rem; font-weight: 700; color: var(--dim); padding: 2px 8px; border-radius: 4px; border: 1px solid transparent; }
+        .history-item.recent { color: white; border-color: var(--border); }
 
-        .start-circle:active {
-            background: white;
-            color: black;
-            transform: scale(0.9);
-        }
+        /* CHECKOUT BOX */
+        .checkout-box { min-height: 70px; margin-bottom: 10px; }
+        .checkout-guide { background: var(--accent); color: #000; padding: 6px 14px; border-radius: 4px; font-size: 0.8rem; font-weight: 900; cursor: pointer; }
 
-        /* --- CARDS --- */
-        .glass-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 40px;
-            padding: 30px;
-            text-align: center;
-            width: 85%;
-            max-width: 340px;
-            display: none;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-        }
+        /* KEYPAD */
+        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; }
+        .key { background: var(--surface); border: 1px solid var(--border); padding: 18px; border-radius: 15px; color: white; font-size: 1.5rem; font-weight: 700; cursor: pointer; }
+        .key.enter { background: white; color: black; font-size: 0.8rem; border: none; }
+        .key.undo { background: transparent; border: 1px solid var(--border); color: var(--dim); font-size: 0.6rem; letter-spacing: 1px; }
 
-        label { color: var(--text-secondary); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; margin-bottom: 15px; display: block; text-align: left; }
+        /* STATS TABLE */
+        .stats-grid { width: 100%; margin: 20px 0; border-top: 1px solid var(--border); padding-top: 20px; }
+        .stat-item { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-val { font-weight: 900; color: white; }
 
-        .choice-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 25px; }
-        .choice-card {
-            background: #1a1a1a;
-            border: 1px solid var(--border);
-            padding: 20px 5px;
-            border-radius: 20px;
-            cursor: pointer;
-        }
-        .choice-card.active { background: white; color: black; border-color: white; }
-        .choice-card h2 { margin: 0; font-size: 0.9rem; font-weight: 800; }
-
-        .circle-grid { display: flex; justify-content: space-between; margin-bottom: 20px; }
-        .circle-btn { width: 50px; height: 50px; border-radius: 50%; background: #1a1a1a; border: 1px solid var(--border); color: white; font-weight: 800; cursor: pointer; }
-        .circle-btn.active { background: white; color: black; }
-
-        .name-field { background: #1a1a1a; border: 1px solid var(--border); padding: 15px; border-radius: 15px; color: white; margin-bottom: 10px; width: 90%; outline: none; display: block; margin-left: auto; margin-right: auto;}
-
-        .cta-button { width: 100%; padding: 20px; border-radius: 100px; border: none; background: white; color: black; font-weight: 900; font-size: 0.9rem; text-transform: uppercase; cursor: pointer; margin-top: 10px; }
-
-        /* --- SCOREBOARD --- */
-        .score-display { font-size: 6rem; font-weight: 900; letter-spacing: -4px; margin: 0; line-height: 1; }
-        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
-        .key { background: #111111; border: 1px solid var(--border); padding: 20px; border-radius: 20px; color: white; font-size: 1.5rem; font-weight: 700; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-        .key.enter { background: white; color: black; font-size: 0.9rem; border: none; }
+        .cta { width: 100%; padding: 18px; background: white; color: black; border-radius: 50px; font-weight: 900; margin-top: 20px; text-transform: uppercase; border: none; cursor: pointer; }
+        input.name-input { width: 100%; background: #1a1a1a; border: 1px solid var(--border); padding: 15px; border-radius: 12px; color: white; margin-bottom: 10px; text-align: center; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    <div id="welcome-screen">
-        <div class="welcome-content">
-            <h1>DARTS<span style="color:#444">.</span></h1>
-            <p>Master the board</p>
-            <div class="start-circle" onclick="goToGameSelection()">→</div>
+    <div id="screen-welcome" class="screen active">
+        <h1>DARTS<span style="color:var(--dim)">.</span></h1>
+        <p class="tagline">The ultimate pro scorer</p>
+        <div style="width:100px; height:100px; border:2px solid white; border-radius:50%; display:flex; justify-content:center; align-items:center; font-weight:900; font-size:0.8rem; cursor:pointer;" onclick="nextScreen('screen-welcome', 'screen-mode')">START</div>
+    </div>
+
+    <div id="screen-mode" class="screen">
+        <p class="tagline">Select Mode</p>
+        <button class="cta" style="background:transparent; color:white; border:1px solid var(--border);" onclick="selectMode('01')">301 GAME</button>
+        <button class="cta" style="background:transparent; color:white; border:1px solid var(--border); margin-top:10px;" onclick="selectMode('cricket')">CRICKET</button>
+        <button class="cta" onclick="nextScreen('screen-mode', 'screen-players')">Next</button>
+    </div>
+
+    <div id="screen-players" class="screen">
+        <p class="tagline">Enter Name</p>
+        <input type="text" id="p1-name" class="name-input" value="SREE">
+        <button class="cta" onclick="startGame()">Start Match</button>
+    </div>
+
+    <div id="screen-game" class="screen">
+        <div class="tagline" id="cur-player-name">PLAYER</div>
+        <div class="p-score" id="cur-player-score">301</div>
+        
+        <div class="history-row" id="history-display">
+            <div class="history-item">-</div>
+            <div class="history-item">-</div>
+            <div class="history-item recent">-</div>
+        </div>
+
+        <div class="checkout-box">
+            <div id="checkout-view" class="checkout-guide" style="display:none;" onclick="alert('D = Double Outer Ring\nT = Triple Inner Ring')"></div>
+        </div>
+        
+        <div id="input-view" style="font-size:2rem; color:var(--dim); font-weight:900; height:40px;">_</div>
+        
+        <div class="keypad">
+            <button class="key" onclick="press(1)">1</button>
+            <button class="key" onclick="press(2)">2</button>
+            <button class="key" onclick="press(3)">3</button>
+            <button class="key" onclick="press(4)">4</button>
+            <button class="key" onclick="press(5)">5</button>
+            <button class="key" onclick="press(6)">6</button>
+            <button class="key" onclick="press(7)">7</button>
+            <button class="key" onclick="press(8)">8</button>
+            <button class="key" onclick="press(9)">9</button>
+            <button class="key undo" onclick="undo()">UNDO</button>
+            <button class="key enter" onclick="submit()">ENTER</button>
+            <button class="key" onclick="press(0)">0</button>
         </div>
     </div>
 
-    <div id="game-selection-screen" class="glass-card">
-        <label>Pick a Mode</label>
-        <div class="choice-row">
-            <div class="choice-card active" onclick="pickGame('01', this)">
-                <h2>01 GAME</h2>
-            </div>
-            <div class="choice-card" onclick="pickGame('cricket', this)">
-                <h2>CRICKET</h2>
-            </div>
+    <div id="screen-congrats" class="screen">
+        <h1>VICTORY<span style="color:var(--dim)">.</span></h1>
+        <p class="tagline" id="winner-text">SREE WINS</p>
+        
+        <div class="stats-grid">
+            <div class="stat-item"><span>Total Turns</span> <span class="stat-val" id="stat-turns">0</span></div>
+            <div class="stat-item"><span>3-Dart Avg</span> <span class="stat-val" id="stat-avg">0.0</span></div>
         </div>
-        <button class="cta-button" onclick="goToSetup()">Next</button>
+        
+        <button class="cta" onclick="location.reload()">Play Again</button>
     </div>
+</div>
 
-    <div id="setup-screen" class="glass-card">
-        <label>Players</label>
-        <div class="circle-grid">
+<script>
+    let mode = '01';
+    let players = [];
+    let curIdx = 0;
+    let typed = "";
+    let historyStack = [];
+    let dartHistory = [];
+    let turnCount = 0;
+    let totalScoreThrown = 0;
+
+    const checkouts = {
+        2: "D1", 4: "D2", 6: "D3", 8: "D4", 10: "D5", 12: "D6", 14: "D7", 16: "D8", 18: "D9", 20: "D10",
+        40: "D20", 50: "BULL", 60: "S20, D20", 80: "T20, D10", 100: "T20, D20", 170: "T20, T20, BULL"
+    };
+
+    function nextScreen(cur, next) {
+        document.getElementById(cur).classList.add('fade-out');
+        setTimeout(() => {
+            document.getElementById(cur).classList.remove('active', 'fade-out');
+            document.getElementById(next).classList.add('active', 'fade-in');
+        }, 400);
+    }
+
+    function selectMode(m) { mode = m; nextScreen('screen-mode', 'screen-players'); }
+
+    function startGame() {
+        const name = document.getElementById('p1-name').value.toUpperCase();
+        players = [{ name: name, score: (mode === '01' ? 301 : 0) }];
+        nextScreen('screen-players', 'screen-game');
+        updateUI();
+    }
+
+    function press(n) { if(typed.length < 3) { typed += n; document.getElementById('input-view').innerText = typed; } }
+    function clearIn() { typed = ""; document.getElementById('input-view').innerText = "_"; }
+
+    function submit() {
+        let val = parseInt(typed);
+        if(isNaN(val) || val > 180) return;
+
+        // Save State for Undo
+        historyStack.push({
+            score: players[0].score,
+            dartHistory: [...dartHistory],
+            turnCount: turnCount,
+            totalScoreThrown: totalScoreThrown
+        });
+
+        if(mode === '01') {
+            let res = players[0].score - val;
+            if(res === 0) { finishGame(); return; }
+            if(res > 1) {
+                players[0].score = res;
+                totalScoreThrown += val;
+                turnCount++;
+                dartHistory.push(val);
+                if(dartHistory.length > 3) dartHistory.shift();
+            } else {
+                alert("BUST");
+            }
+        }
+        
+        clearIn();
+        updateUI();
+    }
+
+    function undo() {
+        if(historyStack.length === 0) return;
+        let state = historyStack.pop();
+        players[0].score = state.score;
+        dartHistory = state.dartHistory;
+        turnCount = state.turnCount;
+        totalScoreThrown = state.totalScoreThrown;
+        updateUI();
+    }
+
+    function updateUI() {
+        document.getElementById('cur-player-name').innerText = players[0].name;
+        document.getElementById('cur-player-score').innerText = players[0].score;
+        
+        // History items
+        const hItems = document.querySelectorAll('.history-item');
+        hItems[0].innerText = dartHistory[dartHistory.length - 3] || "-";
+        hItems[1].innerText = dartHistory[dartHistory.length - 2] || "-";
+        hItems[2].innerText = dartHistory[dartHistory.length - 1] || "-";
+
+        // Checkout guide
+        const guide = document.getElementById('checkout-view');
+        if(mode === '01' && checkouts[players[0].score]) {
+            guide.innerText = "FINISH: " + checkouts[players[0].score];
+            guide.style.display = "block";
+        } else {
+            guide.style.display = "none";
+        }
+    }
+
+    function finishGame() {
+        turnCount++; // Count the winning turn
+        document.getElementById('stat-turns').innerText = turnCount;
+        let avg = turnCount > 0 ? (totalScoreThrown / turnCount).toFixed(1) : "0.0";
+        document.getElementById('stat-avg').innerText = avg;
+        document.getElementById('winner-text').innerText = players[0].name + " WINS";
+        nextScreen('screen-game', 'screen-congrats');
+    }
+</script>
+</body>
+</html>
