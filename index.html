@@ -55,8 +55,6 @@
             align-items: center; cursor: pointer; border: 1px solid var(--border);
             transition: all 0.2s;
         }
-
-        .nav-icon-btn:active { transform: scale(0.9); }
         .nav-icon-btn svg { width: 20px; height: 20px; fill: var(--text); }
 
         /* SCREENS */
@@ -64,27 +62,25 @@
         .screen.active { display: flex; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* TYPOGRAPHY */
         h1 { font-size: 4rem; font-weight: 900; letter-spacing: -3px; margin: 0; }
         .tagline { color: var(--dim); text-transform: uppercase; letter-spacing: 2px; font-size: 0.7rem; margin-bottom: 20px; }
         .p-score { font-size: 7.5rem; font-weight: 900; margin: 0; line-height: 0.8; letter-spacing: -5px; }
 
-        /* INPUTS */
+        /* KEYPAD & INPUTS */
+        .num-view { font-size: 4.5rem; font-weight: 900; margin: 10px 0; color: var(--text); height: 90px; }
+        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; max-width: 320px; }
+        .key { background: var(--surface); border: 1px solid var(--border); padding: 20px; border-radius: 15px; color: var(--text); font-size: 1.5rem; font-weight: 700; cursor: pointer; }
+        .key.action { background: var(--text); color: var(--bg); font-size: 0.8rem; border: none; }
+        .key.clear { background: transparent; border: 1px solid var(--border); color: var(--dim); font-size: 0.7rem; }
+
         .name-input { 
             width: 100%; max-width: 320px; background: var(--surface); 
             border: 1px solid var(--border); padding: 18px; border-radius: 15px; 
-            color: var(--text); margin-bottom: 12px; text-align: center; 
-            font-weight: 700; font-size: 1rem;
+            color: var(--text); margin-bottom: 12px; text-align: center; font-weight: 700;
         }
         .name-input::placeholder { color: var(--dim); font-weight: 400; font-style: italic; }
 
-        .cta { width: 100%; max-width: 320px; padding: 18px; background: var(--text); color: var(--bg); border-radius: 50px; font-weight: 900; margin-top: 10px; text-transform: uppercase; border: none; cursor: pointer; }
-        
-        .circle-btn { 
-            width: 60px; height: 60px; border: 1px solid var(--border); 
-            border-radius: 50%; display: flex; justify-content: center; 
-            align-items: center; font-weight: 900; cursor: pointer;
-        }
+        .cta { width: 100%; max-width: 320px; padding: 18px; background: var(--text); color: var(--bg); border-radius: 50px; font-weight: 900; margin-top: 15px; text-transform: uppercase; border: none; cursor: pointer; }
     </style>
 </head>
 <body data-theme="dark">
@@ -107,39 +103,51 @@
     <div id="screen-welcome" class="screen active">
         <h1>DARTS<span style="color:var(--dim)">.</span></h1>
         <p class="tagline">By Sree</p>
-        <div style="width:100px; height:100px; border:2px solid var(--text); border-radius:50%; display:flex; justify-content:center; align-items:center; font-weight:900; font-size:0.8rem; cursor:pointer;" onclick="navigateTo('screen-welcome', 'screen-players')">START</div>
+        <div style="width:100px; height:100px; border:2px solid var(--text); border-radius:50%; display:flex; justify-content:center; align-items:center; font-weight:900; font-size:0.8rem; cursor:pointer;" onclick="navigateTo('screen-welcome', 'screen-mode')">START</div>
+    </div>
+
+    <div id="screen-mode" class="screen">
+        <p class="tagline">Select Mode</p>
+        <button class="cta" onclick="setMode('01')">01 Game</button>
+        <button class="cta" style="background:transparent; color:var(--text); border:1px solid var(--border); margin-top:10px;" onclick="setMode('cricket')">Cricket</button>
     </div>
 
     <div id="screen-players" class="screen">
-        <p class="tagline">Players</p>
-        <div style="display:flex; gap:15px; margin:20px 0;">
-            <div class="circle-btn" onclick="setCount(1)">1</div>
-            <div class="circle-btn" onclick="setCount(2)">2</div>
+        <p class="tagline">Number of Players</p>
+        <div id="player-num-view" class="num-view">1</div>
+        <div class="keypad">
+            <button class="key" onclick="pressNum(1)">1</button><button class="key" onclick="pressNum(2)">2</button><button class="key" onclick="pressNum(3)">3</button>
+            <button class="key" onclick="pressNum(4)">4</button><button class="key" onclick="pressNum(5)">5</button><button class="key" onclick="pressNum(6)">6</button>
+            <button class="key" onclick="pressNum(7)">7</button><button class="key" onclick="pressNum(8)">8</button><button class="key" onclick="pressNum(9)">9</button>
+            <button class="key clear" onclick="clearNum()">CLR</button><button class="key" onclick="pressNum(0)">0</button><button class="key action" onclick="submitPlayerCount()">NEXT</button>
         </div>
     </div>
 
     <div id="screen-names" class="screen">
         <p class="tagline">Set Names</p>
-        <div id="name-container" style="width:100%; display:flex; flex-direction:column; align-items:center;"></div>
+        <div id="name-container" style="width:100%; display:flex; flex-direction:column; align-items:center; overflow-y:auto; max-height:50vh;"></div>
         <button class="cta" onclick="beginMatch()">Start Match</button>
     </div>
 
     <div id="screen-game" class="screen">
-        <div class="tagline" id="cur-p-name">PLAYER 1</div>
+        <div class="tagline" id="game-mode-label">01 GAME</div>
+        <div class="tagline" id="cur-p-name" style="margin-bottom:0;">PLAYER 1</div>
         <div class="p-score" id="cur-p-score">301</div>
-        <button class="cta" style="background:transparent; border:1px solid var(--border); color:var(--text); margin-top:50px;" onclick="alert('Score tracking active!')">Simulate Scoring</button>
-    </div>
+        <p style="color:var(--dim); font-size: 0.8rem;">Match Active</p>
+        </div>
 </div>
 
 <script>
     let navStack = ['screen-welcome'];
-    let isGameInProgress = false;
+    let selectedMode = '01';
+    let playerInput = "1";
+    let isGameActive = false;
 
     function navigateTo(cur, next) {
         document.getElementById(cur).classList.remove('active');
         document.getElementById(next).classList.add('active');
         navStack.push(next);
-        updateNavVisibility();
+        updateNav();
     }
 
     function goBack() {
@@ -148,48 +156,69 @@
         let prev = navStack[navStack.length - 1];
         document.getElementById(cur).classList.remove('active');
         document.getElementById(prev).classList.add('active');
-        if (prev === 'screen-welcome') isGameInProgress = false;
-        updateNavVisibility();
+        if (prev === 'screen-welcome') isGameActive = false;
+        updateNav();
     }
 
     function confirmGoHome() {
-        const warning = "Are you sure you want to stop the game? All scores and progress will be lost.";
-        if (isGameInProgress) {
-            if (confirm(warning)) {
-                resetToHome();
-            }
+        if (isGameActive) {
+            if (confirm("Are you sure you want to stop the game? All scores will be lost.")) resetApp();
         } else {
-            resetToHome();
+            resetApp();
         }
     }
 
-    function resetToHome() {
-        isGameInProgress = false;
+    function resetApp() {
+        isGameActive = false;
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById('screen-welcome').classList.add('active');
         navStack = ['screen-welcome'];
-        updateNavVisibility();
+        playerInput = "1";
+        document.getElementById('player-num-view').innerText = "1";
+        updateNav();
     }
 
-    function updateNavVisibility() {
-        const currentScreen = navStack[navStack.length - 1];
-        const isHome = currentScreen === 'screen-welcome';
+    function updateNav() {
+        const cur = navStack[navStack.length-1];
+        const isHome = cur === 'screen-welcome';
         document.getElementById('home-btn').style.display = isHome ? 'none' : 'flex';
         document.getElementById('back-btn').style.display = isHome ? 'none' : 'flex';
     }
 
-    function setCount(n) {
+    function setMode(m) {
+        selectedMode = m;
+        document.getElementById('game-mode-label').innerText = m === '01' ? '01 GAME' : 'CRICKET';
+        navigateTo('screen-mode', 'screen-players');
+    }
+
+    function pressNum(n) {
+        if (playerInput === "1" && n !== 0) playerInput = n.toString();
+        else if (playerInput.length < 2) playerInput += n.toString();
+        document.getElementById('player-num-view').innerText = playerInput;
+    }
+
+    function clearNum() {
+        playerInput = "1";
+        document.getElementById('player-num-view').innerText = "1";
+    }
+
+    function submitPlayerCount() {
+        const count = parseInt(playerInput);
+        if (count < 1) return alert("Please enter at least 1 player.");
+        
         const container = document.getElementById('name-container');
         container.innerHTML = "";
-        for(let i=1; i<=n; i++) {
+        for(let i=1; i<=count; i++) {
             container.innerHTML += `<input type="text" class="name-input" id="p${i}" placeholder="Click to add name" autocomplete="off">`;
         }
         navigateTo('screen-players', 'screen-names');
     }
 
     function beginMatch() {
-        isGameInProgress = true;
+        isGameActive = true;
         navigateTo('screen-names', 'screen-game');
+        // Initial score setup based on mode
+        document.getElementById('cur-p-score').innerText = selectedMode === '01' ? '301' : '0';
     }
 
     function toggleTheme() {
