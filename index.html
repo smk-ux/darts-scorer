@@ -100,10 +100,12 @@
         <div class="bottom-action"><button class="cta" onclick="submitPlayerCount()">Next</button></div>
     </div>
 
-    <div id="screen-names" class="screen">
+    <div id="screen-names" class="screen" style="overflow-y: auto;">
         <div class="brand-group"><p class="subtitle">Enter Names</p></div>
-        <div id="name-container" style="flex-grow:1; overflow-y:auto;"></div>
-        <div class="bottom-action"><button class="cta" onclick="beginMatch()">Confirm & Play</button></div>
+        <div id="name-container" style="margin-bottom: 20px;"></div>
+        <div style="padding: 0 10px 40px 10px;">
+            <button class="cta" onclick="beginMatch()">Confirm & Play</button>
+        </div>
     </div>
 
     <div id="screen-game" class="screen" style="padding-bottom:140px;">
