@@ -9,6 +9,7 @@
         :root {
             --bg: #000000; --surface: #111111; --border: #222222; --text: #ffffff;
             --dim: #888888; --accent: #00ff88; --nav-bg: rgba(255,255,255,0.1);
+            --gold: #ffd700;
         }
         [data-theme="light"] {
             --bg: #ffffff; --surface: #f5f5f5; --border: #e0e0e0; --text: #000000;
@@ -28,6 +29,20 @@
             padding-bottom: 80px;
         }
         .screen.active { display: flex; }
+
+        /* HAT TRICK OVERLAY */
+        #hat-trick-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 2000; display: none;
+            flex-direction: column; align-items: center; justify-content: center;
+            pointer-events: none;
+        }
+        .ht-text { 
+            font-size: 4rem; font-weight: 900; color: var(--gold); 
+            text-shadow: 0 0 20px rgba(255,215,0,0.5); 
+            animation: ht-pop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes ht-pop { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
         .side-menu {
             position: fixed; top: 0; left: -280px; width: 280px; height: 100%;
@@ -82,7 +97,6 @@
         .content-area li { margin-bottom: 10px; font-size: 0.85rem; color: var(--dim); list-style: none; }
         .content-area strong { color: var(--text); }
         
-        /* IMPROVED SCORING UI DESIGN */
         .score-header { text-align: center; margin-bottom: 15px; }
         #p-name { font-size: 1.8rem; font-weight: 900; color: var(--text); text-transform: uppercase; margin-bottom: -5px; letter-spacing: -1px; }
         #score-display { font-size: 4rem; font-weight: 900; color: var(--accent); line-height: 1; }
@@ -90,6 +104,7 @@
 </head>
 <body data-theme="dark">
 
+<div id="hat-trick-overlay"><div class="ht-text">HAT TRICK!</div><div style="color:var(--gold); font-weight:800;">3x BULLSEYE</div></div>
 <div id="menu-overlay" class="menu-overlay" onclick="toggleMenu()"></div>
 <div id="side-menu" class="side-menu">
     <h2 style="margin-bottom: 30px; font-weight: 900;">MENU</h2>
@@ -334,8 +349,17 @@
         }
     }
     
-    function confirmTurn() {
+    async function confirmTurn() {
         let p = players[currentPlayerIdx];
+        const isHatTrick = dartsThrown.every(d => d.v === 25);
+        
+        if (isHatTrick) {
+            const overlay = document.getElementById('hat-trick-overlay');
+            overlay.style.display = 'flex';
+            await new Promise(r => setTimeout(r, 1500));
+            overlay.style.display = 'none';
+        }
+
         dartsThrown.forEach(d => { 
             if(gMode === '01') { p.score01 -= (d.v * d.m); } 
             else if(p.cricketHits.hasOwnProperty(d.v)) {
