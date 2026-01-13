@@ -4,120 +4,135 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Darts. | Pro Scorer</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --main-bg: #0a0c10;
-            --glass: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --accent: #3b82f6; 
-            --text-main: #ffffff;
-            --text-dim: #6b7280;
-            --danger: #ef4444;
+            --bg: #000000;
+            --surface: #111111;
+            --border: #222222;
+            --text-primary: #ffffff;
+            --text-secondary: #888888;
+            --accent: #ffffff;
         }
 
         body {
-            background-color: var(--main-bg);
-            color: var(--text-main);
+            background-color: var(--bg);
+            color: var(--text-primary);
             font-family: 'Inter', sans-serif;
             margin: 0;
             display: flex;
             justify-content: center;
             min-height: 100vh;
+            overflow: hidden;
         }
 
-        .app-container { width: 100%; max-width: 400px; padding: 20px; }
+        .app-container { width: 100%; max-width: 400px; position: relative; }
 
+        /* --- SCREEN: WELCOME --- */
+        #welcome-screen {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            text-align: center;
+            padding: 40px;
+            transition: transform 0.6s cubic-bezier(0.8, 0, 0.2, 1);
+        }
+
+        .welcome-content h1 { font-size: 3.5rem; font-weight: 900; letter-spacing: -2px; margin: 0; }
+        .welcome-content p { color: var(--text-secondary); font-size: 1.1rem; margin: 20px 0 40px 0; line-height: 1.5; }
+        
+        .start-circle {
+            width: 80px;
+            height: 80px;
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.3s;
+            background: transparent;
+            color: white;
+            font-size: 1.5rem;
+        }
+        .start-circle:hover { background: white; color: black; }
+
+        /* --- SCREEN: SETUP & SCOREBOARD --- */
         .glass-card {
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 35px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 35px;
+            margin-top: 20px;
             text-align: center;
         }
 
-        header { margin-bottom: 30px; }
-        .subtitle { color: var(--accent); font-weight: 600; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; }
-        h1 { font-size: 2.2rem; margin: 0; font-weight: 800; }
-        .dot { color: var(--accent); }
+        label { color: var(--text-secondary); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; display: block; text-align: left; padding-left: 10px; }
 
-        .selection-group { margin-bottom: 25px; text-align: left; }
-        label { color: var(--text-dim); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; margin-bottom: 10px; display: block; padding-left: 10px; }
+        .pill-toggle { background: #1a1a1a; padding: 4px; border-radius: 100px; display: flex; margin-bottom: 25px; }
+        .pill-btn { flex: 1; background: transparent; border: none; color: var(--text-secondary); padding: 12px; border-radius: 100px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .pill-btn.active { background: white; color: black; }
 
-        .pill-toggle { background: rgba(255,255,255,0.05); padding: 5px; border-radius: 100px; display: flex; }
-        .pill-btn { flex: 1; background: transparent; border: none; color: var(--text-dim); padding: 12px; border-radius: 100px; font-weight: 600; cursor: pointer; }
-        .pill-btn.active { background: var(--text-main); color: var(--main-bg); }
+        .circle-grid { display: flex; justify-content: space-between; margin-bottom: 25px; }
+        .circle-btn { width: 55px; height: 55px; border-radius: 50%; background: #1a1a1a; border: 1px solid var(--border); color: white; font-weight: 800; cursor: pointer; transition: 0.3s; }
+        .circle-btn.active { background: white; color: black; border-color: white; }
 
-        .circle-grid { display: flex; justify-content: space-around; margin-bottom: 20px; }
-        .circle-btn { width: 50px; height: 50px; border-radius: 50%; background: var(--glass); border: 1px solid var(--glass-border); color: white; font-weight: bold; cursor: pointer; }
-        .circle-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(59, 130, 246, 0.1); }
+        .name-field { background: #1a1a1a; border: 1px solid var(--border); padding: 14px; border-radius: 15px; color: white; margin-bottom: 10px; width: calc(100% - 30px); outline: none; transition: 0.3s; }
+        .name-field:focus { border-color: #555; }
 
-        /* PLAYER NAME INPUTS */
-        .name-input-group { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
-        .name-field {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--glass-border);
-            padding: 12px 15px;
-            border-radius: 15px;
-            color: white;
-            font-family: inherit;
-            outline: none;
-        }
-        .name-field:focus { border-color: var(--accent); }
+        .cta-button { width: 100%; padding: 20px; border-radius: 100px; border: none; background: white; color: black; font-weight: 900; font-size: 1rem; text-transform: uppercase; cursor: pointer; margin-top: 20px; }
 
-        .cta-button { width: 100%; padding: 18px; border-radius: 20px; border: none; background: var(--accent); color: white; font-weight: 700; font-size: 1.1rem; cursor: pointer; margin-top: 20px; }
-
-        /* --- SCOREBOARD --- */
-        #scoreboard-screen { display: none; }
-        .score-display { font-size: 5.5rem; font-weight: 800; margin: 10px 0; }
-        .player-name-display { font-size: 1.2rem; color: var(--accent); text-transform: uppercase; font-weight: 700; }
-        .input-preview { height: 40px; font-size: 1.8rem; color: var(--text-dim); margin-bottom: 20px; font-weight: 700; border-bottom: 2px solid var(--glass-border); display: inline-block; min-width: 60px; }
+        /* --- SCOREBOARD LOGIC --- */
+        #setup-screen, #scoreboard-screen { display: none; }
+        .score-display { font-size: 6.5rem; font-weight: 900; margin: 0; letter-spacing: -4px; }
+        .player-name-display { color: var(--text-secondary); font-weight: 700; text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem; }
         
-        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-        .key { background: var(--glass); border: 1px solid var(--glass-border); padding: 22px; border-radius: 18px; color: white; font-size: 1.6rem; font-weight: 600; cursor: pointer; }
-        .key:active { transform: scale(0.95); background: rgba(255,255,255,0.1); }
-        .key.enter { background: var(--accent); font-size: 1rem; border: none; }
-        .key.clear { color: var(--danger); }
+        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
+        .key { background: #111111; border: 1px solid var(--border); padding: 20px; border-radius: 20px; color: white; font-size: 1.5rem; font-weight: 700; cursor: pointer; }
+        .key:active { background: white; color: black; }
+        .key.enter { background: white; color: black; border: none; font-size: 0.9rem; }
+        .key.clear { color: #555; }
 
-        footer { margin-top: 25px; font-size: 0.7rem; color: var(--text-dim); }
+        .input-preview { font-size: 2rem; font-weight: 900; height: 50px; color: var(--text-secondary); }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    <div id="setup-screen" class="glass-card">
-        <header>
-            <p class="subtitle">Match Settings</p>
-            <h1>Darts<span class="dot">.</span></h1>
-        </header>
+    <div id="welcome-screen">
+        <div class="welcome-content">
+            <h1>DARTS<span style="color:#555">.</span></h1>
+            <p>Master your aim.<br>We'll handle the math.</p>
+            <button class="start-circle" onclick="goToSetup()">→</button>
+        </div>
+    </div>
 
-        <div class="selection-group">
-            <label>Score Type</label>
-            <div class="pill-toggle">
-                <button class="pill-btn active" onclick="setInitial(301, this)">301</button>
-                <button class="pill-btn" onclick="setInitial(501, this)">501</button>
-            </div>
+    <div id="setup-screen" class="glass-card">
+        <label>Game Mode</label>
+        <div class="pill-toggle">
+            <button class="pill-btn active" onclick="setInitial(301, this)">301</button>
+            <button class="pill-btn" onclick="setInitial(501, this)">501</button>
         </div>
 
-        <div class="selection-group">
-            <label>Players</label>
-            <div class="circle-grid">
-                <button class="circle-btn active" onclick="updatePlayerNames(1, this)">1</button>
-                <button class="circle-btn" onclick="updatePlayerNames(2, this)">2</button>
-                <button class="circle-btn" onclick="updatePlayerNames(3, this)">3</button>
-                <button class="circle-btn" onclick="updatePlayerNames(4, this)">4</button>
-            </div>
-            
-            <label>Player Names</label>
-            <div id="player-names-container" class="name-input-group">
-                <input type="text" class="name-field" placeholder="Player 1 Name" value="Player 1">
-            </div>
+        <label>Players</label>
+        <div class="circle-grid">
+            <button class="circle-btn active" onclick="updatePlayerNames(1, this)">1</button>
+            <button class="circle-btn" onclick="updatePlayerNames(2, this)">2</button>
+            <button class="circle-btn" onclick="updatePlayerNames(3, this)">3</button>
+            <button class="circle-btn" onclick="updatePlayerNames(4, this)">4</button>
+        </div>
+
+        <label>Player Names</label>
+        <div id="player-names-container" style="display:flex; flex-direction:column;">
+            <input type="text" class="name-field" placeholder="Player 1" value="Player 1">
         </div>
 
         <button class="cta-button" onclick="launchGame()">Start Match</button>
-        <footer>Created by Sree | <a href="mailto:sreekuttanmk95@gmail.com" style="color:var(--accent); text-decoration:none;">Feedback</a></footer>
     </div>
 
     <div id="scoreboard-screen" class="glass-card">
@@ -140,16 +155,23 @@
             <button class="key" onclick="press(0)">0</button>
         </div>
         
-        <button style="background:transparent; border:none; color:var(--text-dim); margin-top:30px; cursor:pointer; font-size: 0.7rem; letter-spacing: 1px;" onclick="location.reload()">RESTART GAME</button>
+        <p style="margin-top:30px; font-size:10px; color:#444; cursor:pointer;" onclick="location.reload()">TERMINATE SESSION</p>
     </div>
 </div>
 
 <script>
     let startingScore = 301;
     let playerCount = 1;
-    let players = []; // Array of objects: { name, score }
+    let players = [];
     let currentPlayerIndex = 0;
     let tempInput = "";
+
+    function goToSetup() {
+        document.getElementById('welcome-screen').style.transform = 'translateY(-100%)';
+        setTimeout(() => {
+            document.getElementById('setup-screen').style.display = 'block';
+        }, 300);
+    }
 
     function setInitial(val, btn) {
         startingScore = val;
@@ -159,15 +181,12 @@
     function updatePlayerNames(count, btn) {
         playerCount = count;
         setActive(btn);
-        
         const container = document.getElementById('player-names-container');
         container.innerHTML = "";
-        
         for(let i = 1; i <= count; i++) {
             const input = document.createElement('input');
             input.type = "text";
             input.className = "name-field";
-            input.placeholder = `Player ${i} Name`;
             input.value = `Player ${i}`;
             container.appendChild(input);
         }
@@ -182,13 +201,8 @@
         const nameFields = document.querySelectorAll('.name-field');
         players = [];
         nameFields.forEach(field => {
-            players.push({
-                name: field.value || "Player",
-                score: startingScore
-            });
+            players.push({ name: field.value || "Player", score: startingScore });
         });
-
-        currentPlayerIndex = 0;
         document.getElementById('setup-screen').style.display = 'none';
         document.getElementById('scoreboard-screen').style.display = 'block';
         updateDisplay();
@@ -209,24 +223,16 @@
     function submitScore() {
         let points = parseInt(tempInput);
         if (isNaN(points)) return;
-        if (points > 180) {
-            alert("Max score is 180!");
-            clearInput();
-            return;
-        }
+        if (points > 180) { alert("Max 180"); clearInput(); return; }
 
-        let player = players[currentPlayerIndex];
-        let newTotal = player.score - points;
+        let p = players[currentPlayerIndex];
+        let newTotal = p.score - points;
 
         if (newTotal < 0 || newTotal === 1) {
-            alert("BUST! Try again next turn.");
+            alert("BUST");
         } else {
-            player.score = newTotal;
-            if (newTotal === 0) {
-                alert("🏆 " + player.name + " WINS!");
-                location.reload();
-                return;
-            }
+            p.score = newTotal;
+            if (newTotal === 0) { alert("WINNER: " + p.name); location.reload(); return; }
         }
 
         currentPlayerIndex = (currentPlayerIndex + 1) % playerCount;
@@ -235,9 +241,9 @@
     }
 
     function updateDisplay() {
-        const player = players[currentPlayerIndex];
-        document.getElementById('main-score').innerText = player.score;
-        document.getElementById('display-player-name').innerText = player.name;
+        const p = players[currentPlayerIndex];
+        document.getElementById('main-score').innerText = p.score;
+        document.getElementById('display-player-name').innerText = p.name;
         document.getElementById('current-input').innerText = "_";
     }
 </script>
