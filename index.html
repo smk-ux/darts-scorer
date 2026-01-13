@@ -20,51 +20,52 @@
             margin: 0; height: 100vh; width: 100vw; overflow: hidden;
             display: flex; justify-content: center;
         }
-        .app-container { width: 100%; max-width: 400px; height: 100%; display: flex; flex-direction: column; padding: 20px; position: relative; }
-        
-        .screen { position: absolute; top: 70px; left: 20px; right: 20px; bottom: 20px; opacity: 0; visibility: hidden; pointer-events: none; text-align: center; display: flex; flex-direction: column; transition: opacity 0.3s ease; }
-        .screen.active { opacity: 1; visibility: visible; pointer-events: auto; }
+        .app-container { width: 100%; max-width: 400px; height: 100%; display: flex; flex-direction: column; padding: 15px; position: relative; }
+        .screen { display: none; flex-direction: column; flex-grow: 1; width: 100%; text-align: center; overflow-y: auto; }
+        .screen.active { display: flex; }
 
         /* BRANDING */
+        .brand-group { margin: 30px 0; }
         h1 { font-size: 4.5rem; font-weight: 900; margin: 0; line-height: 0.9; letter-spacing: -3px; }
         .subtitle { color: var(--dim); font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; margin-top: -5px; font-weight: 700; }
 
-        /* CRICKET TABLE */
-        .cricket-grid { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 10px; margin-top: 10px; background: var(--surface); padding: 15px; border-radius: 12px; border: 1px solid var(--border); }
-        .cricket-row { display: contents; font-weight: 900; font-size: 1.2rem; }
-        .cricket-mark { color: var(--accent); font-size: 1.4rem; }
-
-        /* PRO KEYPAD */
-        .pro-keypad { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 10px; }
+        /* UI ELEMENTS */
+        .cta { width: 100%; padding: 18px; background: var(--text); color: var(--bg); border-radius: 50px; font-weight: 900; text-transform: uppercase; border: none; cursor: pointer; flex-shrink: 0; }
+        .pro-keypad { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: auto; padding-bottom: 5px; }
         .key { background: var(--surface); border: 1px solid var(--border); padding: 12px 0; border-radius: 8px; color: var(--text); font-size: 1rem; font-weight: 700; cursor: pointer; }
         .key.active-num { border-color: var(--accent); color: var(--accent); }
-
-        /* BUTTONS */
-        .cta { width: 100%; padding: 18px; background: var(--text); color: var(--bg); border-radius: 50px; font-weight: 900; text-transform: uppercase; border: none; cursor: pointer; }
-        .m-bar { display: flex; gap: 6px; margin-bottom: 10px; }
-        .m-btn { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-weight: 800; font-size: 0.7rem; text-transform: uppercase; cursor: pointer; }
-        .m-btn.active { background: var(--text); color: var(--bg); }
         
-        .top-nav { display: flex; justify-content: space-between; align-items: center; padding-top: 10px; z-index: 1000; }
+        .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; height: 60px; }
         .nav-btn { width: 44px; height: 44px; background: var(--nav-bg); border-radius: 50%; display: flex; justify-content: center; align-items: center; border: 1px solid var(--border); cursor: pointer; }
+        
+        /* CONGRATS PAGE STYLING */
+        .congrats-card { padding: 40px 20px; background: linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%); border-radius: 24px; border: 1px solid var(--border); margin: auto 0; }
+        .trophy-icon { font-size: 4rem; margin-bottom: 10px; }
+
+        .m-bar { display: flex; gap: 6px; margin: 10px 0; }
+        .m-btn { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-weight: 800; font-size: 0.7rem; text-transform: uppercase; }
+        .m-btn.active { background: var(--text); color: var(--bg); }
+        .cricket-grid { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 8px; background: var(--surface); padding: 10px; border-radius: 12px; border: 1px solid var(--border); margin-top: 5px; }
     </style>
 </head>
 <body data-theme="dark">
 
 <div class="app-container">
     <div class="top-nav">
-        <div id="home-btn" class="nav-btn" style="opacity:0" onclick="location.reload()"><svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z"/></svg></div>
+        <div id="home-btn" class="nav-btn" style="visibility:hidden" onclick="confirmExit()"><svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z"/></svg></div>
         <div class="nav-btn" onclick="toggleTheme()"><svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M12,18C15.31,18 18,15.31 18,12C18,8.69 15.31,6 12,6V18M20,12.51V16.19L17.62,18.57L13.94,20.95H10.06L6.38,18.57L4,16.19V12.51L1.62,10.13L4,7.75V4.06L6.38,1.68H10.06L13.94,4.06L17.62,6.44V10.13L20,12.51Z"/></svg></div>
     </div>
 
     <div id="screen-welcome" class="screen active" style="justify-content:center;">
-        <h1>APEX<span style="color:var(--dim)">.</span></h1>
-        <p class="subtitle">ENGINEERED BY SREE</p>
-        <div style="margin-top:40px; width:80px; height:80px; border:2px solid var(--text); border-radius:50%; display:flex; justify-content:center; align-items:center; font-weight:900; align-self:center; cursor:pointer;" onclick="navigateTo('screen-welcome', 'screen-mode')">GO</div>
+        <div class="brand-group">
+            <h1>APEX<span style="color:var(--dim)">.</span></h1>
+            <p class="subtitle">ENGINEERED BY SREE</p>
+        </div>
+        <div style="width:80px; height:80px; border:2px solid var(--text); border-radius:50%; display:flex; justify-content:center; align-items:center; font-weight:900; align-self:center; cursor:pointer;" onclick="navigateTo('screen-welcome', 'screen-mode')">GO</div>
     </div>
 
     <div id="screen-mode" class="screen" style="justify-content:center;">
-        <button class="cta" style="margin-bottom:10px" onclick="setMode('01')">01 Game</button>
+        <button class="cta" style="margin-bottom:12px" onclick="setMode('01')">01 Game</button>
         <button class="cta" style="background:transparent; color:var(--text); border:1px solid var(--border);" onclick="setMode('cricket')">Cricket</button>
     </div>
 
@@ -78,87 +79,70 @@
     </div>
 
     <div id="screen-names" class="screen">
-        <div id="name-container" style="overflow-y:auto; margin-bottom:10px;"></div>
+        <p style="font-size:0.7rem; color:var(--dim); text-transform:uppercase; margin-bottom:10px;">Add Names</p>
+        <div style="flex-grow:1; overflow-y:auto; padding-bottom:10px;" id="name-container"></div>
         <button class="cta" onclick="beginMatch()">Start Match</button>
     </div>
 
     <div id="screen-game" class="screen">
         <div id="p-name" style="font-weight:700; color:var(--dim); font-size:0.8rem; text-transform:uppercase;">PLAYER 1</div>
-        
-        <div id="01-ui">
-            <div style="font-size:4rem; font-weight:900;" id="score-display">301</div>
-        </div>
-
-        <div id="cricket-ui" style="display:none;">
-            <div class="cricket-grid" id="cricket-board">
-                </div>
-        </div>
-        
-        <div class="m-bar" style="margin-top:10px;">
-            <button class="m-btn active" id="m1" onclick="setMultiplier(1)">S</button>
-            <button class="m-btn" id="m2" onclick="setMultiplier(2)">D</button>
-            <button class="m-btn" id="m3" onclick="setMultiplier(3)">T</button>
-        </div>
-
+        <div id="01-ui"><div style="font-size:3.5rem; font-weight:900;" id="score-display">301</div></div>
+        <div id="cricket-ui" style="display:none;"><div class="cricket-grid" id="cricket-board"></div></div>
+        <div class="m-bar"><button class="m-btn active" id="m1" onclick="setMultiplier(1)">S</button><button class="m-btn" id="m2" onclick="setMultiplier(2)">D</button><button class="m-btn" id="m3" onclick="setMultiplier(3)">T</button></div>
         <div class="pro-keypad" id="keypad"></div>
+        <div style="display:flex; gap:10px; margin-top:10px; padding-bottom:10px;"><button class="cta" style="background:var(--surface); color:var(--dim); border:1px solid var(--border); flex:1;" onclick="undoDart()">Undo</button><button class="cta" id="confirm-btn" style="flex:1; opacity:0.3; pointer-events:none;" onclick="confirmTurn()">Confirm</button></div>
+    </div>
 
-        <div style="display:flex; gap:10px; margin-top:15px;">
-            <button class="cta" style="background:var(--surface); color:var(--dim); border:1px solid var(--border); flex:1;" onclick="undoDart()">Undo</button>
-            <button class="cta" id="confirm-btn" style="flex:1; opacity:0.3; pointer-events:none;" onclick="confirmTurn()">Confirm</button>
+    <div id="screen-summary" class="screen" style="justify-content:center;">
+        <div class="congrats-card">
+            <div class="trophy-icon">🏆</div>
+            <p style="color:var(--accent); text-transform:uppercase; letter-spacing:4px; font-weight:900; font-size:0.8rem;">Congratulations</p>
+            <h2 id="winner-name" style="font-size:3.5rem; margin:10px 0; text-transform:uppercase; font-weight:900; line-height:1;">PLAYER 1</h2>
+            <p style="color:var(--dim); margin-bottom:30px;">You are the Apex Champion!</p>
+            <button class="cta" onclick="location.reload()">Start New Game</button>
         </div>
     </div>
 </div>
 
 <script>
-    let gMode='01', pCount=1, currentScore=301, multiplier=1, dartsThrown=[];
+    let gMode='01', pCount=1, currentScore=301, multiplier=1, dartsThrown=[], pName="PLAYER 1";
     let cricketHits = { 20:0, 19:0, 18:0, 17:0, 16:0, 15:0, 25:0 };
 
     window.onload = function() {
         const grid = document.getElementById('keypad');
-        const nums = [20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1];
-        nums.forEach(n => {
-            const b = document.createElement('button');
-            b.className = 'key'; b.innerText = n; b.id = 'key-'+n;
-            b.onclick = () => pressValue(n);
-            grid.appendChild(b);
+        [20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1].forEach(n => {
+            const b = document.createElement('button'); b.className = 'key'; b.innerText = n; b.id = 'key-'+n; b.onclick = () => pressValue(n); grid.appendChild(b);
         });
-        const bull = document.createElement('button');
-        bull.className = 'key'; bull.innerText = 'BULL'; bull.onclick = () => pressValue(25);
-        grid.appendChild(bull);
-        const miss = document.createElement('button');
-        miss.className = 'key'; miss.innerText = '0'; miss.onclick = () => pressValue(0);
-        grid.appendChild(miss);
+        const bull = document.createElement('button'); bull.className = 'key'; bull.innerText = 'BULL'; b.id='key-25'; bull.onclick = () => pressValue(25); grid.appendChild(bull);
+        const miss = document.createElement('button'); miss.className = 'key'; miss.innerText = '0'; miss.onclick = () => pressValue(0); grid.appendChild(miss);
     };
 
     function navigateTo(cur, next) {
         document.getElementById(cur).classList.remove('active');
         document.getElementById(next).classList.add('active');
-        document.getElementById('home-btn').style.opacity = (next === 'screen-welcome') ? "0" : "1";
+        document.getElementById('home-btn').style.visibility = (next === 'screen-welcome' || next === 'screen-summary') ? "hidden" : "visible";
     }
 
     function setMode(m) { 
         gMode=m; 
-        document.getElementById('01-ui').style.display = (m==='01') ? 'block' : 'none';
-        document.getElementById('cricket-ui').style.display = (m==='cricket') ? 'block' : 'none';
-        
-        // Highlight active Cricket numbers on keypad
-        const cricketNums = [20,19,18,17,16,15,25];
-        document.querySelectorAll('.key').forEach(k => k.classList.remove('active-num'));
-        if(m === 'cricket') {
-            cricketNums.forEach(n => { if(document.getElementById('key-'+n)) document.getElementById('key-'+n).classList.add('active-num'); });
-            updateCricketBoard();
-        }
+        document.getElementById('01-ui').style.display = (m==='01')?'block':'none';
+        document.getElementById('cricket-ui').style.display = (m==='cricket')?'block':'none';
+        if(m==='cricket') { [20,19,18,17,16,15,25].forEach(n => { let k=document.getElementById('key-'+n); if(k) k.classList.add('active-num'); }); updateCricketBoard(); }
         navigateTo('screen-mode', 'screen-players'); 
     }
 
     function changeCount(v) { pCount=Math.max(1, Math.min(8, pCount+v)); document.getElementById('player-val').innerText=pCount; }
     function submitPlayerCount() {
         const c=document.getElementById('name-container'); c.innerHTML="";
-        for(let i=1; i<=pCount; i++) c.innerHTML += `<input type="text" class="name-input" id="in-p${i}" placeholder="Name ${i}" style="width:100%; background:var(--surface); border:1px solid var(--border); padding:16px; border-radius:12px; color:var(--text); margin-bottom:10px; text-align:center;">`;
+        for(let i=1; i<=pCount; i++) c.innerHTML += `<input type="text" class="name-input" id="in-p${i}" placeholder="Name ${i}" autocomplete="off">`;
         navigateTo('screen-players', 'screen-names');
     }
 
-    function beginMatch() { navigateTo('screen-names', 'screen-game'); }
+    function beginMatch() { 
+        pName = (document.getElementById('in-p1').value || "PLAYER 1").toUpperCase();
+        document.getElementById('p-name').innerText = pName;
+        navigateTo('screen-names', 'screen-game'); 
+    }
 
     function setMultiplier(m) {
         multiplier = m;
@@ -166,61 +150,45 @@
         document.getElementById('m'+m).classList.add('active');
     }
 
-    function pressValue(v) {
-        if(dartsThrown.length >= 3) return;
-        if(v === 25 && multiplier === 3) multiplier = 2;
-        dartsThrown.push({val: v, mult: multiplier});
-        updateUI();
-        setMultiplier(1);
-    }
+    function pressValue(v) { if(dartsThrown.length<3){ if(v===25 && multiplier===3) multiplier=2; dartsThrown.push({v, m:multiplier}); updateUI(); setMultiplier(1); }}
 
     function updateUI() {
-        const ready = (dartsThrown.length === 3);
         const cBtn = document.getElementById('confirm-btn');
-        cBtn.style.opacity = ready ? "1" : "0.3";
-        cBtn.style.pointerEvents = ready ? "auto" : "none";
+        cBtn.style.opacity = (dartsThrown.length === 3) ? "1" : "0.3";
+        cBtn.style.pointerEvents = (dartsThrown.length === 3) ? "auto" : "none";
     }
 
     function confirmTurn() {
         dartsThrown.forEach(d => {
-            let total = d.val * d.mult;
-            if(gMode === '01') {
-                currentScore -= total;
-            } else {
-                if(cricketHits.hasOwnProperty(d.val)) {
-                    cricketHits[d.val] += d.mult;
-                }
-            }
+            if(gMode === '01') currentScore -= (d.v * d.m);
+            else if(cricketHits.hasOwnProperty(d.v)) cricketHits[d.v] += d.m;
         });
-
-        if(gMode === '01') document.getElementById('score-display').innerText = currentScore;
-        else updateCricketBoard();
-
-        dartsThrown = [];
-        updateUI();
+        if(gMode === '01') {
+            document.getElementById('score-display').innerText = currentScore;
+            if(currentScore <= 0) showSummary();
+        } else {
+            updateCricketBoard();
+            if(Object.values(cricketHits).every(h => h >= 3)) showSummary();
+        }
+        dartsThrown = []; updateUI();
     }
 
     function updateCricketBoard() {
-        const board = document.getElementById('cricket-board');
-        board.innerHTML = "";
-        const targets = [20, 19, 18, 17, 16, 15, 25];
-        targets.forEach(t => {
-            let hits = cricketHits[t];
-            let mark = "";
-            if(hits === 1) mark = "/";
-            if(hits === 2) mark = "X";
-            if(hits >= 3) mark = "⊗";
-            
-            board.innerHTML += `
-                <div class="cricket-mark">${mark}</div>
-                <div style="color:var(--dim)">${t === 25 ? 'BULL' : t}</div>
-                <div style="color:var(--accent)">${hits > 3 ? (hits-3)*t : 0}</div>
-            `;
+        const board = document.getElementById('cricket-board'); board.innerHTML = "";
+        [20, 19, 18, 17, 16, 15, 25].forEach(t => {
+            let h = cricketHits[t], m = h === 1 ? "/" : h === 2 ? "X" : h >= 3 ? "⊗" : "";
+            board.innerHTML += `<div style="color:var(--accent)">${m}</div><div style="color:var(--dim)">${t==25?'BULL':t}</div><div style="font-weight:900">${h>3?(h-3)*t:0}</div>`;
         });
+    }
+
+    function showSummary() {
+        document.getElementById('winner-name').innerText = pName;
+        navigateTo('screen-game', 'screen-summary');
     }
 
     function undoDart() { dartsThrown.pop(); updateUI(); }
     function toggleTheme() { document.body.setAttribute('data-theme', document.body.getAttribute('data-theme')==='dark'?'light':'dark'); }
+    function confirmExit() { if(confirm("End current match and return home?")) location.reload(); }
 </script>
 </body>
 </html>
