@@ -13,6 +13,7 @@
             --text: #ffffff;
             --dim: #888888;
             --nav-bg: rgba(255,255,255,0.1);
+            --transition-speed: 0.3s;
         }
 
         [data-theme="light"] {
@@ -31,7 +32,7 @@
             color: var(--text);
             font-family: 'Inter', sans-serif;
             margin: 0; height: 100vh; width: 100vw; overflow: hidden;
-            display: flex; justify-content: center; transition: background-color 0.3s;
+            display: flex; justify-content: center; transition: background-color var(--transition-speed);
         }
 
         .app-container {
@@ -40,7 +41,7 @@
             padding: 20px; position: relative;
         }
 
-        /* TOP NAVIGATION */
+        /* NAVIGATION BAR */
         .top-nav {
             position: absolute; top: 30px; width: 100%;
             display: flex; justify-content: space-between;
@@ -48,39 +49,53 @@
         }
 
         .nav-group { display: flex; gap: 10px; }
-
         .nav-icon-btn {
             width: 44px; height: 44px; background: var(--nav-bg);
             border-radius: 50%; display: flex; justify-content: center;
             align-items: center; cursor: pointer; border: 1px solid var(--border);
-            transition: all 0.2s;
         }
         .nav-icon-btn svg { width: 20px; height: 20px; fill: var(--text); }
 
-        /* SCREENS */
-        .screen { display: none; width: 100%; text-align: center; flex-direction: column; align-items: center; }
-        .screen.active { display: flex; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        /* SMOOTH TRANSITION SYSTEM */
+        .screen { 
+            position: absolute; /* Stack screens for cross-fade */
+            width: calc(100% - 40px);
+            opacity: 0; 
+            visibility: hidden;
+            pointer-events: none;
+            text-align: center; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            transition: opacity var(--transition-speed) ease, visibility var(--transition-speed);
+        }
 
+        .screen.active { 
+            opacity: 1; 
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        /* UI ELEMENTS */
         h1 { font-size: 4rem; font-weight: 900; letter-spacing: -3px; margin: 0; }
         .tagline { color: var(--dim); text-transform: uppercase; letter-spacing: 2px; font-size: 0.7rem; margin-bottom: 20px; }
-        .p-score { font-size: 7.5rem; font-weight: 900; margin: 0; line-height: 0.8; letter-spacing: -5px; }
+        
+        /* STEPPER UI */
+        .stepper-container { display: flex; align-items: center; justify-content: center; gap: 30px; margin: 40px 0; }
+        .step-btn {
+            width: 70px; height: 70px; border-radius: 50%; background: var(--surface);
+            border: 1px solid var(--border); color: var(--text); font-size: 2rem;
+            display: flex; justify-content: center; align-items: center; cursor: pointer;
+        }
+        .player-val { font-size: 6rem; font-weight: 900; min-width: 80px; }
 
-        /* KEYPAD & INPUTS */
-        .num-view { font-size: 4.5rem; font-weight: 900; margin: 10px 0; color: var(--text); height: 90px; }
-        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; max-width: 320px; }
-        .key { background: var(--surface); border: 1px solid var(--border); padding: 20px; border-radius: 15px; color: var(--text); font-size: 1.5rem; font-weight: 700; cursor: pointer; }
-        .key.action { background: var(--text); color: var(--bg); font-size: 0.8rem; border: none; }
-        .key.clear { background: transparent; border: 1px solid var(--border); color: var(--dim); font-size: 0.7rem; }
-
+        .cta { width: 100%; max-width: 320px; padding: 18px; background: var(--text); color: var(--bg); border-radius: 50px; font-weight: 900; margin-top: 15px; text-transform: uppercase; border: none; cursor: pointer; }
+        
         .name-input { 
             width: 100%; max-width: 320px; background: var(--surface); 
             border: 1px solid var(--border); padding: 18px; border-radius: 15px; 
             color: var(--text); margin-bottom: 12px; text-align: center; font-weight: 700;
         }
-        .name-input::placeholder { color: var(--dim); font-weight: 400; font-style: italic; }
-
-        .cta { width: 100%; max-width: 320px; padding: 18px; background: var(--text); color: var(--bg); border-radius: 50px; font-weight: 900; margin-top: 15px; text-transform: uppercase; border: none; cursor: pointer; }
     </style>
 </head>
 <body data-theme="dark">
@@ -88,10 +103,10 @@
 <div class="app-container">
     <div class="top-nav">
         <div class="nav-group">
-            <div id="home-btn" class="nav-icon-btn" style="display: none;" onclick="confirmGoHome()">
+            <div id="home-btn" class="nav-icon-btn" style="opacity: 0; pointer-events: none;" onclick="confirmGoHome()">
                 <svg viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
             </div>
-            <div id="back-btn" class="nav-icon-btn" style="display: none;" onclick="goBack()">
+            <div id="back-btn" class="nav-icon-btn" style="opacity: 0; pointer-events: none;" onclick="goBack()">
                 <svg viewBox="0 0 24 24"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" /></svg>
             </div>
         </div>
@@ -113,35 +128,30 @@
     </div>
 
     <div id="screen-players" class="screen">
-        <p class="tagline">Number of Players</p>
-        <div id="player-num-view" class="num-view">1</div>
-        <div class="keypad">
-            <button class="key" onclick="pressNum(1)">1</button><button class="key" onclick="pressNum(2)">2</button><button class="key" onclick="pressNum(3)">3</button>
-            <button class="key" onclick="pressNum(4)">4</button><button class="key" onclick="pressNum(5)">5</button><button class="key" onclick="pressNum(6)">6</button>
-            <button class="key" onclick="pressNum(7)">7</button><button class="key" onclick="pressNum(8)">8</button><button class="key" onclick="pressNum(9)">9</button>
-            <button class="key clear" onclick="clearNum()">CLR</button><button class="key" onclick="pressNum(0)">0</button><button class="key action" onclick="submitPlayerCount()">NEXT</button>
+        <p class="tagline">Players</p>
+        <div class="stepper-container">
+            <div class="step-btn" onclick="changeCount(-1)">–</div>
+            <div class="player-val" id="player-val">1</div>
+            <div class="step-btn" onclick="changeCount(1)">+</div>
         </div>
+        <button class="cta" onclick="submitPlayerCount()">Next</button>
     </div>
 
     <div id="screen-names" class="screen">
         <p class="tagline">Set Names</p>
-        <div id="name-container" style="width:100%; display:flex; flex-direction:column; align-items:center; overflow-y:auto; max-height:50vh;"></div>
+        <div id="name-container" style="width:100%; display:flex; flex-direction:column; align-items:center;"></div>
         <button class="cta" onclick="beginMatch()">Start Match</button>
     </div>
 
     <div id="screen-game" class="screen">
-        <div class="tagline" id="game-mode-label">01 GAME</div>
-        <div class="tagline" id="cur-p-name" style="margin-bottom:0;">PLAYER 1</div>
-        <div class="p-score" id="cur-p-score">301</div>
-        <p style="color:var(--dim); font-size: 0.8rem;">Match Active</p>
-        </div>
+        <p class="tagline">Match Active</p>
+        <div class="p-score">301</div>
+    </div>
 </div>
 
 <script>
     let navStack = ['screen-welcome'];
-    let selectedMode = '01';
-    let playerInput = "1";
-    let isGameActive = false;
+    let pCount = 1;
 
     function navigateTo(cur, next) {
         document.getElementById(cur).classList.remove('active');
@@ -156,74 +166,51 @@
         let prev = navStack[navStack.length - 1];
         document.getElementById(cur).classList.remove('active');
         document.getElementById(prev).classList.add('active');
-        if (prev === 'screen-welcome') isGameActive = false;
         updateNav();
     }
 
     function confirmGoHome() {
-        if (isGameActive) {
-            if (confirm("Are you sure you want to stop the game? All scores will be lost.")) resetApp();
-        } else {
-            resetApp();
+        if (confirm("Stop the game? Progress will be lost.")) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('screen-welcome').classList.add('active');
+            navStack = ['screen-welcome'];
+            updateNav();
         }
     }
 
-    function resetApp() {
-        isGameActive = false;
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById('screen-welcome').classList.add('active');
-        navStack = ['screen-welcome'];
-        playerInput = "1";
-        document.getElementById('player-num-view').innerText = "1";
-        updateNav();
-    }
-
     function updateNav() {
-        const cur = navStack[navStack.length-1];
-        const isHome = cur === 'screen-welcome';
-        document.getElementById('home-btn').style.display = isHome ? 'none' : 'flex';
-        document.getElementById('back-btn').style.display = isHome ? 'none' : 'flex';
+        const cur = navStack[navStack.length - 1];
+        const show = (cur !== 'screen-welcome');
+        const homeBtn = document.getElementById('home-btn');
+        const backBtn = document.getElementById('back-btn');
+        
+        homeBtn.style.opacity = show ? "1" : "0";
+        homeBtn.style.pointerEvents = show ? "auto" : "none";
+        backBtn.style.opacity = show ? "1" : "0";
+        backBtn.style.pointerEvents = show ? "auto" : "none";
     }
 
-    function setMode(m) {
-        selectedMode = m;
-        document.getElementById('game-mode-label').innerText = m === '01' ? '01 GAME' : 'CRICKET';
-        navigateTo('screen-mode', 'screen-players');
+    function changeCount(val) {
+        pCount = Math.max(1, Math.min(10, pCount + val));
+        document.getElementById('player-val').innerText = pCount;
     }
 
-    function pressNum(n) {
-        if (playerInput === "1" && n !== 0) playerInput = n.toString();
-        else if (playerInput.length < 2) playerInput += n.toString();
-        document.getElementById('player-num-view').innerText = playerInput;
-    }
-
-    function clearNum() {
-        playerInput = "1";
-        document.getElementById('player-num-view').innerText = "1";
-    }
+    function setMode(m) { navigateTo('screen-mode', 'screen-players'); }
 
     function submitPlayerCount() {
-        const count = parseInt(playerInput);
-        if (count < 1) return alert("Please enter at least 1 player.");
-        
         const container = document.getElementById('name-container');
         container.innerHTML = "";
-        for(let i=1; i<=count; i++) {
-            container.innerHTML += `<input type="text" class="name-input" id="p${i}" placeholder="Click to add name" autocomplete="off">`;
+        for(let i=1; i<=pCount; i++) {
+            container.innerHTML += `<input type="text" class="name-input" placeholder="Click to add name">`;
         }
         navigateTo('screen-players', 'screen-names');
     }
 
-    function beginMatch() {
-        isGameActive = true;
-        navigateTo('screen-names', 'screen-game');
-        // Initial score setup based on mode
-        document.getElementById('cur-p-score').innerText = selectedMode === '01' ? '301' : '0';
-    }
+    function beginMatch() { navigateTo('screen-names', 'screen-game'); }
 
     function toggleTheme() {
-        const theme = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-        document.body.setAttribute('data-theme', theme);
+        const t = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        document.body.setAttribute('data-theme', t);
     }
 </script>
 </body>
