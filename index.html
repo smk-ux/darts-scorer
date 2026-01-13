@@ -77,7 +77,15 @@
         .name-input { flex: 1; background: transparent; border: none; padding: 10px; color: var(--text); font-size: 1rem; }
         
         /* DARTBOARD IMAGE STYLE */
-        .board-img { width: 180px; height: 180px; border-radius: 50%; object-fit: cover; border: 4px solid var(--border); margin: 10px 0; }
+        .board-img { 
+            width: 180px; height: 180px; border-radius: 50%; object-fit: cover; 
+            border: 4px solid var(--accent); margin: 10px 0; 
+            background: var(--surface); /* Fallback background */
+        }
+
+        .content-area { padding: 20px; line-height: 1.6; color: var(--text); overflow-y: auto; }
+        .content-area h3 { color: var(--accent); margin: 20px 0 10px 0; text-transform: uppercase; }
+        .content-area p { margin-bottom: 15px; font-size: 0.9rem; color: var(--dim); }
     </style>
 </head>
 <body data-theme="dark">
@@ -100,7 +108,7 @@
         </div>
     </div>
 
-    <div id="screen-welcome" class="screen active" style="padding-bottom: 0;">
+    <div id="screen-welcome" class="screen active">
         <div class="brand-group">
             <h1>THE DARTS<br><span style="color:var(--accent)">SCORER</span></h1>
             <p class="subtitle">ENGINEERED BY SREE</p>
@@ -110,7 +118,7 @@
         </div>
     </div>
 
-    <div id="screen-mode" class="screen" style="padding-bottom: 0;">
+    <div id="screen-mode" class="screen">
         <div class="brand-group"><p class="subtitle">Choose Mode</p></div>
         <div class="center-action">
             <button class="cta" style="width: 80%;" onclick="setMode('01')">01 Game</button>
@@ -118,10 +126,10 @@
         </div>
     </div>
 
-    <div id="screen-players" class="screen" style="padding-bottom: 0;">
+    <div id="screen-players" class="screen">
         <div class="brand-group"><p class="subtitle">number of players</p></div>
         <div class="center-action">
-            <img src="https://images.unsplash.com/photo-1594132176008-8926955a8288?auto=format&fit=crop&q=80&w=300&h=300" alt="Dartboard" class="board-img">
+            <img src="https://cdn.pixabay.com/photo/2013/07/13/10/31/dartboard-157416_1280.png" alt="Dartboard" class="board-img">
             <div style="display:flex; align-items:center; justify-content:center; gap:30px; margin-bottom: 20px;">
                 <div class="nav-btn" onclick="changeCount(-1)">–</div>
                 <div style="font-size:5rem; font-weight:900;" id="player-val">1</div>
@@ -131,7 +139,7 @@
         </div>
     </div>
 
-    <div id="screen-names" class="screen" style="overflow-y: auto;">
+    <div id="screen-names" class="screen">
         <div class="brand-group"><p class="subtitle">Enter Names</p></div>
         <div id="name-container" style="margin-bottom: 20px;"></div>
         <div style="padding: 0 10px 40px 10px;">
@@ -142,24 +150,13 @@
     <div id="screen-game" class="screen" style="padding-bottom:140px;">
         <div id="p-name" style="font-weight:700; color:var(--dim); font-size:0.8rem; text-transform:uppercase; margin-bottom:5px;">PLAYER 1</div>
         <div id="01-ui"><div style="font-size:3.5rem; font-weight:900;" id="score-display">301</div></div>
-        
         <div id="cricket-ui" style="display:none;">
-            <div class="total-points-bar">
-                <span>Current Points</span>
-                <span id="cricket-total-points">0</span>
-            </div>
-            <div class="cricket-grid">
-                <div class="c-head">Marks</div><div class="c-head">Target</div><div class="c-head">Pts</div>
-                <div id="cricket-board" style="display: contents;"></div>
-            </div>
+            <div class="total-points-bar"><span>Current Points</span><span id="cricket-total-points">0</span></div>
+            <div class="cricket-grid"><div class="c-head">Marks</div><div class="c-head">Target</div><div class="c-head">Pts</div><div id="cricket-board" style="display: contents;"></div></div>
         </div>
-
         <div class="score-strip">
-            <div class="dart-slot" id="d1">-</div>
-            <div class="dart-slot" id="d2">-</div>
-            <div class="dart-slot" id="d3">-</div>
+            <div class="dart-slot" id="d1">-</div><div class="dart-slot" id="d2">-</div><div class="dart-slot" id="d3">-</div>
         </div>
-
         <div class="m-bar">
             <button class="m-btn active" id="m1" onclick="setMultiplier(1)">S</button>
             <button class="m-btn" id="m2" onclick="setMultiplier(2)">D</button>
@@ -169,6 +166,25 @@
         <div class="bottom-action" style="flex-direction:row;">
             <button class="cta cta-outline" style="flex:1;" onclick="undoDart()">Undo</button>
             <button class="cta" id="confirm-btn" style="flex:1; opacity:0.3; pointer-events:none;" onclick="confirmTurn()">Submit</button>
+        </div>
+    </div>
+
+    <div id="screen-help" class="screen">
+        <div class="brand-group"><p class="subtitle">How to Play</p></div>
+        <div class="content-area">
+            <h3>01 Games</h3>
+            <p>Start from 301. Each throw reduces your score. The goal is to reach exactly zero.</p>
+            <h3>Cricket</h3>
+            <p>Close numbers 15-20 and the Bull by hitting them 3 times. Once closed, additional hits score points if your opponent hasn't closed it yet.</p>
+        </div>
+    </div>
+
+    <div id="screen-about" class="screen">
+        <div class="brand-group"><p class="subtitle">About App</p></div>
+        <div class="content-area" style="text-align: center;">
+            <p><strong>The Darts Scorer</strong><br>Version 2.0</p>
+            <p>A premium digital companion for your dart matches.</p>
+            <p style="margin-top: 50px; font-size: 0.7rem;">DESIGNED BY SREE</p>
         </div>
     </div>
 
@@ -183,9 +199,7 @@
 </div>
 
 <script>
-    let gMode='01', pCount=1, currentPlayerIdx=0, multiplier=1, dartsThrown=[];
-    let players = [];
-    let history = ['screen-welcome'];
+    let gMode='01', pCount=1, currentPlayerIdx=0, multiplier=1, dartsThrown=[], players=[], history=['screen-welcome'];
 
     window.onload = function() {
         const grid = document.getElementById('keypad');
@@ -206,11 +220,10 @@
     function handleMenu(opt) {
         toggleMenu();
         const cur = history[history.length-1];
-        if (opt === 'home') {
-            if (cur !== 'screen-game' || confirm("Exit game?")) location.reload();
-        } else if (opt === 'play') {
-            if (cur !== 'screen-game' || confirm("End current match?")) navigateTo(cur, 'screen-mode');
-        }
+        if (opt === 'home') { if (cur !== 'screen-game' || confirm("Exit game?")) location.reload(); }
+        else if (opt === 'play') { if (cur !== 'screen-game' || confirm("End current match?")) navigateTo(cur, 'screen-mode'); }
+        else if (opt === 'help') { navigateTo(cur, 'screen-help'); }
+        else if (opt === 'about') { navigateTo(cur, 'screen-about'); }
     }
 
     function navigateTo(cur, next) {
@@ -254,24 +267,19 @@
         for(let i=1; i<=pCount; i++) {
             let name = (document.getElementById(`in-p${i}`)?.value || "PLAYER " + i).toUpperCase();
             players.push({
-                name: name,
-                score01: 301,
+                name: name, score01: 301,
                 cricketHits: { 20:0, 19:0, 18:0, 17:0, 16:0, 15:0, 25:0 },
                 cricketPoints: { 20:0, 19:0, 18:0, 17:0, 16:0, 15:0, 25:0 }
             });
         }
-        currentPlayerIdx = 0;
-        navigateTo('screen-names', 'screen-game'); 
+        currentPlayerIdx = 0; navigateTo('screen-names', 'screen-game'); 
     }
     
     function updateTurnUI() {
         let p = players[currentPlayerIdx];
         document.getElementById('p-name').innerText = p.name;
-        if(gMode === '01') {
-            document.getElementById('score-display').innerText = p.score01;
-        } else {
-            updateCricketBoard();
-        }
+        if(gMode === '01') { document.getElementById('score-display').innerText = p.score01; } 
+        else { updateCricketBoard(); }
         updateDartSlots();
     }
 
@@ -280,9 +288,7 @@
     function pressValue(v) { 
         if(dartsThrown.length < 3){ 
             if(v===25 && multiplier===3) multiplier=2; 
-            dartsThrown.push({v, m:multiplier}); 
-            updateDartSlots(); 
-            setMultiplier(1); 
+            dartsThrown.push({v, m:multiplier}); updateDartSlots(); setMultiplier(1); 
         } 
     }
 
@@ -290,7 +296,6 @@
         const cBtn = document.getElementById('confirm-btn'); 
         cBtn.style.opacity = (dartsThrown.length === 3) ? "1" : "0.3"; 
         cBtn.style.pointerEvents = (dartsThrown.length === 3) ? "auto" : "none"; 
-
         for(let i=1; i<=3; i++) {
             const slot = document.getElementById('d'+i);
             if(dartsThrown[i-1]) {
@@ -304,9 +309,8 @@
     function confirmTurn() {
         let p = players[currentPlayerIdx];
         dartsThrown.forEach(d => { 
-            if(gMode === '01') {
-                p.score01 -= (d.v * d.m);
-            } else if(p.cricketHits.hasOwnProperty(d.v)) {
+            if(gMode === '01') { p.score01 -= (d.v * d.m); } 
+            else if(p.cricketHits.hasOwnProperty(d.v)) {
                 let hitsNeeded = 3 - p.cricketHits[d.v];
                 if (hitsNeeded > 0) {
                     let toMarks = Math.min(d.m, hitsNeeded);
@@ -315,13 +319,10 @@
                 } else { p.cricketPoints[d.v] += (d.m * d.v); }
             } 
         });
-
         if(gMode === '01' && p.score01 <= 0) { showSummary(p.name); return; }
         if(gMode === 'cricket' && Object.values(p.cricketHits).every(h => h >= 3)) { showSummary(p.name); return; }
-
         currentPlayerIdx = (currentPlayerIdx + 1) % players.length;
-        dartsThrown = [];
-        updateTurnUI();
+        dartsThrown = []; updateTurnUI();
     }
 
     function updateCricketBoard() {
