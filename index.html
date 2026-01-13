@@ -29,7 +29,6 @@
         }
         .screen.active { display: flex; }
 
-        /* SIDE MENU STYLES */
         .side-menu {
             position: fixed; top: 0; left: -280px; width: 280px; height: 100%;
             background: var(--surface); z-index: 1000; transition: 0.3s;
@@ -185,6 +184,7 @@
 <script>
     let gMode='01', pCount=1, currentScore=301, multiplier=1, dartsThrown=[], pName="PLAYER 1";
     let cricketHits = { 20:0, 19:0, 18:0, 17:0, 16:0, 15:0, 25:0 };
+    let cricketPoints = { 20:0, 19:0, 18:0, 17:0, 16:0, 15:0, 25:0 };
     let history = ['screen-welcome'];
 
     window.onload = function() {
@@ -207,16 +207,12 @@
         toggleMenu();
         const cur = history[history.length-1];
         const isMidGame = (cur === 'screen-game');
-
         if (opt === 'home') {
             if (!isMidGame || confirm("Exit game and return home?")) location.reload();
         } else if (opt === 'play') {
             if (!isMidGame || confirm("End current match to start a new one?")) navigateTo(cur, 'screen-mode');
-        } else if (opt === 'help') {
-            navigateTo(cur, 'screen-help');
-        } else if (opt === 'about') {
-            navigateTo(cur, 'screen-about');
-        }
+        } else if (opt === 'help') { navigateTo(cur, 'screen-help');
+        } else if (opt === 'about') { navigateTo(cur, 'screen-about'); }
     }
 
     function navigateTo(cur, next) {
@@ -267,8 +263,19 @@
     
     function confirmTurn() {
         dartsThrown.forEach(d => { 
-            if(gMode === '01') currentScore -= (d.v * d.m); 
-            else if(cricketHits.hasOwnProperty(d.v)) cricketHits[d.v] += d.m; 
+            if(gMode === '01') {
+                currentScore -= (d.v * d.m);
+            } else if(cricketHits.hasOwnProperty(d.v)) {
+                let hitsNeeded = 3 - cricketHits[d.v];
+                if (hitsNeeded > 0) {
+                    let toMarks = Math.min(d.m, hitsNeeded);
+                    let toPoints = d.m - toMarks;
+                    cricketHits[d.v] += toMarks;
+                    cricketPoints[d.v] += (toPoints * d.v);
+                } else {
+                    cricketPoints[d.v] += (d.m * d.v);
+                }
+            } 
         });
         if(gMode === '01') { 
             document.getElementById('score-display').innerText = currentScore; 
@@ -280,12 +287,14 @@
         dartsThrown = []; updateUI();
     }
 
+    
+
     function updateCricketBoard() {
         const board = document.getElementById('cricket-board'); board.innerHTML = "";
         [20,19,18,17,16,15,25].forEach(t => {
             let h = cricketHits[t];
             let mark = h === 1 ? "/" : h === 2 ? "X" : h >= 3 ? "⊗" : "";
-            let score = h > 3 ? (h - 3) * t : 0;
+            let score = cricketPoints[t];
             board.innerHTML += `<div class="c-val">${mark}</div><div class="c-num">${t==25?'BULL':t}</div><div class="c-val" style="color:var(--text); opacity:0.6">${score}</div>`;
         });
     }
