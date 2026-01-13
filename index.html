@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Darts. | Pro Scorer</title>
+    <title>Apex Darts</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -41,7 +41,6 @@
             padding: 20px; position: relative;
         }
 
-        /* NAVIGATION BAR */
         .top-nav {
             position: absolute; top: 30px; width: 100%;
             display: flex; justify-content: space-between;
@@ -53,49 +52,37 @@
             width: 44px; height: 44px; background: var(--nav-bg);
             border-radius: 50%; display: flex; justify-content: center;
             align-items: center; cursor: pointer; border: 1px solid var(--border);
+            transition: opacity 0.3s;
         }
         .nav-icon-btn svg { width: 20px; height: 20px; fill: var(--text); }
 
-        /* SMOOTH TRANSITION SYSTEM */
         .screen { 
-            position: absolute; /* Stack screens for cross-fade */
-            width: calc(100% - 40px);
-            opacity: 0; 
-            visibility: hidden;
-            pointer-events: none;
-            text-align: center; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center;
-            transition: opacity var(--transition-speed) ease, visibility var(--transition-speed);
+            position: absolute; width: calc(100% - 40px);
+            opacity: 0; visibility: hidden; pointer-events: none;
+            text-align: center; display: flex; flex-direction: column; align-items: center;
+            transition: opacity var(--transition-speed) ease;
         }
 
-        .screen.active { 
-            opacity: 1; 
-            visibility: visible;
-            pointer-events: auto;
-        }
+        .screen.active { opacity: 1; visibility: visible; pointer-events: auto; }
 
-        /* UI ELEMENTS */
         h1 { font-size: 4rem; font-weight: 900; letter-spacing: -3px; margin: 0; }
         .tagline { color: var(--dim); text-transform: uppercase; letter-spacing: 2px; font-size: 0.7rem; margin-bottom: 20px; }
-        
-        /* STEPPER UI */
-        .stepper-container { display: flex; align-items: center; justify-content: center; gap: 30px; margin: 40px 0; }
+        .p-score { font-size: 7.5rem; font-weight: 900; margin: 0; line-height: 0.8; letter-spacing: -5px; }
+
+        .stepper-container { display: flex; align-items: center; justify-content: center; gap: 30px; margin: 30px 0; }
         .step-btn {
-            width: 70px; height: 70px; border-radius: 50%; background: var(--surface);
-            border: 1px solid var(--border); color: var(--text); font-size: 2rem;
+            width: 60px; height: 60px; border-radius: 50%; background: var(--surface);
+            border: 1px solid var(--border); color: var(--text); font-size: 1.5rem;
             display: flex; justify-content: center; align-items: center; cursor: pointer;
         }
-        .player-val { font-size: 6rem; font-weight: 900; min-width: 80px; }
+        .player-val { font-size: 5rem; font-weight: 900; min-width: 60px; }
 
-        .cta { width: 100%; max-width: 320px; padding: 18px; background: var(--text); color: var(--bg); border-radius: 50px; font-weight: 900; margin-top: 15px; text-transform: uppercase; border: none; cursor: pointer; }
-        
         .name-input { 
             width: 100%; max-width: 320px; background: var(--surface); 
             border: 1px solid var(--border); padding: 18px; border-radius: 15px; 
             color: var(--text); margin-bottom: 12px; text-align: center; font-weight: 700;
         }
+        .cta { width: 100%; max-width: 320px; padding: 18px; background: var(--text); color: var(--bg); border-radius: 50px; font-weight: 900; margin-top: 15px; text-transform: uppercase; border: none; cursor: pointer; }
     </style>
 </head>
 <body data-theme="dark">
@@ -116,8 +103,8 @@
     </div>
 
     <div id="screen-welcome" class="screen active">
-        <h1>DARTS<span style="color:var(--dim)">.</span></h1>
-        <p class="tagline">By Sree</p>
+        <h1>APEX<span style="color:var(--dim)">.</span></h1>
+        <p class="tagline">Engineered by Sree</p>
         <div style="width:100px; height:100px; border:2px solid var(--text); border-radius:50%; display:flex; justify-content:center; align-items:center; font-weight:900; font-size:0.8rem; cursor:pointer;" onclick="navigateTo('screen-welcome', 'screen-mode')">START</div>
     </div>
 
@@ -128,7 +115,7 @@
     </div>
 
     <div id="screen-players" class="screen">
-        <p class="tagline">Players</p>
+        <p class="tagline">How many players?</p>
         <div class="stepper-container">
             <div class="step-btn" onclick="changeCount(-1)">–</div>
             <div class="player-val" id="player-val">1</div>
@@ -138,26 +125,30 @@
     </div>
 
     <div id="screen-names" class="screen">
-        <p class="tagline">Set Names</p>
-        <div id="name-container" style="width:100%; display:flex; flex-direction:column; align-items:center;"></div>
+        <p class="tagline">Enter Names</p>
+        <div id="name-container" style="width:100%;"></div>
         <button class="cta" onclick="beginMatch()">Start Match</button>
     </div>
 
     <div id="screen-game" class="screen">
-        <p class="tagline">Match Active</p>
-        <div class="p-score">301</div>
+        <p class="tagline" id="game-mode-display">01 GAME</p>
+        <div id="player-name-display" style="font-weight: 700; color: var(--dim);">PLAYER 1</div>
+        <div class="p-score" id="score-display">301</div>
+        <div style="margin-top: 20px; color: var(--dim); font-size: 0.8rem;">Ready for first throw</div>
     </div>
 </div>
 
 <script>
     let navStack = ['screen-welcome'];
+    let gameMode = '01';
     let pCount = 1;
+    let isGameRunning = false;
 
     function navigateTo(cur, next) {
         document.getElementById(cur).classList.remove('active');
         document.getElementById(next).classList.add('active');
         navStack.push(next);
-        updateNav();
+        updateNavIcons();
     }
 
     function goBack() {
@@ -166,47 +157,67 @@
         let prev = navStack[navStack.length - 1];
         document.getElementById(cur).classList.remove('active');
         document.getElementById(prev).classList.add('active');
-        updateNav();
+        if (prev === 'screen-welcome') isGameRunning = false;
+        updateNavIcons();
     }
 
     function confirmGoHome() {
-        if (confirm("Stop the game? Progress will be lost.")) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById('screen-welcome').classList.add('active');
-            navStack = ['screen-welcome'];
-            updateNav();
+        if (isGameRunning) {
+            if (confirm("Stop the game? Progress will be lost.")) resetToHome();
+        } else {
+            resetToHome();
         }
     }
 
-    function updateNav() {
-        const cur = navStack[navStack.length - 1];
-        const show = (cur !== 'screen-welcome');
-        const homeBtn = document.getElementById('home-btn');
-        const backBtn = document.getElementById('back-btn');
-        
-        homeBtn.style.opacity = show ? "1" : "0";
-        homeBtn.style.pointerEvents = show ? "auto" : "none";
-        backBtn.style.opacity = show ? "1" : "0";
-        backBtn.style.pointerEvents = show ? "auto" : "none";
+    function resetToHome() {
+        isGameRunning = false;
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById('screen-welcome').classList.add('active');
+        navStack = ['screen-welcome'];
+        updateNavIcons();
+    }
+
+    function updateNavIcons() {
+        const current = navStack[navStack.length-1];
+        const isHome = (current === 'screen-welcome');
+        const btns = [document.getElementById('home-btn'), document.getElementById('back-btn')];
+        btns.forEach(b => {
+            b.style.opacity = isHome ? "0" : "1";
+            b.style.pointerEvents = isHome ? "none" : "auto";
+        });
+    }
+
+    function setMode(m) {
+        gameMode = m;
+        document.getElementById('game-mode-display').innerText = (m === '01') ? "01 GAME" : "CRICKET";
+        navigateTo('screen-mode', 'screen-players');
     }
 
     function changeCount(val) {
-        pCount = Math.max(1, Math.min(10, pCount + val));
+        pCount = Math.max(1, Math.min(8, pCount + val));
         document.getElementById('player-val').innerText = pCount;
     }
-
-    function setMode(m) { navigateTo('screen-mode', 'screen-players'); }
 
     function submitPlayerCount() {
         const container = document.getElementById('name-container');
         container.innerHTML = "";
         for(let i=1; i<=pCount; i++) {
-            container.innerHTML += `<input type="text" class="name-input" placeholder="Click to add name">`;
+            container.innerHTML += `<input type="text" class="name-input" id="player-input-${i}" placeholder="Click to add name" autocomplete="off">`;
         }
         navigateTo('screen-players', 'screen-names');
     }
 
-    function beginMatch() { navigateTo('screen-names', 'screen-game'); }
+    function beginMatch() {
+        isGameRunning = true;
+        // Get first player name
+        let firstPlayer = document.getElementById('player-input-1').value.trim();
+        document.getElementById('player-name-display').innerText = firstPlayer === "" ? "PLAYER 1" : firstPlayer.toUpperCase();
+        
+        // Set Score
+        document.getElementById('score-display').innerText = (gameMode === '01') ? "301" : "0";
+        
+        navigateTo('screen-names', 'screen-game');
+    }
 
     function toggleTheme() {
         const t = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
