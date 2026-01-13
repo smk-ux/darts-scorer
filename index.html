@@ -29,7 +29,7 @@
         }
         .screen.active { display: flex; }
 
-        .top-nav { display: flex; justify-content: space-between; align-items: center; height: 50px; flex-shrink: 0; }
+        .top-nav { display: flex; justify-content: space-between; align-items: center; height: 50px; flex-shrink: 0; gap: 10px; }
         .nav-btn { width: 40px; height: 40px; background: var(--nav-bg); border-radius: 50%; display: flex; justify-content: center; align-items: center; border: 1px solid var(--border); }
 
         .brand-group { margin: 40px 0; text-align: center; }
@@ -69,7 +69,10 @@
 <div class="app-container">
     <div class="top-nav">
         <div id="back-btn" class="nav-btn" style="visibility:hidden" onclick="goBack()"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z"/></svg></div>
-        <div class="nav-btn" onclick="toggleTheme()"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12,18C15.31,18 18,15.31 18,12C18,8.69 15.31,6 12,6V18M20,12.51V16.19L17.62,18.57L13.94,20.95H10.06L6.38,18.57L4,16.19V12.51L1.62,10.13L4,7.75V4.06L6.38,1.68H10.06L13.94,4.06L17.62,6.44V10.13L20,12.51Z"/></svg></div>
+        <div style="display: flex; gap: 10px;">
+            <div id="home-btn" class="nav-btn" style="visibility:hidden" onclick="confirmHome()"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z"/></svg></div>
+            <div class="nav-btn" onclick="toggleTheme()"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12,18C15.31,18 18,15.31 18,12C18,8.69 15.31,6 12,6V18M20,12.51V16.19L17.62,18.57L13.94,20.95H10.06L6.38,18.57L4,16.19V12.51L1.62,10.13L4,7.75V4.06L6.38,1.68H10.06L13.94,4.06L17.62,6.44V10.13L20,12.51Z"/></svg></div>
+        </div>
     </div>
 
     <div id="screen-welcome" class="screen active" style="padding-bottom: 0;">
@@ -158,7 +161,7 @@
     function navigateTo(cur, next) {
         document.getElementById(cur).style.display = 'none';
         document.getElementById(next).style.display = 'flex';
-        history.push(next); updateBack();
+        history.push(next); updateNav();
         if(next === 'screen-game' && gMode === 'cricket') updateCricketBoard();
     }
 
@@ -168,12 +171,22 @@
         let prev = history[history.length-1];
         document.getElementById(cur).style.display = 'none';
         document.getElementById(prev).style.display = 'flex';
-        updateBack();
+        updateNav();
     }
 
-    function updateBack() {
+    function confirmHome() {
+        const cur = history[history.length-1];
+        if (cur === 'screen-game') {
+            if (confirm("End current game and return home?")) location.reload();
+        } else {
+            location.reload();
+        }
+    }
+
+    function updateNav() {
         const cur = history[history.length-1];
         document.getElementById('back-btn').style.visibility = (cur==='screen-welcome'||cur==='screen-summary') ? "hidden" : "visible";
+        document.getElementById('home-btn').style.visibility = (cur==='screen-welcome') ? "hidden" : "visible";
     }
 
     function setMode(m) { 
