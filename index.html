@@ -90,14 +90,16 @@
         </div>
     </div>
 
-    <div id="screen-players" class="screen">
-        <div class="brand-group"><p class="subtitle">Players</p></div>
-        <div style="display:flex; align-items:center; justify-content:center; gap:30px; margin:20px 0;">
-            <div class="nav-btn" onclick="changeCount(-1)">–</div>
-            <div style="font-size:5rem; font-weight:900;" id="player-val">1</div>
-            <div class="nav-btn" onclick="changeCount(1)">+</div>
+    <div id="screen-players" class="screen" style="padding-bottom: 0;">
+        <div class="brand-group"><p class="subtitle">number of players</p></div>
+        <div class="center-action">
+            <div style="display:flex; align-items:center; justify-content:center; gap:30px; margin-bottom: 20px;">
+                <div class="nav-btn" onclick="changeCount(-1)">–</div>
+                <div style="font-size:5rem; font-weight:900;" id="player-val">1</div>
+                <div class="nav-btn" onclick="changeCount(1)">+</div>
+            </div>
+            <button class="cta" style="width: 80%;" onclick="submitPlayerCount()">Next</button>
         </div>
-        <div class="bottom-action"><button class="cta" onclick="submitPlayerCount()">Next</button></div>
     </div>
 
     <div id="screen-names" class="screen" style="overflow-y: auto;">
