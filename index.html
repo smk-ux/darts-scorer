@@ -84,8 +84,8 @@
         .score-strip { display: flex; gap: 10px; margin: 10px 0; justify-content: center; }
         .dart-slot { flex: 1; background: var(--surface); border: 1px solid var(--border); height: 50px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.2rem; color: var(--accent); }
 
-        .picker-btn-container { display: flex; gap: 10px; margin-top: 20px; width: 100%; }
-        .picker-main-btn { flex: 1; padding: 25px 0; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-weight: 900; font-size: 1.1rem; text-transform: uppercase; }
+        .picker-btn-container { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; width: 100%; }
+        .picker-main-btn { flex: 1; min-width: 45%; padding: 20px 0; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-weight: 900; font-size: 1.1rem; text-transform: uppercase; }
         
         #value-picker-overlay {
             position: fixed; bottom: -100%; left: 0; width: 100%; height: 70%;
@@ -116,7 +116,6 @@
         #p-name { font-size: 1.8rem; font-weight: 900; color: var(--text); text-transform: uppercase; margin-bottom: -5px; letter-spacing: -1px; }
         #score-display { font-size: 4rem; font-weight: 900; color: var(--accent); line-height: 1; }
 
-        /* CENTERED SUMMARY SCREEN */
         #screen-summary { justify-content: center; align-items: center; text-align: center; padding-bottom: 100px; }
     </style>
 </head>
@@ -189,6 +188,7 @@
             <button class="picker-main-btn" onclick="openPicker(1)">Single</button>
             <button class="picker-main-btn" onclick="openPicker(2)">Double</button>
             <button class="picker-main-btn" onclick="openPicker(3)">Triple</button>
+            <button class="picker-main-btn" style="background: var(--border);" onclick="selectValue(0)">Miss</button>
         </div>
         <div id="cricket-controls" style="display:none;">
             <div class="m-bar">
@@ -295,7 +295,9 @@
     }
 
     function selectValue(v) {
+        if(dartsThrown.length >= 3) return;
         document.getElementById('value-picker-overlay').classList.remove('open');
+        if(v === 0) multiplier = 1;
         if(v === 25 && multiplier === 3) multiplier = 2;
         dartsThrown.push({v, m: multiplier});
         updateDartSlots();
