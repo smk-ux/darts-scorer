@@ -16,20 +16,13 @@
             height: 100%; width: 100%; overflow: hidden;
         }
         .app-container { width: 100%; max-width: 450px; height: 100%; margin: 0 auto; display: flex; flex-direction: column; padding: 15px; position: relative; }
-        
         .screen { display: none; flex-direction: column; height: 100%; width: 100%; }
         .screen.active { display: flex; }
-        
-        /* Navigation */
         .top-nav { display: flex; justify-content: space-between; align-items: center; height: 40px; flex-shrink: 0; margin-bottom: 5px; }
         .nav-btn { width: 35px; height: 35px; background: var(--nav-bg); border-radius: 50%; display: flex; justify-content: center; align-items: center; border: 1px solid var(--border); cursor: pointer; }
         .subtitle { color: var(--dim); font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase; font-weight: 800; }
-
-        /* Typography & Branding */
         .brand-group { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
         h1 { font-size: 3.5rem; font-weight: 900; line-height: 0.85; letter-spacing: -2px; text-transform: uppercase; }
-        
-        /* Game UI */
         .h2h-header { display: flex; justify-content: space-between; padding: 5px 0; flex-shrink: 0; min-height: 55px; }
         .p-block { display: flex; flex-direction: column; width: 45%; border-bottom: 3px solid transparent; visibility: hidden; }
         .p-block.visible { visibility: visible; }
@@ -38,7 +31,6 @@
         .p-name-label { font-size: 0.7rem; font-weight: 800; color: var(--dim); text-transform: uppercase; }
         .p-score-label { font-size: 2.2rem; font-weight: 900; line-height: 1; }
         .active .p-name-label { color: var(--accent); }
-
         .board-container { flex-grow: 1; display: flex; align-items: center; justify-content: center; min-height: 0; padding: 5px 0; }
         #dartboard-svg { width: 85vw; max-width: 280px; max-height: 33vh; cursor: pointer; }
         .db-bg { fill: #000; }
@@ -48,22 +40,17 @@
         .db-green { fill: #009245; stroke: #333; stroke-width: 0.2; }
         .db-highlight { fill: var(--accent) !important; transition: fill 0.1s; }
         .db-text { fill: #666; font-size: 7px; font-weight: 900; pointer-events: none; }
-
         .center-action { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
         .cta { width: 100%; max-width: 280px; padding: 18px; background: var(--text); color: var(--bg); border-radius: 50px; font-weight: 900; text-transform: uppercase; border: none; font-size: 1rem; cursor: pointer; }
         .name-input { width: 100%; background: var(--surface); border: 1px solid var(--border); padding: 15px; color: var(--text); border-radius: 12px; margin-bottom: 10px; font-weight: 700; text-align: center; font-size: 1.1rem; }
-
-        /* Victory Page specific */
-        .winner-name { color: var(--accent); font-size: 4rem; font-weight: 900; margin: 10px 0; text-transform: uppercase; letter-spacing: -2px; }
-        .victory-icon { font-size: 4rem; margin-bottom: 20px; }
-
-        /* Controls */
         .game-controls { padding-top: 5px; flex-shrink: 0; }
         .score-strip { display: flex; gap: 8px; margin-bottom: 10px; justify-content: center; align-items: center; }
         .dart-slot { width: 55px; height: 45px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--accent); font-size: 1.2rem; }
         .miss-btn { width: 55px; height: 45px; background: var(--surface); border: 1px solid var(--danger); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--danger); font-size: 0.7rem; text-transform: uppercase; cursor: pointer; }
         .cta-submit { width: 100%; padding: 15px; background: var(--accent); color: #000; border-radius: 50px; font-weight: 900; border: none; text-transform: uppercase; cursor: pointer; }
         .cta-undo { background: transparent; color: var(--dim); border: none; text-transform: uppercase; font-size: 0.7rem; font-weight: 700; padding: 5px; cursor: pointer; }
+        .winner-name { color: var(--accent); font-size: 4rem; font-weight: 900; margin: 10px 0; text-transform: uppercase; letter-spacing: -2px; }
+        .victory-icon { font-size: 4rem; margin-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -82,18 +69,12 @@
 
     <div id="screen-mode" class="screen">
         <div class="brand-group" style="flex-grow:0; margin: 15px 0;"><p class="subtitle">Select Game</p></div>
-        <div class="center-action">
-            <button class="cta" onclick="setGame('01')">01 Game</button>
-            <button class="cta" onclick="setGame('CRICKET')">Cricket Game</button>
-        </div>
+        <div class="center-action"><button class="cta" onclick="setGame('01')">01 Game</button><button class="cta" onclick="setGame('CRICKET')">Cricket Game</button></div>
     </div>
 
     <div id="screen-01-vars" class="screen">
         <div class="brand-group" style="flex-grow:0; margin: 15px 0;"><p class="subtitle">Score</p></div>
-        <div class="center-action">
-            <button class="cta" onclick="set01Var('301')">301</button>
-            <button class="cta" onclick="set01Var('501')">501</button>
-        </div>
+        <div class="center-action"><button class="cta" onclick="set01Var('301')">301</button><button class="cta" onclick="set01Var('501')">501</button></div>
     </div>
 
     <div id="screen-players" class="screen">
@@ -139,20 +120,14 @@
     </div>
 
     <div id="screen-victory" class="screen">
-        <div class="brand-group">
-            <div class="victory-icon">🏆</div>
-            <p class="subtitle">WINNER WINNER</p>
-            <div class="winner-name" id="winner-display">PLAYER 1</div>
-            <p class="subtitle" style="margin-top:0">CHAMPION</p>
-        </div>
-        <div class="center-action">
-            <button class="cta" style="background:var(--accent); color:#000;" onclick="location.reload()">New Game</button>
-        </div>
+        <div class="brand-group"><div class="victory-icon">🏆</div><p class="subtitle">WINNER WINNER</p><div class="winner-name" id="winner-display">PLAYER 1</div><p class="subtitle" style="margin-top:0">CHAMPION</p></div>
+        <div class="center-action"><button class="cta" style="background:var(--accent); color:#000;" onclick="location.reload()">New Game</button></div>
     </div>
 </div>
 
 <script>
     let mainGameType = '01', gMode = '301', pCount = 2, currentPlayerIdx = 0, dartsThrown = [], players = [], history = ['screen-welcome'];
+    let turnStartScore = 0; // Tracks score at start of current turn for rollbacks
     const boardValues = [20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5];
 
     function navigateTo(next) {
@@ -194,6 +169,7 @@
             let n = document.getElementById(`pname-${i}`).value || `PLAYER ${i+1}`;
             players.push({ name: n.toUpperCase(), score: mainGameType === '01' ? parseInt(gMode) : 0, cricket: {15:0, 16:0, 17:0, 18:0, 19:0, 20:0, 25:0} });
         }
+        turnStartScore = players[0].score;
         buildH2H();
         navigateTo('screen-game');
     }
@@ -232,25 +208,63 @@
         if (dartsThrown.length < 3) {
             let p = players[currentPlayerIdx];
             let dartValue = v * m;
-            let turnTotalSoFar = dartsThrown.reduce((acc, d) => acc + (d.v * d.m), 0);
             
-            if (mainGameType === '01' && (turnTotalSoFar + dartValue) > p.score) {
-                alert("BUST!");
-                dartsThrown = [];
-                currentPlayerIdx = (currentPlayerIdx + 1) % players.length;
+            // 01 Dynamic Scoring Logic
+            if (mainGameType === '01') {
+                if (p.score - dartValue < 0) {
+                    alert("BUST!");
+                    p.score = turnStartScore; // Reset to start of turn
+                    dartsThrown = [];
+                    nextTurn();
+                    return;
+                }
+                
+                p.score -= dartValue;
+                dartsThrown.push({v, m});
                 updateUI();
-                return;
-            }
 
-            dartsThrown.push({v, m});
-            updateUI();
-
-            if (mainGameType === '01' && (turnTotalSoFar + dartValue) === p.score) {
-                p.score = 0;
+                if (p.score === 0) {
+                    showVictory(p.name);
+                }
+            } else {
+                // Cricket Logic (Static turn update)
+                dartsThrown.push({v, m});
                 updateUI();
-                showVictory(p.name);
             }
         }
+    }
+
+    function undoDart() {
+        if(dartsThrown.length > 0) {
+            let last = dartsThrown.pop();
+            if(mainGameType === '01') {
+                players[currentPlayerIdx].score += (last.v * last.m);
+            }
+            updateUI();
+        }
+    }
+
+    function confirmTurn() {
+        if(mainGameType === 'CRICKET') {
+            let p = players[currentPlayerIdx];
+            let otherP = players[(currentPlayerIdx + 1) % players.length];
+            dartsThrown.forEach(d => {
+                if(d.v >= 15 || d.v === 25) {
+                    for(let i=0; i<d.m; i++) {
+                        if(p.cricket[d.v] < 3) p.cricket[d.v]++;
+                        else if(otherP && otherP.cricket[d.v] < 3) p.score += d.v;
+                    }
+                }
+            });
+        }
+        nextTurn();
+    }
+
+    function nextTurn() {
+        currentPlayerIdx = (currentPlayerIdx + 1) % players.length;
+        turnStartScore = players[currentPlayerIdx].score; // Store new start score
+        dartsThrown = [];
+        updateUI();
     }
 
     function showVictory(name) {
@@ -279,29 +293,6 @@
         });
     }
 
-    function confirmTurn() {
-        let p = players[currentPlayerIdx];
-        let otherP = players[(currentPlayerIdx + 1) % players.length];
-        if(mainGameType === '01') {
-            let total = 0; dartsThrown.forEach(d => total += (d.v * d.m));
-            p.score -= total;
-        } else {
-            // Cricket Win Check logic could go here
-            dartsThrown.forEach(d => {
-                if(d.v >= 15 || d.v === 25) {
-                    for(let i=0; i<d.m; i++) {
-                        if(p.cricket[d.v] < 3) p.cricket[d.v]++;
-                        else if(otherP && otherP.cricket[d.v] < 3) p.score += d.v;
-                    }
-                }
-            });
-        }
-        currentPlayerIdx = (currentPlayerIdx + 1) % players.length;
-        dartsThrown = [];
-        updateUI();
-    }
-
-    function undoDart() { dartsThrown.pop(); updateUI(); }
     window.onload = initBoard;
 </script>
 </body>
