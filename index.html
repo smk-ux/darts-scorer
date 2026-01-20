@@ -3,149 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Darts Pro | SMK</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>Darts PRO | Sree</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #000000; --surface: #111111; --border: #222222; --text: #ffffff;
-            --dim: #888888; --accent: #00ff88; --nav-bg: rgba(255,255,255,0.1); --danger: #ff4444;
+            --bg: #000000; --surface: #0a0a0a; --border: #1a1a1a; --text: #ffffff;
+            --dim: #666666; --accent: #00ff88; --nav-bg: rgba(255,255,255,0.05); --danger: #ff4444;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         body, html {
             background-color: var(--bg); color: var(--text); font-family: 'Inter', sans-serif;
             height: 100%; width: 100%; overflow: hidden;
         }
-        .app-container { width: 100%; max-width: 450px; height: 100%; margin: 0 auto; display: flex; flex-direction: column; padding: 15px; position: relative; }
+        .app-container { width: 100%; max-width: 450px; height: 100%; margin: 0 auto; display: flex; flex-direction: column; padding: 20px; position: relative; }
         .screen { display: none; flex-direction: column; height: 100%; width: 100%; }
         .screen.active { display: flex; }
 
         /* Side Menu */
         .side-menu {
             position: fixed; top: 0; left: -280px; width: 280px; height: 100%; 
-            background: var(--surface); z-index: 1000; transition: 0.3s;
-            padding: 40px 20px; border-right: 1px solid var(--border);
+            background: var(--surface); z-index: 1000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 50px 30px; border-right: 1px solid var(--border);
         }
-        .side-menu.open { left: 0; box-shadow: 10px 0 50px rgba(0,0,0,0.8); }
+        .side-menu.open { left: 0; box-shadow: 20px 0 80px rgba(0,0,0,0.9); }
         .menu-overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.7); display: none; z-index: 999; 
+            background: rgba(0,0,0,0.8); display: none; z-index: 999; backdrop-filter: blur(4px);
         }
         .menu-item { 
-            padding: 15px 0; font-size: 1.1rem; font-weight: 700; border-bottom: 1px solid var(--border);
-            color: var(--text); cursor: pointer; display: flex; align-items: center; gap: 15px;
+            padding: 20px 0; font-size: 1.2rem; font-weight: 400; border-bottom: 1px solid var(--border);
+            color: var(--text); cursor: pointer; display: flex; align-items: center; gap: 20px;
         }
-        .menu-item span { color: var(--accent); width: 25px; font-size: 0.8rem; }
+        .menu-item span { color: var(--accent); font-weight: 700; font-size: 0.7rem; letter-spacing: 2px; }
 
         /* Navigation */
-        .top-nav { display: flex; justify-content: space-between; align-items: center; height: 45px; flex-shrink: 0; z-index: 10; }
-        .nav-btn { width: 40px; height: 40px; background: var(--nav-bg); border-radius: 50%; display: flex; justify-content: center; align-items: center; border: 1px solid var(--border); cursor: pointer; }
+        .top-nav { display: flex; justify-content: space-between; align-items: center; height: 60px; flex-shrink: 0; z-index: 10; }
+        .nav-btn { width: 45px; height: 45px; background: var(--nav-bg); border-radius: 12px; display: flex; justify-content: center; align-items: center; border: 1px solid var(--border); cursor: pointer; }
         
-        /* Branding Header */
-        .sree-top-brand { 
-            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
-            font-size: 0.65rem; letter-spacing: 5px; color: var(--accent); 
-            text-transform: uppercase; font-weight: 700; opacity: 0.8; white-space: nowrap;
-        }
-        
-        /* Typography */
-        .brand-group { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-        h1 { font-size: 4rem; font-weight: 900; line-height: 0.85; letter-spacing: -3px; text-transform: uppercase; }
-        .subtitle { color: var(--dim); font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase; font-weight: 800; }
+        /* Home Branding */
+        .hero-group { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        .hero-title { font-size: 4.5rem; font-weight: 900; line-height: 0.9; letter-spacing: -3px; color: var(--text); margin-bottom: 15px; text-transform: uppercase; }
+        .hero-title span { color: var(--accent); }
+        .hero-sub { color: var(--dim); font-size: 0.75rem; letter-spacing: 4px; text-transform: uppercase; font-weight: 500; }
 
-        /* Game UI Components */
-        .h2h-header { display: flex; justify-content: space-between; padding: 10px 0; min-height: 60px; }
-        .p-block { display: flex; flex-direction: column; width: 45%; border-bottom: 3px solid transparent; visibility: hidden; transition: 0.3s; }
+        /* Shared UI */
+        .h2h-header { display: flex; justify-content: space-between; padding: 10px 0; min-height: 80px; }
+        .p-block { display: flex; flex-direction: column; width: 45%; border-left: 2px solid transparent; padding-left: 10px; visibility: hidden; transition: 0.3s; }
         .p-block.visible { visibility: visible; }
-        .p-block.active { border-bottom-color: var(--accent); }
-        .p-block.right { text-align: right; }
-        .p-name-label { font-size: 0.7rem; font-weight: 800; color: var(--dim); text-transform: uppercase; }
-        .p-score-label { font-size: 2.5rem; font-weight: 900; line-height: 1; }
+        .p-block.active { border-left-color: var(--accent); }
+        .p-block.right { text-align: right; border-left: none; border-right: 2px solid transparent; padding-right: 10px; }
+        .p-block.right.active { border-right-color: var(--accent); }
+        .p-name-label { font-size: 0.7rem; font-weight: 700; color: var(--dim); text-transform: uppercase; }
+        .p-score-label { font-size: 3rem; font-weight: 900; line-height: 1; }
         .active .p-name-label { color: var(--accent); }
 
         .board-container { flex-grow: 1; display: flex; align-items: center; justify-content: center; }
-        #dartboard-svg { width: 90vw; max-width: 300px; max-height: 35vh; cursor: pointer; }
+        #dartboard-svg { width: 100%; max-width: 320px; }
         .db-bg { fill: #000; }
-        .db-seg-even { fill: #1a1a1a; stroke: #333; stroke-width: 0.2; }
-        .db-seg-odd { fill: #0a0a0a; stroke: #333; stroke-width: 0.2; }
-        .db-red { fill: #be1e2d; stroke: #333; stroke-width: 0.2; }
-        .db-green { fill: #009245; stroke: #333; stroke-width: 0.2; }
-        .db-highlight { fill: var(--accent) !important; transition: fill 0.1s; }
-        .db-text { fill: #666; font-size: 7px; font-weight: 900; pointer-events: none; }
+        .db-seg-even { fill: #111; stroke: #222; stroke-width: 0.2; }
+        .db-seg-odd { fill: #050505; stroke: #222; stroke-width: 0.2; }
+        .db-red { fill: #8b0000; }
+        .db-green { fill: #004d2c; }
+        .db-highlight { fill: var(--accent) !important; transition: 0.1s; }
+        .db-text { fill: #444; font-size: 6px; font-weight: 700; pointer-events: none; }
 
-        .center-action { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; }
-        .cta { width: 100%; max-width: 280px; padding: 18px; background: var(--text); color: var(--bg); border-radius: 50px; font-weight: 900; text-transform: uppercase; border: none; font-size: 1rem; cursor: pointer; }
-        .name-input { width: 100%; background: var(--surface); border: 1px solid var(--border); padding: 18px; color: var(--text); border-radius: 15px; margin-bottom: 12px; font-weight: 700; text-align: center; font-size: 1.1rem; }
+        .center-action { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 15px; padding-bottom: 40px; }
+        .cta { width: 100%; padding: 22px; background: var(--text); color: var(--bg); border-radius: 16px; font-weight: 900; text-transform: uppercase; border: none; font-size: 0.9rem; letter-spacing: 2px; cursor: pointer; }
+        
+        .name-input { width: 100%; background: var(--surface); border: 1px solid var(--border); padding: 20px; color: var(--text); border-radius: 12px; margin-bottom: 15px; font-weight: 700; text-align: center; font-size: 1.1rem; }
 
-        .score-strip { display: flex; gap: 10px; margin-bottom: 15px; justify-content: center; }
-        .dart-slot { width: 60px; height: 50px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--accent); font-size: 1.3rem; }
-        .miss-btn { width: 60px; height: 50px; background: var(--surface); border: 1px solid var(--danger); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--danger); font-size: 0.7rem; text-transform: uppercase; cursor: pointer; }
-        .cta-submit { width: 100%; padding: 16px; background: var(--accent); color: #000; border-radius: 50px; font-weight: 900; border: none; text-transform: uppercase; cursor: pointer; }
-        .cta-undo { background: transparent; color: var(--dim); border: none; text-transform: uppercase; font-size: 0.7rem; font-weight: 700; padding: 8px; cursor: pointer; margin-top: 5px; }
+        .score-strip { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
+        .dart-slot { width: 70px; height: 60px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--accent); font-size: 1.5rem; }
+        .miss-btn { width: 70px; height: 60px; background: #1a0000; border: 1px solid var(--danger); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--danger); font-size: 0.7rem; text-transform: uppercase; cursor: pointer; }
+        .cta-submit { width: 100%; padding: 20px; background: var(--accent); color: #000; border-radius: 16px; font-weight: 900; border: none; text-transform: uppercase; cursor: pointer; }
 
-        .content-box { background: var(--surface); padding: 25px; border-radius: 20px; border: 1px solid var(--border); text-align: left; line-height: 1.6; width: 100%; max-width: 350px; margin: 0 auto; }
-        .winner-name { color: var(--accent); font-size: 4rem; font-weight: 900; margin: 10px 0; text-transform: uppercase; letter-spacing: -2px; }
-        .victory-icon { font-size: 5rem; margin-bottom: 10px; }
+        .content-box { background: var(--surface); padding: 30px; border-radius: 20px; border: 1px solid var(--border); text-align: left; line-height: 1.8; width: 100%; }
+        .winner-name { color: var(--accent); font-size: 5rem; font-weight: 900; line-height: 0.9; margin: 20px 0; text-transform: uppercase; letter-spacing: -4px; }
     </style>
 </head>
 <body>
 
 <div class="menu-overlay" id="overlay" onclick="toggleMenu()"></div>
 <div class="side-menu" id="side-menu">
-    <div class="subtitle" style="margin-bottom: 30px;">Navigation</div>
-    <div class="menu-item" onclick="resetToHome()"><span>01</span> Home</div>
-    <div class="menu-item" onclick="navigateTo('screen-mode')"><span>02</span> Play a Game</div>
-    <div class="menu-item" onclick="navigateTo('screen-help')"><span>03</span> Help</div>
-    <div class="menu-item" onclick="navigateTo('screen-about')"><span>04</span> About</div>
+    <div class="hero-sub" style="margin-bottom: 40px;">Navigation</div>
+    <div class="menu-item" onclick="resetToHome()"><span>01</span> HOME</div>
+    <div class="menu-item" onclick="navigateTo('screen-mode')"><span>02</span> PLAY A GAME</div>
+    <div class="menu-item" onclick="navigateTo('screen-help')"><span>03</span> HELP</div>
+    <div class="menu-item" onclick="navigateTo('screen-about')"><span>04</span> ABOUT</div>
 </div>
 
 <div class="app-container">
     <div class="top-nav" id="global-nav">
-        <div class="nav-btn" onclick="toggleMenu()"><svg width="24" height="24" fill="white" viewBox="0 0 24 24"><path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z"/></svg></div>
-        <div class="subtitle" id="nav-title">DARTS</div>
+        <div class="nav-btn" onclick="toggleMenu()"><svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z"/></svg></div>
+        <div class="hero-sub" id="nav-title" style="font-size: 0.6rem; letter-spacing: 2px;">PRO SCORER</div>
         <div class="nav-btn" id="back-btn" style="visibility:hidden" onclick="goBack()"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z"/></svg></div>
     </div>
 
     <div id="screen-welcome" class="screen active">
-        <div class="sree-top-brand">Engineered by SMK</div>
-        <div class="brand-group">
-            <h1>DARTS<br><span style="color:var(--accent)">PRO</span></h1>
-            <p class="subtitle">CHAMPIONSHIP SCORER</p>
+        <div class="hero-group">
+            <div class="hero-title">Darts <span>PRO</span></div>
+            <div class="hero-sub">Engineered by Sree</div>
         </div>
-        <div class="center-action"><button class="cta" onclick="navigateTo('screen-mode')">Start Match</button></div>
+        <div class="center-action">
+            <button class="cta" onclick="navigateTo('screen-mode')">Start Game</button>
+        </div>
     </div>
 
     <div id="screen-mode" class="screen">
-        <div class="brand-group" style="flex-grow:0; margin: 20px 0;"><p class="subtitle">Select Game Mode</p></div>
-        <div class="center-action">
+        <div class="hero-group" style="flex-grow:0; margin: 40px 0;"><div class="hero-sub">Game Type</div></div>
+        <div class="center-action" style="flex-grow:1; justify-content:center;">
             <button class="cta" onclick="setGame('01')">01 Classic</button>
-            <button class="cta" onclick="setGame('CRICKET')">Cricket</button>
+            <button class="cta" style="background:var(--surface); color:var(--text); border:1px solid var(--border);" onclick="setGame('CRICKET')">Cricket</button>
         </div>
-    </div>
-
-    <div id="screen-help" class="screen">
-        <div class="brand-group" style="flex-grow:0; margin: 20px 0;"><p class="subtitle">Rule Book</p></div>
-        <div class="content-box">
-            <b style="color:var(--accent)">01 Classic:</b> Subtract points from 301/501. Reach exactly 0 to win. Hitting more than required results in a "BUST".<br><br>
-            <b style="color:var(--accent)">Cricket:</b> Hit 15-20 and Bull 3 times to close segments. Score on closed numbers until everyone else closes them.
-        </div>
-        <div class="center-action"><button class="cta" onclick="goBack()">Got it</button></div>
     </div>
 
     <div id="screen-about" class="screen">
-        <div class="brand-group">
-            <p class="subtitle">Developer</p>
-            <h1 style="font-size: 3.5rem;">SMK</h1>
-            <p style="color:var(--accent); margin: 15px 0; font-weight:700;">sreekuttanmk95@gmail.com</p>
+        <div class="hero-group">
+            <div class="hero-sub">Developer</div>
+            <div class="hero-title" style="font-size: 4rem; letter-spacing: -3px;">SMK</div>
+            <p style="color:var(--accent); font-weight:700; margin-bottom: 30px;">sreekuttanmk95@gmail.com</p>
             <div class="content-box" style="text-align:center">
-                Darts Pro v1.0.1<br>Built for high-precision tracking and dynamic scoring.
+                Darts Pro Scorer v1.0.1
             </div>
         </div>
         <div class="center-action"><button class="cta" onclick="goBack()">Close</button></div>
     </div>
 
-    <div id="screen-01-vars" class="screen"><div class="brand-group" style="flex-grow:0; margin: 20px 0;"><p class="subtitle">Target Score</p></div><div class="center-action"><button class="cta" onclick="set01Var('301')">301</button><button class="cta" onclick="set01Var('501')">501</button></div></div>
-    <div id="screen-players" class="screen"><div class="brand-group" style="flex-grow:0; margin: 20px 0;"><p class="subtitle">Match Format</p></div><div class="center-action"><div style="display:flex; align-items:center; gap:35px;"><div class="nav-btn" onclick="changeCount(-1)">–</div><div style="font-size:5.5rem; font-weight:900;" id="player-val">2</div><div class="nav-btn" onclick="changeCount(1)">+</div></div><p class="subtitle">Players</p><button class="cta" onclick="setupNames()">Next</button></div></div>
-    <div id="screen-names" class="screen"><div class="brand-group" style="flex-grow:0; margin: 20px 0;"><p class="subtitle">Enter Names</p></div><div id="name-list" style="width: 100%; max-width: 320px; margin: 0 auto;"></div><div class="center-action"><button class="cta" onclick="beginMatch()">Start Game</button></div></div>
+    <div id="screen-help" class="screen">
+        <div class="hero-group" style="flex-grow:0; margin: 40px 0;"><div class="hero-sub">Rules</div></div>
+        <div class="content-box">
+            <b style="color:var(--accent)">01 Classic:</b> Reach 0 exactly. Don't bust.<br><br>
+            <b style="color:var(--accent)">Cricket:</b> Close 15-20 & Bullseye. Score points to win.
+        </div>
+        <div class="center-action"><button class="cta" onclick="goBack()">Got it</button></div>
+    </div>
+
+    <div id="screen-01-vars" class="screen"><div class="hero-group"><div class="hero-sub">Target</div></div><div class="center-action"><button class="cta" onclick="set01Var('301')">301</button><button class="cta" onclick="set01Var('501')">501</button></div></div>
+    <div id="screen-players" class="screen"><div class="hero-group"><div class="hero-sub">Players</div><div style="font-size:6rem; font-weight:900;" id="player-val">2</div><div style="display:flex; gap:20px;"><div class="nav-btn" onclick="changeCount(-1)">–</div><div class="nav-btn" onclick="changeCount(1)">+</div></div></div><div class="center-action"><button class="cta" onclick="setupNames()">Continue</button></div></div>
+    <div id="screen-names" class="screen"><div class="hero-group" style="flex-grow:0; margin: 40px 0;"><div class="hero-sub">Identify Players</div></div><div id="name-list" style="width: 100%;"></div><div class="center-action"><button class="cta" onclick="beginMatch()">Start</button></div></div>
     
     <div id="screen-game" class="screen">
         <div class="h2h-header" id="h2h-box"></div>
@@ -157,29 +152,26 @@
                 <circle id="d25" cx="100" cy="100" r="6" class="db-red" onclick="handleBoardClick(25, 2)"/>
             </svg>
         </div>
-        <div class="game-controls">
-            <div class="score-strip">
-                <div class="dart-slot" id="slot-0">-</div>
-                <div class="dart-slot" id="slot-1">-</div>
-                <div class="dart-slot" id="slot-2">-</div>
-                <button class="miss-btn" onclick="handleBoardClick(0, 1)">Miss</button>
-            </div>
-            <div class="submit-area" style="display:flex; flex-direction:column; align-items:center;">
-                <button class="cta-submit" id="confirm-btn" style="opacity:0.3; pointer-events:none;" onclick="confirmTurn()">Submit Turn</button>
-                <button class="cta-undo" onclick="undoDart()">Undo Last Dart</button>
-            </div>
+        <div class="score-strip">
+            <div class="dart-slot" id="slot-0">-</div>
+            <div class="dart-slot" id="slot-1">-</div>
+            <div class="dart-slot" id="slot-2">-</div>
+            <button class="miss-btn" onclick="handleBoardClick(0, 1)">Miss</button>
+        </div>
+        <div class="center-action">
+            <button class="cta-submit" id="confirm-btn" style="opacity:0.2; pointer-events:none;" onclick="confirmTurn()">Submit Turn</button>
+            <p onclick="undoDart()" style="color:var(--dim); font-size:0.7rem; letter-spacing:2px; cursor:pointer; margin-top:10px;">UNDO DART</p>
         </div>
     </div>
 
     <div id="screen-victory" class="screen">
-        <div class="brand-group"><div class="victory-icon">🏆</div><p class="subtitle">WINNER</p><div class="winner-name" id="winner-display">PLAYER 1</div><p class="subtitle">CHAMPION</p></div>
+        <div class="hero-group"><div class="hero-sub">Winner</div><div class="winner-name" id="winner-display">SMK</div><div class="hero-sub">Victory achieved</div></div>
         <div class="center-action"><button class="cta" style="background:var(--accent); color:#000;" onclick="location.reload()">New Game</button></div>
     </div>
 </div>
 
 <script>
-    let mainGameType = '01', gMode = '301', pCount = 2, currentPlayerIdx = 0, dartsThrown = [], players = [], history = ['screen-welcome'];
-    let turnStartScore = 0;
+    let mainGameType = '01', gMode = '301', pCount = 2, currentPlayerIdx = 0, dartsThrown = [], players = [], history = ['screen-welcome'], turnStartScore = 0;
     const boardValues = [20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5];
 
     function toggleMenu() {
@@ -209,8 +201,8 @@
 
     function updateNav() {
         let cur = history[history.length-1];
-        document.getElementById('back-btn').style.visibility = (cur === 'screen-welcome' || cur === 'screen-game' || cur === 'screen-victory') ? 'hidden' : 'visible';
-        document.getElementById('nav-title').innerText = (cur === 'screen-game') ? mainGameType : 'DARTS PRO';
+        document.getElementById('back-btn').style.visibility = (['screen-welcome','screen-game','screen-victory'].includes(cur)) ? 'hidden' : 'visible';
+        document.getElementById('nav-title').innerText = (cur === 'screen-game') ? mainGameType : 'PRO SCORER';
         document.getElementById('global-nav').style.display = (cur === 'screen-victory') ? 'none' : 'flex';
     }
 
@@ -252,7 +244,7 @@
                 const x2 = 100 + r1 * Math.cos((angle+18) * rad), y2 = 100 + r1 * Math.sin((angle+18) * rad);
                 const x3 = 100 + r2 * Math.cos((angle+18) * rad), y3 = 100 + r2 * Math.sin((angle+18) * rad);
                 const x4 = 100 + r2 * Math.cos(angle * rad), y4 = 100 + r2 * Math.sin(angle * rad);
-                return `<path id="${m===1?'s':m===2?'d':'t'}${v}${r1>60 && m===1?'_a':''}" d="M${x1},${y1} A${r1},${r1} 0 0,1 ${x2},${y2} L${x3},${y3} A${r2},${r2} 0 0,0 ${x4},${y4} Z" class="${cls}" onclick="handleBoardClick(${v}, ${m})"/>`;
+                return `<path id="${m===1?'s':m===2?'d':'t'}${v}" d="M${x1},${y1} A${r1},${r1} 0 0,1 ${x2},${y2} L${x3},${y3} A${r2},${r2} 0 0,0 ${x4},${y4} Z" class="${cls}" onclick="handleBoardClick(${v}, ${m})"/>`;
             };
             const isEven = i % 2 === 0;
             group.innerHTML += drawArc(82, 74, isEven ? 'db-red' : 'db-green', 2);
@@ -269,7 +261,7 @@
             let p = players[currentPlayerIdx];
             let val = v * m;
             if (mainGameType === '01') {
-                if (p.score - val < 0) { alert("BUST!"); p.score = turnStartScore; dartsThrown = []; nextTurn(); return; }
+                if (p.score - val < 0) { alert("BUST!"); p.score = turnStartScore; nextTurn(); return; }
                 p.score -= val; dartsThrown.push({v, m}); updateUI();
                 if (p.score === 0) { document.getElementById('winner-display').innerText = p.name; setTimeout(() => navigateTo('screen-victory'), 300); }
             } else { dartsThrown.push({v, m}); updateUI(); }
@@ -289,7 +281,7 @@
                 const el = document.getElementById(`${d.m===1?'s':d.m===2?'d':'t'}${d.v}`); if (el) el.classList.add('db-highlight');
             } else slot.innerText = '-';
         }
-        document.getElementById('confirm-btn').style.opacity = (dartsThrown.length === 3) ? "1" : "0.3";
+        document.getElementById('confirm-btn').style.opacity = (dartsThrown.length === 3) ? "1" : "0.2";
         document.getElementById('confirm-btn').style.pointerEvents = (dartsThrown.length === 3) ? "auto" : "none";
         players.forEach((p, idx) => {
             document.getElementById(`p-score-${idx}`).innerText = p.score;
