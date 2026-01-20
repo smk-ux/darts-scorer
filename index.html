@@ -15,20 +15,21 @@
             background-color: var(--bg); color: var(--text); font-family: 'Inter', sans-serif;
             height: 100%; width: 100%; overflow: hidden;
         }
-        .app-container { width: 100%; max-width: 450px; height: 100%; margin: 0 auto; display: flex; flex-direction: column; padding: 10px; position: relative; }
+        .app-container { width: 100%; max-width: 450px; height: 100%; margin: 0 auto; display: flex; flex-direction: column; padding: 15px; position: relative; }
         
         /* Navigation & Screens */
-        .screen { display: none; flex-direction: column; height: 100%; width: 100%; overflow: hidden; }
+        .screen { display: none; flex-direction: column; height: 100%; width: 100%; }
         .screen.active { display: flex; }
-        .top-nav { display: flex; justify-content: space-between; align-items: center; height: 40px; flex-shrink: 0; }
+        
+        .top-nav { display: flex; justify-content: space-between; align-items: center; height: 40px; flex-shrink: 0; margin-bottom: 10px; }
         .nav-btn { width: 35px; height: 35px; background: var(--nav-bg); border-radius: 50%; display: flex; justify-content: center; align-items: center; border: 1px solid var(--border); }
 
-        /* Typography */
-        .brand-group { margin: 40px 0; text-align: center; }
-        h1 { font-size: 3rem; font-weight: 900; line-height: 0.9; letter-spacing: -2px; text-transform: uppercase; }
-        .subtitle { color: var(--dim); font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; margin-top: 5px; font-weight: 700; }
+        /* Welcome Page Styles */
+        .brand-group { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        h1 { font-size: 3.5rem; font-weight: 900; line-height: 0.85; letter-spacing: -2px; text-transform: uppercase; }
+        .subtitle { color: var(--dim); font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase; margin-top: 10px; font-weight: 800; }
 
-        /* 01 H2H Scoreboard */
+        /* Game UI Components */
         .h2h-header { display: flex; justify-content: space-between; padding: 10px 0; flex-shrink: 0; }
         .p-block { display: flex; flex-direction: column; width: 45%; border-bottom: 3px solid transparent; }
         .p-block.active { border-bottom-color: var(--accent); }
@@ -37,9 +38,8 @@
         .p-score-label { font-size: 2.2rem; font-weight: 900; line-height: 1; }
         .active .p-name-label { color: var(--accent); }
 
-        /* Central Board */
         .board-container { flex-grow: 1; display: flex; align-items: center; justify-content: center; min-height: 0; }
-        #dartboard-svg { width: 85vw; max-width: 300px; max-height: 38vh; cursor: pointer; }
+        #dartboard-svg { width: 85vw; max-width: 290px; max-height: 35vh; cursor: pointer; }
         .db-bg { fill: #000; }
         .db-seg-even { fill: #1a1a1a; stroke: #333; stroke-width: 0.2; }
         .db-seg-odd { fill: #0a0a0a; stroke: #333; stroke-width: 0.2; }
@@ -48,18 +48,16 @@
         .db-highlight { fill: var(--accent) !important; transition: fill 0.1s; }
         .db-text { fill: #666; font-size: 7px; font-weight: 900; pointer-events: none; }
 
-        /* Inputs & Buttons */
-        .center-action { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
-        .cta { width: 80%; padding: 18px; background: var(--text); color: var(--bg); border-radius: 50px; font-weight: 900; text-transform: uppercase; border: none; font-size: 1rem; }
-        .name-input { width: 100%; background: var(--surface); border: 1px solid var(--border); padding: 15px; color: var(--text); border-radius: 12px; margin-bottom: 10px; font-weight: 700; }
+        .center-action { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; }
+        .cta { width: 100%; max-width: 280px; padding: 18px; background: var(--text); color: var(--bg); border-radius: 50px; font-weight: 900; text-transform: uppercase; border: none; font-size: 1rem; }
+        .name-input { width: 100%; background: var(--surface); border: 1px solid var(--border); padding: 15px; color: var(--text); border-radius: 12px; margin-bottom: 10px; font-weight: 700; text-align: center; font-size: 1.1rem; }
 
-        /* Bottom Controls (Higher up for mobile) */
-        .game-controls { padding: 10px 0; flex-shrink: 0; }
+        .game-controls { padding-top: 10px; flex-shrink: 0; }
         .score-strip { display: flex; gap: 8px; margin-bottom: 10px; justify-content: center; }
-        .dart-slot { width: 60px; height: 45px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--accent); font-size: 1.2rem; }
+        .dart-slot { width: 65px; height: 45px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--accent); font-size: 1.4rem; }
         .submit-area { display: flex; flex-direction: column; align-items: center; gap: 8px; }
         .cta-submit { width: 100%; padding: 15px; background: var(--accent); color: #000; border-radius: 50px; font-weight: 900; border: none; text-transform: uppercase; }
-        .cta-undo { background: transparent; color: var(--dim); border: none; text-transform: uppercase; font-size: 0.7rem; font-weight: 700; }
+        .cta-undo { background: transparent; color: var(--dim); border: none; text-transform: uppercase; font-size: 0.75rem; font-weight: 700; }
     </style>
 </head>
 <body>
@@ -72,12 +70,17 @@
     </div>
 
     <div id="screen-welcome" class="screen active">
-        <div class="brand-group"><h1>THE DARTS<br><span style="color:var(--accent)">SCORER</span></h1><p class="subtitle">ENGINEERED BY SREE</p></div>
-        <div class="center-action"><button class="cta" onclick="navigateTo('screen-mode')">Start Game</button></div>
+        <div class="brand-group">
+            <h1>THE DARTS<br><span style="color:var(--accent)">SCORER</span></h1>
+            <p class="subtitle">ENGINEERED BY SREE</p>
+        </div>
+        <div class="center-action">
+            <button class="cta" onclick="navigateTo('screen-mode')">Start Game</button>
+        </div>
     </div>
 
     <div id="screen-mode" class="screen">
-        <div class="brand-group"><p class="subtitle">Select Mode</p></div>
+        <div class="brand-group" style="flex-grow:0; margin: 20px 0;"><p class="subtitle">Select Mode</p></div>
         <div class="center-action">
             <button class="cta" onclick="setMode('301')">301 Game</button>
             <button class="cta" onclick="setMode('501')">501 Game</button>
@@ -85,27 +88,25 @@
     </div>
 
     <div id="screen-players" class="screen">
-        <div class="brand-group"><p class="subtitle">How many players?</p></div>
+        <div class="brand-group" style="flex-grow:0; margin: 20px 0;"><p class="subtitle">Players</p></div>
         <div class="center-action">
-            <div style="display:flex; align-items:center; gap:30px;">
+            <div style="display:flex; align-items:center; gap:30px; margin-bottom: 20px;">
                 <div class="nav-btn" onclick="changeCount(-1)">–</div>
-                <div style="font-size:4rem; font-weight:900;" id="player-val">2</div>
+                <div style="font-size:5rem; font-weight:900;" id="player-val">2</div>
                 <div class="nav-btn" onclick="changeCount(1)">+</div>
             </div>
-            <button class="cta" style="margin-top:20px" onclick="setupNames()">Next</button>
+            <button class="cta" onclick="setupNames()">Next</button>
         </div>
     </div>
 
     <div id="screen-names" class="screen">
-        <div class="brand-group"><p class="subtitle">Enter Names</p></div>
-        <div id="name-list" style="padding: 0 20px;"></div>
+        <div class="brand-group" style="flex-grow:0; margin: 20px 0;"><p class="subtitle">Enter Names</p></div>
+        <div id="name-list" style="width: 100%; max-width: 300px; margin: 0 auto;"></div>
         <div class="center-action"><button class="cta" onclick="beginMatch()">Play</button></div>
     </div>
 
     <div id="screen-game" class="screen">
-        <div class="h2h-header" id="h2h-box">
-            </div>
-
+        <div class="h2h-header" id="h2h-box"></div>
         <div class="board-container">
             <svg id="dartboard-svg" viewBox="0 0 200 200">
                 <circle cx="100" cy="100" r="98" class="db-bg"/>
@@ -114,7 +115,6 @@
                 <circle id="s25" cx="100" cy="100" r="6" class="db-red" onclick="handleBoardClick(25, 1)"/>
             </svg>
         </div>
-
         <div class="game-controls">
             <div class="score-strip">
                 <div class="dart-slot" id="slot-0">-</div>
@@ -150,7 +150,7 @@
 
     function updateNav() {
         let cur = history[history.length-1];
-        document.getElementById('back-btn').style.visibility = cur === 'screen-welcome' ? 'hidden' : 'visible';
+        document.getElementById('back-btn').style.visibility = (cur === 'screen-welcome') ? 'hidden' : 'visible';
     }
 
     function setMode(m) { gMode = m; navigateTo('screen-players'); }
@@ -231,7 +231,6 @@
         document.getElementById('confirm-btn').style.opacity = (dartsThrown.length === 3) ? "1" : "0.3";
         document.getElementById('confirm-btn').style.pointerEvents = (dartsThrown.length === 3) ? "auto" : "none";
         
-        // Header Sync
         players.forEach((p, idx) => {
             const ui = document.getElementById(`p-ui-${idx}`);
             if(ui) {
@@ -253,7 +252,12 @@
     }
 
     function undoDart() { dartsThrown.pop(); updateUI(); }
-    window.onload = () => { initBoard(); };
+    
+    window.onload = () => { 
+        initBoard(); 
+        // Force the Welcome screen on load
+        document.getElementById('screen-welcome').classList.add('active');
+    };
 </script>
 </body>
 </html>
