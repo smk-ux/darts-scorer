@@ -80,14 +80,13 @@
 
         .cta { width: 100%; padding: 22px; background: var(--text); color: var(--bg); border-radius: 16px; font-weight: 900; text-transform: uppercase; border: none; font-size: 0.9rem; letter-spacing: 2px; cursor: pointer; }
         .cta-submit { width: 100%; padding: 20px; background: var(--accent); color: #fff; border-radius: 16px; font-weight: 900; border: none; text-transform: uppercase; }
-        [data-theme="light"] .cta-submit { color: #fff; }
 
         .score-strip { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
         .dart-slot { width: 70px; height: 60px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--accent); font-size: 1.5rem; }
-        .miss-btn { width: 70px; height: 60px; background: var(--danger); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: #fff; font-size: 0.7rem; text-transform: uppercase; border: none; }
+        .miss-btn { width: 70px; height: 60px; background: var(--danger); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: #fff; font-size: 0.7rem; text-transform: uppercase; border: none; cursor: pointer; }
 
         .name-input { width: 100%; background: var(--surface); border: 1px solid var(--border); padding: 20px; color: var(--text); border-radius: 12px; margin-bottom: 15px; text-align: center; font-weight: 700; }
-        .content-box { background: var(--surface); padding: 30px; border-radius: 20px; border: 1px solid var(--border); text-align: left; }
+        .content-box { background: var(--surface); padding: 30px; border-radius: 20px; border: 1px solid var(--border); text-align: left; line-height: 1.6; }
     </style>
 </head>
 <body>
@@ -95,7 +94,7 @@
 <div class="menu-overlay" id="overlay" onclick="toggleMenu()"></div>
 <div class="side-menu" id="side-menu">
     <div class="theme-switch" onclick="toggleTheme()">
-        <span id="theme-label">Switch to Light</span>
+        <span id="theme-label">Switch Theme</span>
         <div id="theme-icon">🌙</div>
     </div>
     <div class="menu-item" onclick="resetToHome()"><span>01</span> HOME</div>
@@ -119,23 +118,42 @@
         <div class="center-action"><button class="cta" onclick="navigateTo('screen-mode')">Start Game</button></div>
     </div>
 
+    <div id="screen-help" class="screen">
+        <div class="hero-group" style="flex-grow:0; margin: 40px 0;"><div class="hero-sub">Rules</div></div>
+        <div class="content-box">
+            <p style="margin-bottom: 15px;">
+                <b style="color:var(--accent)">01 Classic:</b> Subtract points from 301/501. Reach exactly zero. Hitting more than remaining is a "Bust."
+            </p>
+            <p>
+                <b style="color:var(--accent)">Cricket:</b> Close 15-20 and Bullseye by hitting them 3 times. Score on closed numbers until all players close them.
+            </p>
+        </div>
+        <div class="center-action" style="margin-top: 20px;"><button class="cta" onclick="goBack()">Got it</button></div>
+    </div>
+
+    <div id="screen-about" class="screen">
+        <div class="hero-group">
+            <div class="hero-sub">Developer</div>
+            <div class="hero-title" style="font-size: 3rem;">SMK</div>
+            <p style="color:var(--accent); font-weight:700;">sreekuttanmk95@gmail.com</p>
+        </div>
+        <div class="center-action"><button class="cta" onclick="goBack()">Close</button></div>
+    </div>
+
     <div id="screen-mode" class="screen"><div class="hero-group"><div class="hero-sub">Game Type</div></div><div style="display:flex; flex-direction:column; gap:15px;"><button class="cta" onclick="setGame('01')">01 Classic</button><button class="cta" style="background:var(--surface); color:var(--text); border:1px solid var(--border);" onclick="setGame('CRICKET')">Cricket</button></div></div>
     <div id="screen-01-vars" class="screen"><div class="hero-group"><div class="hero-sub">Target</div></div><div style="display:flex; flex-direction:column; gap:15px;"><button class="cta" onclick="set01Var('301')">301</button><button class="cta" onclick="set01Var('501')">501</button></div></div>
-    <div id="screen-players" class="screen"><div class="hero-group"><div class="hero-sub">Players</div><div style="font-size:6rem; font-weight:900;" id="player-val">2</div><div style="display:flex; gap:20px;"><div class="nav-btn" onclick="changeCount(-1)">–</div><div class="nav-btn" onclick="changeCount(1)">+</div></div></div><button class="cta" onclick="setupNames()">Continue</button></div>
-    <div id="screen-names" class="screen"><div class="hero-group" style="flex-grow:0; margin: 40px 0;"><div class="hero-sub">Identify Players</div></div><div id="name-list"></div><button class="cta" onclick="beginMatch()">Start</button></div>
-
-    <div id="screen-help" class="screen"><div class="hero-group"><div class="hero-sub">Rules</div></div><div class="content-box">Reach 0 exactly in 01. Don't bust!</div><button class="cta" onclick="goBack()" style="margin-top:20px">Got it</button></div>
-    <div id="screen-about" class="screen"><div class="hero-group"><div class="hero-sub">Developer</div><div class="hero-title" style="font-size: 3rem;">SMK</div><p style="color:var(--accent); font-weight:700;">sreekuttanmk95@gmail.com</p></div><button class="cta" onclick="goBack()">Close</button></div>
+    <div id="screen-players" class="screen"><div class="hero-group"><div class="hero-sub">Players</div><div style="font-size:6rem; font-weight:900;" id="player-val">2</div><div style="display:flex; gap:20px;"><div class="nav-btn" onclick="changeCount(-1)">–</div><div class="nav-btn" onclick="changeCount(1)">+</div></div></div><button class="cta" onclick="setupNames()" style="margin-top:30px">Continue</button></div>
+    <div id="screen-names" class="screen"><div class="hero-group" style="flex-grow:0; margin: 40px 0;"><div class="hero-sub">Identify Players</div></div><div id="name-list"></div><button class="cta" onclick="beginMatch()">Start Match</button></div>
 
     <div id="screen-game" class="screen">
         <div class="h2h-header" id="h2h-box"></div>
         <div class="board-container"><svg id="dartboard-svg" viewBox="0 0 200 200"><circle cx="100" cy="100" r="98" class="db-bg"/><g id="segments-group"></g><circle id="s25" cx="100" cy="100" r="12" class="db-green" onclick="handleBoardClick(25, 1)"/><circle id="d25" cx="100" cy="100" r="6" class="db-red" onclick="handleBoardClick(25, 2)"/></svg></div>
         <div class="score-strip"><div class="dart-slot" id="slot-0">-</div><div class="dart-slot" id="slot-1">-</div><div class="dart-slot" id="slot-2">-</div><button class="miss-btn" onclick="handleBoardClick(0, 1)">Miss</button></div>
         <button class="cta-submit" id="confirm-btn" style="opacity:0.2; pointer-events:none;" onclick="confirmTurn()">Submit Turn</button>
-        <p onclick="undoDart()" style="color:var(--dim); font-size:0.7rem; text-align:center; margin-top:15px; cursor:pointer;">UNDO DART</p>
+        <p onclick="undoDart()" style="color:var(--dim); font-size:0.7rem; text-align:center; margin-top:15px; cursor:pointer; text-transform:uppercase; letter-spacing:1px;">Undo Last Dart</p>
     </div>
 
-    <div id="screen-victory" class="screen"><div class="hero-group"><div class="hero-sub">Winner</div><div id="winner-display" style="font-size: 4rem; font-weight:900; color:var(--accent)">SMK</div></div><button class="cta" onclick="location.reload()">New Game</button></div>
+    <div id="screen-victory" class="screen"><div class="hero-group"><div class="hero-sub">Winner</div><div id="winner-display" style="font-size: 4rem; font-weight:900; color:var(--accent)">PLAYER</div></div><button class="cta" onclick="location.reload()">New Game</button></div>
 </div>
 
 <script>
@@ -147,14 +165,14 @@
         const current = root.getAttribute('data-theme');
         const next = current === 'dark' ? 'light' : 'dark';
         root.setAttribute('data-theme', next);
-        document.getElementById('theme-label').innerText = `Switch to ${current === 'dark' ? 'Dark' : 'Light'}`;
         document.getElementById('theme-icon').innerText = next === 'dark' ? '🌙' : '☀️';
         localStorage.setItem('darts-theme', next);
     }
 
-    // Load saved theme
+    // Load saved theme preference
     const savedTheme = localStorage.getItem('darts-theme') || 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
+    document.getElementById('theme-icon').innerText = savedTheme === 'dark' ? '🌙' : '☀️';
 
     function toggleMenu() {
         const menu = document.getElementById('side-menu');
@@ -207,8 +225,8 @@
     function buildH2H() {
         let box = document.getElementById('h2h-box');
         box.innerHTML = `
-            <div class="p-block visible active" id="p-ui-0"><span class="p-name-label">${players[0].name}</span><span class="p-score-label" id="p-score-0">${players[0].score}</span></div>
-            <div class="p-block right ${players[1] ? 'visible' : ''}" id="p-ui-1"><span class="p-name-label">${players[1] ? players[1].name : ''}</span><span class="p-score-label" id="p-score-1">${players[1] ? players[1].score : ''}</span></div>
+            <div class="p-block visible active" id="p-ui-0"><span class="p-name-label" style="font-size:0.7rem; font-weight:700; color:var(--dim)">${players[0].name}</span><span class="p-score-label" id="p-score-0">${players[0].score}</span></div>
+            <div class="p-block right ${players[1] ? 'visible' : ''}" id="p-ui-1"><span class="p-name-label" style="font-size:0.7rem; font-weight:700; color:var(--dim)">${players[1] ? players[1].name : ''}</span><span class="p-score-label" id="p-score-1">${players[1] ? players[1].score : ''}</span></div>
         `;
     }
 
