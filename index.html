@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>The Darts Scorer</title>
+    <title>Darts Scorer</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -23,12 +23,12 @@
         .top-nav { display: flex; justify-content: space-between; align-items: center; height: 40px; flex-shrink: 0; margin-bottom: 10px; }
         .nav-btn { width: 35px; height: 35px; background: var(--nav-bg); border-radius: 50%; display: flex; justify-content: center; align-items: center; border: 1px solid var(--border); }
 
-        /* Welcome Page Styles */
+        /* Typography */
         .brand-group { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
         h1 { font-size: 3.5rem; font-weight: 900; line-height: 0.85; letter-spacing: -2px; text-transform: uppercase; }
         .subtitle { color: var(--dim); font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase; margin-top: 10px; font-weight: 800; }
 
-        /* Game UI Components */
+        /* Game UI */
         .h2h-header { display: flex; justify-content: space-between; padding: 10px 0; flex-shrink: 0; min-height: 60px; }
         .p-block { display: flex; flex-direction: column; width: 45%; border-bottom: 3px solid transparent; visibility: hidden; }
         .p-block.visible { visibility: visible; }
@@ -65,20 +65,31 @@
 <div class="app-container">
     <div class="top-nav">
         <div id="back-btn" class="nav-btn" style="visibility:hidden" onclick="goBack()"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z"/></svg></div>
-        <div class="subtitle" id="nav-title">SREE'S SCORER</div>
+        <div class="subtitle" id="nav-title">DARTS</div>
         <div class="nav-btn" onclick="location.reload()"><svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z"/></svg></div>
     </div>
 
     <div id="screen-welcome" class="screen active">
-        <div class="brand-group"><h1>THE DARTS<br><span style="color:var(--accent)">SCORER</span></h1><p class="subtitle">ENGINEERED BY SREE</p></div>
+        <div class="brand-group">
+            <h1>DARTS<br><span style="color:var(--accent)">PRO</span></h1>
+            <p class="subtitle">READY TO PLAY?</p>
+        </div>
         <div class="center-action"><button class="cta" onclick="navigateTo('screen-mode')">Start Game</button></div>
     </div>
 
     <div id="screen-mode" class="screen">
-        <div class="brand-group" style="flex-grow:0; margin: 20px 0;"><p class="subtitle">Select Mode</p></div>
+        <div class="brand-group" style="flex-grow:0; margin: 20px 0;"><p class="subtitle">Select Game</p></div>
         <div class="center-action">
-            <button class="cta" onclick="setMode('301')">301 Game</button>
-            <button class="cta" onclick="setMode('501')">501 Game</button>
+            <button class="cta" onclick="setGame('01')">01 Game</button>
+            <button class="cta" onclick="setGame('CRICKET')">Cricket Game</button>
+        </div>
+    </div>
+
+    <div id="screen-01-vars" class="screen">
+        <div class="brand-group" style="flex-grow:0; margin: 20px 0;"><p class="subtitle">Select Starting Score</p></div>
+        <div class="center-action">
+            <button class="cta" onclick="set01Var('301')">301</button>
+            <button class="cta" onclick="set01Var('501')">501</button>
         </div>
     </div>
 
@@ -125,7 +136,7 @@
 </div>
 
 <script>
-    let gMode = '301', pCount = 2, currentPlayerIdx = 0, dartsThrown = [], players = [], history = ['screen-welcome'];
+    let mainGameType = '01', gMode = '301', pCount = 2, currentPlayerIdx = 0, dartsThrown = [], players = [], history = ['screen-welcome'];
     const boardValues = [20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5];
 
     function navigateTo(next) {
@@ -146,17 +157,24 @@
     function updateNav() {
         let cur = history[history.length-1];
         document.getElementById('back-btn').style.visibility = (cur === 'screen-welcome') ? 'hidden' : 'visible';
+        document.getElementById('nav-title').innerText = (cur === 'screen-game') ? mainGameType : 'DARTS';
     }
 
-    function setMode(m) { gMode = m; navigateTo('screen-players'); }
+    function setGame(type) {
+        mainGameType = type;
+        if(type === '01') navigateTo('screen-01-vars');
+        else navigateTo('screen-players');
+    }
+
+    function set01Var(v) { gMode = v; navigateTo('screen-players'); }
+
     function changeCount(v) { pCount = Math.max(1, Math.min(2, pCount+v)); document.getElementById('player-val').innerText = pCount; }
 
     function setupNames() {
         let list = document.getElementById('name-list');
         list.innerHTML = "";
         for(let i=0; i<pCount; i++) {
-            let placeholder = (i === 0) ? "SREE" : "PLAYER 2";
-            list.innerHTML += `<input type="text" class="name-input" id="pname-${i}" placeholder="${placeholder}">`;
+            list.innerHTML += `<input type="text" class="name-input" id="pname-${i}" placeholder="PLAYER ${i+1}">`;
         }
         navigateTo('screen-names');
     }
@@ -164,8 +182,12 @@
     function beginMatch() {
         players = [];
         for(let i=0; i<pCount; i++) {
-            let n = document.getElementById(`pname-${i}`).value || (i === 0 ? "SREE" : "PLAYER 2");
-            players.push({name: n.toUpperCase(), score: parseInt(gMode)});
+            let n = document.getElementById(`pname-${i}`).value || `PLAYER ${i+1}`;
+            players.push({
+                name: n.toUpperCase(), 
+                score: mainGameType === '01' ? parseInt(gMode) : 0,
+                cricket: {15:0, 16:0, 17:0, 18:0, 19:0, 20:0, 25:0}
+            });
         }
         buildH2H();
         navigateTo('screen-game');
@@ -226,30 +248,38 @@
         }
         document.getElementById('confirm-btn').style.opacity = (dartsThrown.length === 3) ? "1" : "0.3";
         document.getElementById('confirm-btn').style.pointerEvents = (dartsThrown.length === 3) ? "auto" : "none";
-        
         players.forEach((p, idx) => {
-            const ui = document.getElementById(`p-ui-${idx}`);
-            if(ui) {
-                ui.className = (idx === currentPlayerIdx) ? `p-block visible active ${idx===1?'right':''}` : `p-block visible ${idx===1?'right':''}`;
-                document.getElementById(`p-score-${idx}`).innerText = p.score;
-            }
+            document.getElementById(`p-score-${idx}`).innerText = p.score;
+            document.getElementById(`p-ui-${idx}`).className = (idx === currentPlayerIdx) ? `p-block visible active ${idx===1?'right':''}` : `p-block visible ${idx===1?'right':''}`;
         });
     }
 
     function confirmTurn() {
         let p = players[currentPlayerIdx];
-        let total = 0;
-        dartsThrown.forEach(d => total += (d.v * d.m));
-        if(p.score - total >= 0) p.score -= total;
-        if(p.score === 0) alert(p.name + " WINS!");
-        
+        let otherP = players[(currentPlayerIdx + 1) % players.length];
+
+        if(mainGameType === '01') {
+            let total = 0; dartsThrown.forEach(d => total += (d.v * d.m));
+            if(p.score - total >= 0) p.score -= total;
+            if(p.score === 0) alert(p.name + " WINS!");
+        } else {
+            // Basic Cricket Scoring
+            dartsThrown.forEach(d => {
+                if(d.v >= 15 || d.v === 25) {
+                    for(let i=0; i<d.m; i++) {
+                        if(p.cricket[d.v] < 3) p.cricket[d.v]++;
+                        else if(otherP && otherP.cricket[d.v] < 3) p.score += d.v;
+                    }
+                }
+            });
+        }
         currentPlayerIdx = (currentPlayerIdx + 1) % players.length;
         dartsThrown = [];
         updateUI();
     }
 
     function undoDart() { dartsThrown.pop(); updateUI(); }
-    window.onload = () => { initBoard(); };
+    window.onload = initBoard;
 </script>
 </body>
 </html>
