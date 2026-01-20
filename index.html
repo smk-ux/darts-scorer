@@ -204,6 +204,22 @@
         </div>
     </div>
 
+    <div id="screen-help" class="screen">
+        <div class="brand-group"><p class="subtitle">Scoring Guide</p></div>
+        <div style="padding:20px;">
+            <h3>Darts Rules</h3>
+            <p style="color:var(--dim); margin-top:10px;">Hit the numbers on the board to reduce your score to zero or to close numbers in Cricket.</p>
+        </div>
+    </div>
+
+    <div id="screen-about" class="screen">
+        <div class="brand-group"><p class="subtitle">About App</p></div>
+        <div style="text-align:center; padding:20px;">
+            <p>Version 2.0</p>
+            <p style="color:var(--accent); font-weight:800; margin-top:10px;">Engineered by Sree</p>
+        </div>
+    </div>
+
     <div id="screen-summary" class="screen">
         <div class="brand-group">
             <div style="font-size:5rem; margin-bottom: 20px;">🏆</div>
@@ -239,8 +255,12 @@
     function handleMenu(opt) {
         toggleMenu();
         const cur = history[history.length-1];
+        
+        // Corrected Mapping
         if (opt === 'home') location.reload();
-        else navigateTo(cur, 'screen-' + opt);
+        else if (opt === 'play') navigateTo(cur, 'screen-mode');
+        else if (opt === 'help') navigateTo(cur, 'screen-help');
+        else if (opt === 'about') navigateTo(cur, 'screen-about');
     }
 
     function navigateTo(cur, next) {
