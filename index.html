@@ -21,8 +21,8 @@
             display: flex; justify-content: space-between; padding: 20px; 
             background: linear-gradient(to bottom, #1a1a1a, transparent);
         }
-        .p-block { display: flex; flex-direction: column; width: 45%; transition: transform 0.2s; }
-        .p-block.active { border-bottom: 3px solid var(--accent); transform: scale(1.05); }
+        .p-block { display: flex; flex-direction: column; width: 45%; border-bottom: 3px solid transparent; padding-bottom: 5px; }
+        .p-block.active { border-bottom-color: var(--accent); }
         .p-block.right { text-align: right; }
         .name { font-size: 0.8rem; font-weight: 800; color: var(--dim); text-transform: uppercase; }
         .score { font-size: 2.5rem; font-weight: 900; line-height: 1; }
@@ -32,7 +32,7 @@
             flex-grow: 1; display: flex; align-items: center; justify-content: center; 
             padding: 10px; position: relative;
         }
-        #dartboard-svg { width: 90vw; max-width: 320px; cursor: pointer; }
+        #dartboard-svg { width: 90vw; max-width: 310px; cursor: pointer; }
         .db-bg { fill: #000; }
         .db-seg-even { fill: #1a1a1a; stroke: #333; stroke-width: 0.2; }
         .db-seg-odd { fill: #0a0a0a; stroke: #333; stroke-width: 0.2; }
@@ -41,24 +41,23 @@
         .db-highlight { fill: var(--accent) !important; transition: fill 0.1s; }
         .db-text { fill: #666; font-size: 7px; font-weight: 900; pointer-events: none; }
 
-        .bottom-section { padding: 20px; background: var(--surface); border-top: 1px solid var(--border); border-radius: 30px 30px 0 0; }
-        .score-strip { display: flex; gap: 10px; margin-bottom: 10px; justify-content: center; }
+        .bottom-section { padding: 15px 20px 30px; background: var(--surface); border-top: 1px solid var(--border); border-radius: 30px 30px 0 0; }
+        .score-strip { display: flex; gap: 10px; margin-bottom: 15px; justify-content: center; }
         .dart-slot { 
-            width: 60px; height: 50px; background: var(--bg); border: 1px solid var(--border); 
+            width: 70px; height: 50px; background: var(--bg); border: 1px solid var(--border); 
             border-radius: 12px; display: flex; align-items: center; justify-content: center; 
             font-weight: 900; color: var(--accent); font-size: 1.2rem;
         }
 
-        /* Centered Submit Button Container */
-        .submit-container { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .submit-container { display: flex; flex-direction: column; align-items: center; gap: 12px; }
         .cta-submit { 
-            width: 100%; max-width: 200px; padding: 18px; background: var(--accent); 
+            width: 100%; padding: 18px; background: var(--accent); 
             color: #000; border-radius: 50px; font-weight: 900; border: none; 
-            text-transform: uppercase; font-size: 1.1rem; box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
+            text-transform: uppercase; font-size: 1.1rem;
         }
         .cta-undo { 
             background: transparent; color: var(--dim); border: none; 
-            text-transform: uppercase; font-size: 0.8rem; font-weight: 700; letter-spacing: 1px;
+            text-transform: uppercase; font-size: 0.8rem; font-weight: 700;
         }
     </style>
 </head>
@@ -67,11 +66,11 @@
 <div class="app-container">
     <div class="h2h-header">
         <div class="p-block active" id="p1-ui">
-            <span class="name" id="p1-name">PLAYER 1</span>
+            <span class="name">SREE</span>
             <span class="score" id="p1-score">301</span>
         </div>
         <div class="p-block right" id="p2-ui">
-            <span class="name" id="p2-name">PLAYER 2</span>
+            <span class="name">PLAYER 2</span>
             <span class="score" id="p2-score">301</span>
         </div>
     </div>
@@ -87,20 +86,20 @@
 
     <div class="bottom-section">
         <div class="score-strip">
-            <div class="dart-slot" id="d1">-</div>
-            <div class="dart-slot" id="d2">-</div>
-            <div class="dart-slot" id="d3">-</div>
+            <div class="dart-slot" id="slot-0">-</div>
+            <div class="dart-slot" id="slot-1">-</div>
+            <div class="dart-slot" id="slot-2">-</div>
         </div>
         
         <div class="submit-container">
-            <button class="cta-submit" id="confirm-btn" style="opacity:0.3; pointer-events:none;" onclick="confirmTurn()">Submit</button>
+            <button class="cta-submit" id="confirm-btn" style="opacity:0.3; pointer-events:none;" onclick="confirmTurn()">Submit Turn</button>
             <button class="cta-undo" onclick="undoDart()">Undo Last Dart</button>
         </div>
     </div>
 </div>
 
 <script>
-    let players = [{name: "SREE", score: 301}, {name: "PLAYER 2", score: 301}];
+    let players = [{score: 301}, {score: 301}];
     let currentPlayerIdx = 0, dartsThrown = [];
     const boardValues = [20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5];
 
@@ -132,28 +131,46 @@
         });
     }
 
-    function handleBoardClick(v, m) { if(dartsThrown.length < 3) { dartsThrown.push({v, m}); updateUI(); } }
+    function handleBoardClick(v, m) {
+        if(dartsThrown.length < 3) {
+            dartsThrown.push({v, m});
+            updateUI();
+        }
+    }
 
     function updateUI() {
+        // Reset highlights
         document.querySelectorAll('.db-highlight').forEach(el => el.classList.remove('db-highlight'));
-        dartsThrown.forEach((d, i) => {
-            const slot = document.getElementById('d'+(i+1));
-            slot.innerText = (d.m===2?'D':d.m===3?'T':'') + (d.v===25?'B':d.v);
-            const el = document.getElementById(`${d.m===1?'s':d.m===2?'d':'t'}${d.v}`);
-            if(el) el.classList.add('db-highlight');
-            if(d.m === 1 && d.v !== 25) {
-                const el2 = document.getElementById(`s${d.v}_a`);
-                if(el2) el2.classList.add('db-highlight');
+        
+        // Update 3 Slots
+        for (let i = 0; i < 3; i++) {
+            const slot = document.getElementById(`slot-${i}`);
+            if (dartsThrown[i]) {
+                const d = dartsThrown[i];
+                const label = (d.m === 2 ? 'D' : d.m === 3 ? 'T' : '') + (d.v === 25 ? 'B' : d.v);
+                slot.innerText = label;
+                
+                // Add highlight to board
+                const prefix = d.m === 1 ? 's' : d.m === 2 ? 'd' : 't';
+                const el = document.getElementById(`${prefix}${d.v}`);
+                if (el) el.classList.add('db-highlight');
+                if (d.m === 1 && d.v !== 25) {
+                    const el2 = document.getElementById(`${prefix}${d.v}_a`);
+                    if (el2) el2.classList.add('db-highlight');
+                }
+            } else {
+                slot.innerText = '-';
             }
-        });
-        for(let i=dartsThrown.length+1; i<=3; i++) document.getElementById('d'+i).innerText = '-';
-        
+        }
+
+        // Submit Button Logic
         const btn = document.getElementById('confirm-btn');
-        btn.style.opacity = dartsThrown.length === 3 ? "1" : "0.3";
-        btn.style.pointerEvents = dartsThrown.length === 3 ? "auto" : "none";
+        btn.style.opacity = (dartsThrown.length === 3) ? "1" : "0.3";
+        btn.style.pointerEvents = (dartsThrown.length === 3) ? "auto" : "none";
         
-        document.getElementById('p1-ui').classList.toggle('active', currentPlayerIdx === 0);
-        document.getElementById('p2-ui').classList.toggle('active', currentPlayerIdx === 1);
+        // Header Visuals
+        document.getElementById('p1-ui').className = currentPlayerIdx === 0 ? 'p-block active' : 'p-block';
+        document.getElementById('p2-ui').className = currentPlayerIdx === 1 ? 'p-block right active' : 'p-block right';
         document.getElementById('p1-score').innerText = players[0].score;
         document.getElementById('p2-score').innerText = players[1].score;
     }
@@ -162,13 +179,19 @@
         let p = players[currentPlayerIdx];
         let total = 0;
         dartsThrown.forEach(d => total += (d.v * d.m));
+        
         if(p.score - total >= 0) p.score -= total;
+        
         currentPlayerIdx = (currentPlayerIdx === 0) ? 1 : 0;
         dartsThrown = [];
         updateUI();
     }
 
-    function undoDart() { dartsThrown.pop(); updateUI(); }
+    function undoDart() {
+        dartsThrown.pop();
+        updateUI();
+    }
+
     window.onload = () => { initBoard(); updateUI(); };
 </script>
 </body>
