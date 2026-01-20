@@ -20,7 +20,6 @@
         /* Navigation & Screens */
         .screen { display: none; flex-direction: column; height: 100%; width: 100%; }
         .screen.active { display: flex; }
-        
         .top-nav { display: flex; justify-content: space-between; align-items: center; height: 40px; flex-shrink: 0; margin-bottom: 10px; }
         .nav-btn { width: 35px; height: 35px; background: var(--nav-bg); border-radius: 50%; display: flex; justify-content: center; align-items: center; border: 1px solid var(--border); }
 
@@ -35,7 +34,7 @@
         .p-block.visible { visibility: visible; }
         .p-block.active { border-bottom-color: var(--accent); }
         .p-block.right { text-align: right; }
-        .p-name-label { font-size: 0.7rem; font-weight: 800; color: var(--dim); text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .p-name-label { font-size: 0.7rem; font-weight: 800; color: var(--dim); text-transform: uppercase; }
         .p-score-label { font-size: 2.2rem; font-weight: 900; line-height: 1; }
         .active .p-name-label { color: var(--accent); }
 
@@ -71,10 +70,7 @@
     </div>
 
     <div id="screen-welcome" class="screen active">
-        <div class="brand-group">
-            <h1>THE DARTS<br><span style="color:var(--accent)">SCORER</span></h1>
-            <p class="subtitle">ENGINEERED BY SREE</p>
-        </div>
+        <div class="brand-group"><h1>THE DARTS<br><span style="color:var(--accent)">SCORER</span></h1><p class="subtitle">ENGINEERED BY SREE</p></div>
         <div class="center-action"><button class="cta" onclick="navigateTo('screen-mode')">Start Game</button></div>
     </div>
 
@@ -110,8 +106,8 @@
             <svg id="dartboard-svg" viewBox="0 0 200 200">
                 <circle cx="100" cy="100" r="98" class="db-bg"/>
                 <g id="segments-group"></g>
-                <circle id="d25" cx="100" cy="100" r="12" class="db-green" onclick="handleBoardClick(25, 2)"/>
-                <circle id="s25" cx="100" cy="100" r="6" class="db-red" onclick="handleBoardClick(25, 1)"/>
+                <circle id="s25" cx="100" cy="100" r="12" class="db-green" onclick="handleBoardClick(25, 1)"/>
+                <circle id="d25" cx="100" cy="100" r="6" class="db-red" onclick="handleBoardClick(25, 2)"/>
             </svg>
         </div>
         <div class="game-controls">
@@ -153,12 +149,7 @@
     }
 
     function setMode(m) { gMode = m; navigateTo('screen-players'); }
-    
-    // STRICT LIMIT 1-2
-    function changeCount(v) { 
-        pCount = Math.max(1, Math.min(2, pCount+v)); 
-        document.getElementById('player-val').innerText = pCount; 
-    }
+    function changeCount(v) { pCount = Math.max(1, Math.min(2, pCount+v)); document.getElementById('player-val').innerText = pCount; }
 
     function setupNames() {
         let list = document.getElementById('name-list');
