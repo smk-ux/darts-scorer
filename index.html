@@ -8,7 +8,7 @@
     <style>
         :root {
             --bg: #000000; --surface: #111111; --border: #222222; --text: #ffffff;
-            --dim: #888888; --accent: #00ff88; --nav-bg: rgba(255,255,255,0.1);
+            --dim: #888888; --accent: #00ff88; --nav-bg: rgba(255,255,255,0.1); --danger: #ff4444;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         body, html {
@@ -17,10 +17,10 @@
         }
         .app-container { width: 100%; max-width: 450px; height: 100%; margin: 0 auto; display: flex; flex-direction: column; padding: 15px; position: relative; }
         
-        /* Navigation & Screens */
+        /* Navigation */
         .screen { display: none; flex-direction: column; height: 100%; width: 100%; }
         .screen.active { display: flex; }
-        .top-nav { display: flex; justify-content: space-between; align-items: center; height: 40px; flex-shrink: 0; margin-bottom: 10px; }
+        .top-nav { display: flex; justify-content: space-between; align-items: center; height: 40px; flex-shrink: 0; margin-bottom: 5px; }
         .nav-btn { width: 35px; height: 35px; background: var(--nav-bg); border-radius: 50%; display: flex; justify-content: center; align-items: center; border: 1px solid var(--border); }
 
         /* Typography */
@@ -29,7 +29,7 @@
         .subtitle { color: var(--dim); font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase; margin-top: 10px; font-weight: 800; }
 
         /* Game UI */
-        .h2h-header { display: flex; justify-content: space-between; padding: 10px 0; flex-shrink: 0; min-height: 60px; }
+        .h2h-header { display: flex; justify-content: space-between; padding: 5px 0; flex-shrink: 0; min-height: 55px; }
         .p-block { display: flex; flex-direction: column; width: 45%; border-bottom: 3px solid transparent; visibility: hidden; }
         .p-block.visible { visibility: visible; }
         .p-block.active { border-bottom-color: var(--accent); }
@@ -38,8 +38,8 @@
         .p-score-label { font-size: 2.2rem; font-weight: 900; line-height: 1; }
         .active .p-name-label { color: var(--accent); }
 
-        .board-container { flex-grow: 1; display: flex; align-items: center; justify-content: center; min-height: 0; }
-        #dartboard-svg { width: 85vw; max-width: 290px; max-height: 35vh; cursor: pointer; }
+        .board-container { flex-grow: 1; display: flex; align-items: center; justify-content: center; min-height: 0; padding: 5px 0; }
+        #dartboard-svg { width: 85vw; max-width: 280px; max-height: 33vh; cursor: pointer; }
         .db-bg { fill: #000; }
         .db-seg-even { fill: #1a1a1a; stroke: #333; stroke-width: 0.2; }
         .db-seg-odd { fill: #0a0a0a; stroke: #333; stroke-width: 0.2; }
@@ -48,16 +48,25 @@
         .db-highlight { fill: var(--accent) !important; transition: fill 0.1s; }
         .db-text { fill: #666; font-size: 7px; font-weight: 900; pointer-events: none; }
 
-        .center-action { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; }
+        .center-action { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
         .cta { width: 100%; max-width: 280px; padding: 18px; background: var(--text); color: var(--bg); border-radius: 50px; font-weight: 900; text-transform: uppercase; border: none; font-size: 1rem; }
         .name-input { width: 100%; background: var(--surface); border: 1px solid var(--border); padding: 15px; color: var(--text); border-radius: 12px; margin-bottom: 10px; font-weight: 700; text-align: center; font-size: 1.1rem; }
 
-        .game-controls { padding-top: 10px; flex-shrink: 0; }
-        .score-strip { display: flex; gap: 8px; margin-bottom: 10px; justify-content: center; }
-        .dart-slot { width: 65px; height: 45px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--accent); font-size: 1.4rem; }
-        .submit-area { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        /* Bottom Controls - Optimized for Mobile visibility */
+        .game-controls { padding-top: 5px; flex-shrink: 0; }
+        .score-strip { display: flex; gap: 8px; margin-bottom: 10px; justify-content: center; align-items: center; }
+        .dart-slot { width: 55px; height: 45px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--accent); font-size: 1.2rem; }
+        
+        /* New Miss Button Style */
+        .miss-btn { 
+            width: 55px; height: 45px; background: var(--surface); border: 1px solid var(--danger); 
+            border-radius: 10px; display: flex; align-items: center; justify-content: center; 
+            font-weight: 900; color: var(--danger); font-size: 0.7rem; text-transform: uppercase;
+        }
+
+        .submit-area { display: flex; flex-direction: column; align-items: center; gap: 6px; }
         .cta-submit { width: 100%; padding: 15px; background: var(--accent); color: #000; border-radius: 50px; font-weight: 900; border: none; text-transform: uppercase; }
-        .cta-undo { background: transparent; color: var(--dim); border: none; text-transform: uppercase; font-size: 0.75rem; font-weight: 700; }
+        .cta-undo { background: transparent; color: var(--dim); border: none; text-transform: uppercase; font-size: 0.7rem; font-weight: 700; padding: 5px; }
     </style>
 </head>
 <body>
@@ -78,7 +87,7 @@
     </div>
 
     <div id="screen-mode" class="screen">
-        <div class="brand-group" style="flex-grow:0; margin: 20px 0;"><p class="subtitle">Select Game</p></div>
+        <div class="brand-group" style="flex-grow:0; margin: 15px 0;"><p class="subtitle">Select Game</p></div>
         <div class="center-action">
             <button class="cta" onclick="setGame('01')">01 Game</button>
             <button class="cta" onclick="setGame('CRICKET')">Cricket Game</button>
@@ -86,7 +95,7 @@
     </div>
 
     <div id="screen-01-vars" class="screen">
-        <div class="brand-group" style="flex-grow:0; margin: 20px 0;"><p class="subtitle">Select Starting Score</p></div>
+        <div class="brand-group" style="flex-grow:0; margin: 15px 0;"><p class="subtitle">Score</p></div>
         <div class="center-action">
             <button class="cta" onclick="set01Var('301')">301</button>
             <button class="cta" onclick="set01Var('501')">501</button>
@@ -94,9 +103,9 @@
     </div>
 
     <div id="screen-players" class="screen">
-        <div class="brand-group" style="flex-grow:0; margin: 20px 0;"><p class="subtitle">Players</p></div>
+        <div class="brand-group" style="flex-grow:0; margin: 15px 0;"><p class="subtitle">Players</p></div>
         <div class="center-action">
-            <div style="display:flex; align-items:center; gap:30px; margin-bottom: 20px;">
+            <div style="display:flex; align-items:center; gap:30px; margin-bottom: 10px;">
                 <div class="nav-btn" onclick="changeCount(-1)">–</div>
                 <div style="font-size:5rem; font-weight:900;" id="player-val">2</div>
                 <div class="nav-btn" onclick="changeCount(1)">+</div>
@@ -106,7 +115,7 @@
     </div>
 
     <div id="screen-names" class="screen">
-        <div class="brand-group" style="flex-grow:0; margin: 20px 0;"><p class="subtitle">Enter Names</p></div>
+        <div class="brand-group" style="flex-grow:0; margin: 15px 0;"><p class="subtitle">Names</p></div>
         <div id="name-list" style="width: 100%; max-width: 300px; margin: 0 auto;"></div>
         <div class="center-action"><button class="cta" onclick="beginMatch()">Play</button></div>
     </div>
@@ -126,6 +135,7 @@
                 <div class="dart-slot" id="slot-0">-</div>
                 <div class="dart-slot" id="slot-1">-</div>
                 <div class="dart-slot" id="slot-2">-</div>
+                <button class="miss-btn" onclick="handleBoardClick(0, 1)">Miss</button>
             </div>
             <div class="submit-area">
                 <button class="cta-submit" id="confirm-btn" style="opacity:0.3; pointer-events:none;" onclick="confirmTurn()">Submit Turn</button>
@@ -229,7 +239,12 @@
         });
     }
 
-    function handleBoardClick(v, m) { if(dartsThrown.length < 3) { dartsThrown.push({v, m}); updateUI(); } }
+    function handleBoardClick(v, m) { 
+        if(dartsThrown.length < 3) { 
+            dartsThrown.push({v, m}); 
+            updateUI(); 
+        } 
+    }
 
     function updateUI() {
         document.querySelectorAll('.db-highlight').forEach(el => el.classList.remove('db-highlight'));
@@ -238,11 +253,14 @@
             if (dartsThrown[i]) {
                 const d = dartsThrown[i];
                 slot.innerText = d.v * d.m;
-                const el = document.getElementById(`${d.m===1?'s':d.m===2?'d':'t'}${d.v}`);
-                if (el) el.classList.add('db-highlight');
-                if (d.m===1 && d.v!==25) { 
-                    const el2 = document.getElementById(`s${d.v}_a`);
-                    if(el2) el2.classList.add('db-highlight');
+                // Highlight board only if not a miss (0)
+                if(d.v !== 0) {
+                    const el = document.getElementById(`${d.m===1?'s':d.m===2?'d':'t'}${d.v}`);
+                    if (el) el.classList.add('db-highlight');
+                    if (d.m===1 && d.v!==25) { 
+                        const el2 = document.getElementById(`s${d.v}_a`);
+                        if(el2) el2.classList.add('db-highlight');
+                    }
                 }
             } else { slot.innerText = '-'; }
         }
@@ -263,7 +281,7 @@
             if(p.score - total >= 0) p.score -= total;
             if(p.score === 0) alert(p.name + " WINS!");
         } else {
-            // Basic Cricket Scoring
+            // Cricket Scoring
             dartsThrown.forEach(d => {
                 if(d.v >= 15 || d.v === 25) {
                     for(let i=0; i<d.m; i++) {
