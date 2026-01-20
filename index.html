@@ -30,11 +30,12 @@
         .subtitle { color: var(--dim); font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase; margin-top: 10px; font-weight: 800; }
 
         /* Game UI Components */
-        .h2h-header { display: flex; justify-content: space-between; padding: 10px 0; flex-shrink: 0; }
-        .p-block { display: flex; flex-direction: column; width: 45%; border-bottom: 3px solid transparent; }
+        .h2h-header { display: flex; justify-content: space-between; padding: 10px 0; flex-shrink: 0; min-height: 60px; }
+        .p-block { display: flex; flex-direction: column; width: 45%; border-bottom: 3px solid transparent; visibility: hidden; }
+        .p-block.visible { visibility: visible; }
         .p-block.active { border-bottom-color: var(--accent); }
         .p-block.right { text-align: right; }
-        .p-name-label { font-size: 0.7rem; font-weight: 800; color: var(--dim); text-transform: uppercase; }
+        .p-name-label { font-size: 0.7rem; font-weight: 800; color: var(--dim); text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .p-score-label { font-size: 2.2rem; font-weight: 900; line-height: 1; }
         .active .p-name-label { color: var(--accent); }
 
@@ -74,9 +75,7 @@
             <h1>THE DARTS<br><span style="color:var(--accent)">SCORER</span></h1>
             <p class="subtitle">ENGINEERED BY SREE</p>
         </div>
-        <div class="center-action">
-            <button class="cta" onclick="navigateTo('screen-mode')">Start Game</button>
-        </div>
+        <div class="center-action"><button class="cta" onclick="navigateTo('screen-mode')">Start Game</button></div>
     </div>
 
     <div id="screen-mode" class="screen">
@@ -154,13 +153,19 @@
     }
 
     function setMode(m) { gMode = m; navigateTo('screen-players'); }
-    function changeCount(v) { pCount = Math.max(1, Math.min(4, pCount+v)); document.getElementById('player-val').innerText = pCount; }
+    
+    // STRICT LIMIT 1-2
+    function changeCount(v) { 
+        pCount = Math.max(1, Math.min(2, pCount+v)); 
+        document.getElementById('player-val').innerText = pCount; 
+    }
 
     function setupNames() {
         let list = document.getElementById('name-list');
         list.innerHTML = "";
         for(let i=0; i<pCount; i++) {
-            list.innerHTML += `<input type="text" class="name-input" id="pname-${i}" placeholder="Player ${i+1}">`;
+            let placeholder = (i === 0) ? "SREE" : "PLAYER 2";
+            list.innerHTML += `<input type="text" class="name-input" id="pname-${i}" placeholder="${placeholder}">`;
         }
         navigateTo('screen-names');
     }
@@ -168,7 +173,7 @@
     function beginMatch() {
         players = [];
         for(let i=0; i<pCount; i++) {
-            let n = document.getElementById(`pname-${i}`).value || `PLAYER ${i+1}`;
+            let n = document.getElementById(`pname-${i}`).value || (i === 0 ? "SREE" : "PLAYER 2");
             players.push({name: n.toUpperCase(), score: parseInt(gMode)});
         }
         buildH2H();
@@ -178,11 +183,11 @@
     function buildH2H() {
         let box = document.getElementById('h2h-box');
         box.innerHTML = `
-            <div class="p-block active" id="p-ui-0">
+            <div class="p-block visible active" id="p-ui-0">
                 <span class="p-name-label">${players[0].name}</span>
                 <span class="p-score-label" id="p-score-0">${players[0].score}</span>
             </div>
-            <div class="p-block right" id="p-ui-1">
+            <div class="p-block right ${players[1] ? 'visible' : ''}" id="p-ui-1">
                 <span class="p-name-label">${players[1] ? players[1].name : ''}</span>
                 <span class="p-score-label" id="p-score-1">${players[1] ? players[1].score : ''}</span>
             </div>
@@ -234,7 +239,7 @@
         players.forEach((p, idx) => {
             const ui = document.getElementById(`p-ui-${idx}`);
             if(ui) {
-                ui.className = (idx === currentPlayerIdx) ? (idx===1?'p-block right active':'p-block active') : (idx===1?'p-block right':'p-block');
+                ui.className = (idx === currentPlayerIdx) ? `p-block visible active ${idx===1?'right':''}` : `p-block visible ${idx===1?'right':''}`;
                 document.getElementById(`p-score-${idx}`).innerText = p.score;
             }
         });
@@ -246,18 +251,14 @@
         dartsThrown.forEach(d => total += (d.v * d.m));
         if(p.score - total >= 0) p.score -= total;
         if(p.score === 0) alert(p.name + " WINS!");
+        
         currentPlayerIdx = (currentPlayerIdx + 1) % players.length;
         dartsThrown = [];
         updateUI();
     }
 
     function undoDart() { dartsThrown.pop(); updateUI(); }
-    
-    window.onload = () => { 
-        initBoard(); 
-        // Force the Welcome screen on load
-        document.getElementById('screen-welcome').classList.add('active');
-    };
+    window.onload = () => { initBoard(); };
 </script>
 </body>
 </html>
